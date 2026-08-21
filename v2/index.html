@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI 设计知识库 · Design Guide</title>
+<style>
+:root{
+  --bg:#FAFAF7;
+  --card:#FFFFFF;
+  --text:#1A1A1A;
+  --text-dim:#6B7280;
+  --text-soft:#9CA3AF;
+  --border:#E5E7EB;
+  --border-soft:#F3F4F6;
+  --accent:#6366F1;
+  --accent-soft:#EEF2FF;
+  --blue:#3B82F6;
+  --green:#10B981;
+  --orange:#F59E0B;
+  --pink:#EC4899;
+  --purple:#8B5CF6;
+  --cyan:#06B6D4;
+  --red:#EF4444;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.08);
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ========== Header ========== */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,0.85);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border-soft);
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;
+  padding:0 32px;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  font-size:18px;font-weight:700;
+  display:flex;align-items:center;gap:10px;
+  text-decoration:none;color:var(--text);
+}
+.logo-icon{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-size:16px;font-weight:800;
+}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{
+  font-size:14px;color:var(--text-dim);text-decoration:none;
+  transition:color .2s;font-weight:500;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--accent)}
+
+/* ========== Hero ========== */
+.hero{
+  max-width:1200px;margin:0 auto;
+  padding:80px 32px 60px;
+  text-align:center;
+}
+.hero h1{
+  font-size:48px;font-weight:800;
+  letter-spacing:-1px;
+  margin-bottom:16px;
+  background:linear-gradient(135deg,#1A1A1A 0%,#6366F1 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{
+  font-size:18px;color:var(--text-dim);
+  max-width:600px;margin:0 auto 32px;
+}
+.hero-stats{
+  display:flex;gap:48px;justify-content:center;
+  margin-top:40px;
+}
+.stat-item{text-align:center}
+.stat-num{
+  font-size:32px;font-weight:800;color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+.stat-label{
+  font-size:13px;color:var(--text-soft);margin-top:4px;
+}
+
+/* ========== Filter ========== */
+.filter-section{
+  max-width:1200px;margin:0 auto;
+  padding:0 32px 24px;
+}
+.filter-tabs{
+  display:flex;gap:8px;
+  padding:6px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  width:fit-content;
+  box-shadow:var(--shadow-sm);
+}
+.filter-tab{
+  padding:10px 20px;
+  border:none;background:transparent;
+  font-size:14px;font-weight:500;
+  color:var(--text-dim);
+  border-radius:8px;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:var(--sans);
+}
+.filter-tab:hover{color:var(--text)}
+.filter-tab.active{
+  background:var(--accent);
+  color:white;
+  box-shadow:0 2px 8px rgba(99,102,241,.3);
+}
+
+/* ========== Card Grid ========== */
+.grid-section{
+  max-width:1200px;margin:0 auto;
+  padding:24px 32px 80px;
+}
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+  text-decoration:none;
+  color:var(--text);
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  position:relative;
+  overflow:hidden;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg);
+  border-color:transparent;
+}
+.card.disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+.card.disabled:hover{
+  transform:none;
+  box-shadow:var(--shadow-sm);
+  border-color:var(--border);
+}
+.card.disabled::after{
+  content:'即将上线';
+  position:absolute;
+  top:16px;right:16px;
+  font-size:11px;font-weight:600;
+  color:var(--text-soft);
+  background:var(--border-soft);
+  padding:4px 10px;
+  border-radius:20px;
+}
+.card-emoji{
+  width:48px;height:48px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  margin-bottom:16px;
+}
+.card-k .card-emoji{background:var(--accent-soft)}
+.card-c .card-emoji{background:#F0FDF4}
+.card h3{
+  font-size:17px;font-weight:700;
+  margin-bottom:8px;
+  line-height:1.4;
+}
+.card-desc{
+  font-size:13.5px;color:var(--text-dim);
+  line-height:1.6;
+  margin-bottom:16px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.card-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--text-soft);
+  padding-top:12px;
+  border-top:1px solid var(--border-soft);
+}
+.card-tag{
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:20px;
+  font-size:11px;font-weight:600;
+}
+.tag-k{background:var(--accent-soft);color:var(--accent)}
+.tag-c{background:#F0FDF4;color:var(--green)}
+
+/* ========== Section Title ========== */
+.section-title{
+  display:flex;align-items:center;gap:12px;
+  margin:40px 0 20px;
+}
+.section-title h2{
+  font-size:22px;font-weight:700;
+}
+.section-title .count{
+  font-size:13px;color:var(--text-soft);
+  background:var(--border-soft);
+  padding:4px 12px;
+  border-radius:20px;
+}
+
+/* ========== Footer ========== */
+.footer{
+  border-top:1px solid var(--border-soft);
+  padding:32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+
+/* ========== Responsive ========== */
+@media(max-width:768px){
+  .header-inner{padding:0 20px}
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .hero p{font-size:15px}
+  .hero-stats{gap:32px}
+  .stat-num{font-size:24px}
+  .filter-section{padding:0 20px 20px}
+  .grid-section{padding:20px 20px 60px}
+  .card-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">D</div>
+      <span>Design Guide</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#theory" class="active">理论知识</a>
+      <a href="#practice">教程实践</a>
+      <a href="#">关于</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>UI 设计知识库</h1>
+  <p>系统化的设计理论与实操教程，每个知识点都配有交互演示和真实案例，让设计学习更直观。</p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">20</div>
+      <div class="stat-label">理论知识点</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">30</div>
+      <div class="stat-label">实践教程</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">7</div>
+      <div class="stat-label">已上线</div>
+    </div>
+  </div>
+</section>
+
+<!-- Filter -->
+<section class="filter-section">
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterCards('all', this)">全部</button>
+    <button class="filter-tab" onclick="filterCards('k', this)">理论知识</button>
+    <button class="filter-tab" onclick="filterCards('c', this)">教程实践</button>
+  </div>
+</section>
+
+<!-- Theory Section -->
+<section class="grid-section" id="theory">
+  <div class="section-title">
+    <h2>理论知识</h2>
+    <span class="count">20 个知识点</span>
+  </div>
+  <div class="card-grid" id="theoryGrid">
+
+    <a href="k01.html" class="card card-k" data-type="k">
+      <div class="card-emoji">🎯</div>
+      <h3>UI 设计四大基本原则</h3>
+      <p class="card-desc">一致性、易用性、层级性、规范性——好设计的底层框架。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K01 · 基础</span>
+        <span>8 分钟阅读</span>
+      </div>
+    </a>
+
+    <a href="k03.html" class="card card-k" data-type="k">
+      <div class="card-emoji">🧩</div>
+      <h3>格式塔原理</h3>
+      <p class="card-desc">接近性、相似性、闭合性…大脑如何自动组织视觉信息。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K03 · 视觉认知</span>
+        <span>10 分钟阅读</span>
+      </div>
+    </a>
+
+    <a href="k04.html" class="card card-k" data-type="k">
+      <div class="card-emoji">🏃</div>
+      <h3>费茨定律</h3>
+      <p class="card-desc">目标越大、距离越近，点击越快——交互设计的基础定律。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K04 · 交互定律</span>
+        <span>7 分钟阅读</span>
+      </div>
+    </a>
+
+    <a href="k05.html" class="card card-k" data-type="k">
+      <div class="card-emoji">⚖️</div>
+      <h3>席克定律与米勒定律</h3>
+      <p class="card-desc">选项越多决策越慢，人脑一次能记住 7±2 个信息块。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K05 · 交互定律</span>
+        <span>9 分钟阅读</span>
+      </div>
+    </a>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🧠</div>
+      <h3>认知负荷理论</h3>
+      <p class="card-desc">内在、外在、相关——三种认知负荷的平衡之道。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K06 · 认知心理</span>
+        <span>8 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">💡</div>
+      <h3>心智模型</h3>
+      <p class="card-desc">用户脑中的"世界模型"如何影响他们使用产品的方式。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K07 · 认知心理</span>
+        <span>7 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🎨</div>
+      <h3>情感化设计</h3>
+      <p class="card-desc">本能层、行为层、反思层——设计的三个情感维度。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K08 · 体验设计</span>
+        <span>9 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">✅</div>
+      <h3>Nielsen 可用性启发式</h3>
+      <p class="card-desc">10 条启发式评估原则，快速发现界面可用性问题。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K09 · 可用性</span>
+        <span>12 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">📐</div>
+      <h3>雅各布定律</h3>
+      <p class="card-desc">用户把在其他产品上的经验带到你的产品上。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K10 · 交互定律</span>
+        <span>6 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🔚</div>
+      <h3>峰终定律</h3>
+      <p class="card-desc">人们只记得体验的高峰和结尾，而不是全部过程。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K11 · 体验设计</span>
+        <span>6 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🌟</div>
+      <h3>孤立效应</h3>
+      <p class="card-desc">与众不同的东西更容易被记住——冯·雷斯托夫效应。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K12 · 视觉认知</span>
+        <span>5 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">⏱️</div>
+      <h3>多尔蒂阈值</h3>
+      <p class="card-desc">400 ms——交互响应时间的黄金标准。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K13 · 交互定律</span>
+        <span>5 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🔄</div>
+      <h3>帕累托法则</h3>
+      <p class="card-desc">80% 的效果来自 20% 的原因——设计资源的取舍之道。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K14 · 设计方法</span>
+        <span>6 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🧱</div>
+      <h3>特斯勒定律</h3>
+      <p class="card-desc">复杂性守恒——复杂度只能被转移，不能被消除。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K15 · 设计方法</span>
+        <span>7 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">📝</div>
+      <h3>蔡格尼克效应</h3>
+      <p class="card-desc">未完成的任务比已完成的更容易被记住。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K16 · 认知心理</span>
+        <span>5 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🎭</div>
+      <h3>认知偏差</h3>
+      <p class="card-desc">锚定效应、确认偏误、损失厌恶——影响判断的心理陷阱。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K17 · 认知心理</span>
+        <span>10 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🌊</div>
+      <h3>心流理论</h3>
+      <p class="card-desc">全神贯注的沉浸状态——如何让用户"忘了时间"。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K18 · 体验设计</span>
+        <span>8 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">🖋️</div>
+      <h3>奥卡姆剃刀</h3>
+      <p class="card-desc">如无必要，勿增实体——最简单的解释往往最正确。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K19 · 设计方法</span>
+        <span>6 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-k disabled" data-type="k">
+      <div class="card-emoji">📊</div>
+      <h3>序列位置效应</h3>
+      <p class="card-desc">开头和结尾更容易被记住——信息排序的设计策略。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-k">K20 · 认知心理</span>
+        <span>5 分钟阅读</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Practice Section -->
+<section class="grid-section" id="practice">
+  <div class="section-title">
+    <h2>教程实践</h2>
+    <span class="count">30 个案例</span>
+  </div>
+  <div class="card-grid" id="practiceGrid">
+
+    <a href="c01.html" class="card card-c" data-type="c">
+      <div class="card-emoji">🟦</div>
+      <h3>扁平风格图标设计</h3>
+      <p class="card-desc">从网格到布尔运算，系统掌握扁平化图标设计方法。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C01 · 图标设计</span>
+        <span>12 分钟阅读</span>
+      </div>
+    </a>
+
+    <a href="c02.html" class="card card-c" data-type="c">
+      <div class="card-emoji">🪟</div>
+      <h3>磨砂玻璃风格图标</h3>
+      <p class="card-desc">Background Blur + 半透明 + 内描边，打造通透玻璃质感。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C02 · 图标设计</span>
+        <span>10 分钟阅读</span>
+      </div>
+    </a>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🎨</div>
+      <h3>拟物风格图标设计</h3>
+      <p class="card-desc">光影、质感、细节——拟物化图标的写实表现技法。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C03 · 图标设计</span>
+        <span>15 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">✏️</div>
+      <h3>线性风格图标设计</h3>
+      <p class="card-desc">2 px 线宽 + 统一圆角，轻盈优雅的线性图标体系。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C04 · 图标设计</span>
+        <span>10 分钟阅读</span>
+      </div>
+    </div>
+
+    <a href="c05.html" class="card card-c" data-type="c">
+      <div class="card-emoji">🔘</div>
+      <h3>玻璃质感开关按钮</h3>
+      <p class="card-desc">从结构到动效，手把手打造一个晶莹剔透的玻璃开关。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C05 · 组件设计</span>
+        <span>11 分钟阅读</span>
+      </div>
+    </a>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">📱</div>
+      <h3>登录注册页面设计</h3>
+      <p class="card-desc">表单布局、输入反馈、错误提示——登录页的设计要点。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C06 · 界面设计</span>
+        <span>13 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🏠</div>
+      <h3>App 首页布局设计</h3>
+      <p class="card-desc">信息流、功能入口、导航结构——首页的信息架构。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C07 · 界面设计</span>
+        <span>14 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🔍</div>
+      <h3>搜索页交互设计</h3>
+      <p class="card-desc">搜索联想、历史记录、筛选排序——搜索体验的完整链路。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C08 · 交互设计</span>
+        <span>11 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🛒</div>
+      <h3>电商商品详情页</h3>
+      <p class="card-desc">从浏览到下单——商品详情页的转化设计策略。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C09 · 界面设计</span>
+        <span>15 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">👤</div>
+      <h3>个人中心设计</h3>
+      <p class="card-desc">信息架构、功能分组、视觉层级——个人中心的设计方法。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C10 · 界面设计</span>
+        <span>12 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">💬</div>
+      <h3>聊天界面设计</h3>
+      <p class="card-desc">气泡、输入框、消息状态——即时通讯界面设计要点。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C11 · 界面设计</span>
+        <span>13 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">📊</div>
+      <h3>数据可视化仪表盘</h3>
+      <p class="card-desc">图表选型、数据层级、信息密度——Dashboard 设计指南。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C12 · 数据设计</span>
+        <span>16 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🎵</div>
+      <h3>音乐播放器界面</h3>
+      <p class="card-desc">播放控制、进度条、歌词展示——音乐 App 的设计精髓。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C13 · 界面设计</span>
+        <span>12 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">📅</div>
+      <h3>日历与日程设计</h3>
+      <p class="card-desc">月视图、周视图、日程创建——时间管理界面设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C14 · 界面设计</span>
+        <span>14 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🌙</div>
+      <h3>深色模式适配设计</h3>
+      <p class="card-desc">颜色系统、对比度、层级表达——Dark Mode 设计规范。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C15 · 设计系统</span>
+        <span>10 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🎬</div>
+      <h3>短视频信息流设计</h3>
+      <p class="card-desc">沉浸式全屏、交互手势、推荐算法——短视频产品设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C16 · 界面设计</span>
+        <span>13 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">📝</div>
+      <h3>富文本编辑器设计</h3>
+      <p class="card-desc">工具栏、快捷键、格式化——内容编辑体验设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C17 · 交互设计</span>
+        <span>14 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🗂️</div>
+      <h3>文件管理器设计</h3>
+      <p class="card-desc">列表/网格视图、分类筛选、批量操作——文件管理设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C18 · 界面设计</span>
+        <span>12 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🔔</div>
+      <h3>通知中心设计</h3>
+      <p class="card-desc">消息分类、优先级、未读红点——通知系统设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C19 · 交互设计</span>
+        <span>9 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">⚙️</div>
+      <h3>设置页面设计</h3>
+      <p class="card-desc">信息分组、搜索、分级导航——设置页的架构设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C20 · 界面设计</span>
+        <span>10 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🎮</div>
+      <h3>游戏 UI 界面设计</h3>
+      <p class="card-desc"> HUD 设计、战斗界面、商城系统——游戏 UI 设计入门。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C21 · 游戏设计</span>
+        <span>15 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🛍️</div>
+      <h3>购物车与结算设计</h3>
+      <p class="card-desc">商品管理、价格计算、支付流程——转化链路设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C22 · 电商设计</span>
+        <span>13 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">📚</div>
+      <h3>阅读器界面设计</h3>
+      <p class="card-desc">排版、翻页、目录、夜间模式——阅读体验设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C23 · 内容设计</span>
+        <span>11 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🗺️</div>
+      <h3>地图与导航设计</h3>
+      <p class="card-desc">地图层级、POI 展示、导航指引——LBS 产品设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C24 · 地图设计</span>
+        <span>14 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">📷</div>
+      <h3>相机与修图界面</h3>
+      <p class="card-desc">取景框、滤镜、参数调节——影像类 App 设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C25 · 工具设计</span>
+        <span>12 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">💰</div>
+      <h3>金融理财界面设计</h3>
+      <p class="card-desc">数据展示、信任感、风险提示——金融产品设计要点。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C26 · 金融设计</span>
+        <span>13 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🏫</div>
+      <h3>在线教育界面设计</h3>
+      <p class="card-desc">课程列表、播放页、学习进度——教育产品设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C27 · 教育设计</span>
+        <span>14 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🏥</div>
+      <h3>医疗健康界面设计</h3>
+      <p class="card-desc">预约挂号、健康数据、在线问诊——医疗产品设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C28 · 医疗设计</span>
+        <span>12 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🚗</div>
+      <h3>出行打车界面设计</h3>
+      <p class="card-desc">地图选点、车型选择、行程追踪——出行产品设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C29 · 出行设计</span>
+        <span>13 分钟阅读</span>
+      </div>
+    </div>
+
+    <div class="card card-c disabled" data-type="c">
+      <div class="card-emoji">🍔</div>
+      <h3>外卖点餐界面设计</h3>
+      <p class="card-desc">店铺列表、菜单浏览、购物车、配送——外卖产品设计。</p>
+      <div class="card-meta">
+        <span class="card-tag tag-c">C30 · 本地生活</span>
+        <span>14 分钟阅读</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  Design Guide · 系统化的 UI 设计知识库
+</footer>
+
+<script>
+function filterCards(type, btn) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    if (type === 'all') {
+      card.style.display = '';
+    } else {
+      card.style.display = card.dataset.type === type ? '' : 'none';
+    }
+  });
+
+  // Scroll to appropriate section
+  const target = type === 'c' ? '#practice' : '#theory';
+  if (type !== 'all') {
+    document.querySelector(target).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+</script>
+</body>
+</html>

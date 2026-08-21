@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>费茨定律 · Design Guide</title>
+<style>
+:root{
+  --bg:#FAFAF7;
+  --card:#FFFFFF;
+  --text:#1A1A1A;
+  --text-dim:#6B7280;
+  --text-soft:#9CA3AF;
+  --border:#E5E7EB;
+  --border-soft:#F3F4F6;
+  --accent:#6366F1;
+  --accent-soft:#EEF2FF;
+  --blue:#3B82F6;
+  --green:#10B981;
+  --green-soft:#ECFDF5;
+  --orange:#F59E0B;
+  --orange-soft:#FFFBEB;
+  --red:#EF4444;
+  --red-soft:#FEF2F2;
+  --purple:#8B5CF6;
+  --cyan:#06B6D4;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.08);
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,BlinkMacSystemFont,sans-serif;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ========== Header ========== */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,0.85);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border-soft);
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;
+  padding:0 32px;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  font-size:18px;font-weight:700;
+  display:flex;align-items:center;gap:10px;
+  text-decoration:none;color:var(--text);
+}
+.logo-icon{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-size:16px;font-weight:800;
+}
+.breadcrumb{
+  font-size:14px;color:var(--text-soft);
+  display:flex;align-items:center;gap:8px;
+}
+.breadcrumb a{color:var(--text-dim);text-decoration:none}
+.breadcrumb a:hover{color:var(--accent)}
+
+/* ========== Article ========== */
+.article{
+  max-width:760px;margin:0 auto;
+  padding:60px 32px 80px;
+}
+.article-header{margin-bottom:48px}
+.article-tag{
+  display:inline-block;
+  padding:6px 14px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  border-radius:20px;
+  font-size:13px;font-weight:600;
+  margin-bottom:20px;
+}
+.article h1{
+  font-family:var(--serif);
+  font-size:42px;font-weight:700;
+  line-height:1.3;
+  letter-spacing:-0.5px;
+  margin-bottom:16px;
+}
+.article-subtitle{
+  font-size:18px;color:var(--text-dim);
+  line-height:1.7;
+  margin-bottom:24px;
+}
+.article-meta{
+  display:flex;gap:24px;
+  font-size:13px;color:var(--text-soft);
+  padding-top:20px;
+  border-top:1px solid var(--border-soft);
+}
+.article-meta span{display:flex;align-items:center;gap:6px}
+
+/* ========== Content Sections ========== */
+.content-section{margin-bottom:56px}
+.content-section h2{
+  font-size:28px;font-weight:700;
+  margin-bottom:20px;
+  letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:12px;
+}
+.content-section h2 .icon{
+  width:40px;height:40px;
+  border-radius:10px;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.content-section h3{
+  font-size:20px;font-weight:700;
+  margin:28px 0 12px;
+}
+.content-section p{
+  font-size:16px;
+  color:#374151;
+  margin-bottom:16px;
+  line-height:1.9;
+}
+.content-section b{color:var(--text);font-weight:600}
+
+/* ========== Definition Box ========== */
+.def-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:12px;
+  padding:24px 28px;
+  margin:24px 0;
+}
+.def-box .label{
+  font-size:12px;font-weight:700;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+.def-box .formula{
+  font-family:var(--serif);
+  font-size:22px;font-weight:600;
+  margin-bottom:8px;
+  color:var(--text);
+}
+.def-box .formula .accent{
+  color:var(--accent);
+  font-weight:700;
+}
+.def-box .desc{
+  font-size:14px;color:var(--text-dim);
+  line-height:1.7;
+}
+
+/* ========== Interactive Demo ========== */
+.demo-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:32px;
+  margin:28px 0;
+}
+.demo-box h3{
+  margin:0 0 8px;
+  display:flex;align-items:center;gap:10px;
+}
+.demo-box .demo-desc{
+  font-size:14px;color:var(--text-dim);
+  margin-bottom:20px;
+}
+.demo-canvas{
+  background:linear-gradient(135deg,#F6F5F2 0%,#E8E6E1 100%);
+  border-radius:12px;
+  padding:24px;
+  position:relative;
+  height:220px;
+  overflow:hidden;
+}
+.fitts-start{
+  width:20px;height:20px;
+  background:var(--red);
+  border-radius:50%;
+  position:absolute;
+  left:24px;top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  transition:all .2s;
+  box-shadow:0 0 0 0 rgba(239,68,68,0.4);
+  animation:pulse 2s infinite;
+}
+.fitts-start:hover{transform:translateY(-50%) scale(1.2)}
+.fitts-start.active{
+  box-shadow:0 0 0 8px rgba(239,68,68,0.2);
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}
+  70%{box-shadow:0 0 0 12px rgba(239,68,68,0)}
+  100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+}
+.fitts-target{
+  background:var(--green);
+  border-radius:6px;
+  position:absolute;
+  right:24px;top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  transition:all .3s;
+  box-shadow:0 4px 12px rgba(16,185,129,0.3);
+}
+.fitts-target:hover{box-shadow:0 6px 20px rgba(16,185,129,0.4)}
+.size-controls{
+  display:flex;gap:8px;margin-top:16px;
+  flex-wrap:wrap;
+}
+.size-btn{
+  padding:8px 16px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:8px;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:var(--sans);
+  font-weight:500;
+  color:var(--text);
+}
+.size-btn:hover{border-color:var(--accent)}
+.size-btn.active{
+  background:var(--accent);
+  color:white;
+  border-color:var(--accent);
+}
+.demo-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:16px;
+}
+.demo-stat{
+  background:var(--bg);
+  border-radius:8px;
+  padding:12px;
+  text-align:center;
+}
+.demo-stat .stat-label{
+  font-size:11px;color:var(--text-soft);
+  margin-bottom:4px;
+}
+.demo-stat .stat-value{
+  font-size:18px;font-weight:700;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.demo-stat.speed .stat-value{color:var(--green)}
+.demo-stat.size .stat-value{color:var(--accent)}
+.demo-stat.best .stat-value{color:var(--orange)}
+.demo-feedback{
+  margin-top:12px;
+  padding:10px 14px;
+  border-radius:8px;
+  font-size:13px;
+  text-align:center;
+  background:var(--orange-soft);
+  color:#B45309;
+  transition:all .3s;
+}
+
+/* ========== Takeaways ========== */
+.takeaway-list{
+  display:flex;flex-direction:column;gap:16px;
+  margin:24px 0;
+}
+.takeaway-item{
+  display:flex;gap:16px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px 24px;
+  transition:all .2s;
+}
+.takeaway-item:hover{
+  box-shadow:var(--shadow);
+  border-color:transparent;
+}
+.takeaway-num{
+  width:32px;height:32px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;
+  flex-shrink:0;
+}
+.takeaway-content h4{
+  font-size:16px;font-weight:600;
+  margin-bottom:6px;
+}
+.takeaway-content p{
+  font-size:14px;color:var(--text-dim);
+  margin:0;line-height:1.7;
+}
+
+/* ========== Cases ========== */
+.cases-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin:24px 0;
+}
+.case-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  transition:all .2s;
+}
+.case-card:hover{
+  box-shadow:var(--shadow-lg);
+  transform:translateY(-2px);
+}
+.case-visual{
+  height:140px;
+  background:linear-gradient(135deg,#F3F4F6,#E5E7EB);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+  position:relative;
+  overflow:hidden;
+}
+.case-visual .phone-mock{
+  width:60px;height:120px;
+  background:#1F2937;
+  border-radius:12px;
+  position:relative;
+  border:2px solid #374151;
+}
+.case-visual .phone-mock .bottom-bar{
+  position:absolute;bottom:0;left:0;right:0;
+  height:20px;
+  background:var(--accent);
+  border-radius:0 0 10px 10px;
+  display:flex;align-items:center;justify-content:space-around;
+  padding:0 6px;
+}
+.case-visual .phone-mock .bottom-bar .dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.6);
+}
+.case-visual .phone-mock .nav-dots{
+  position:absolute;top:8px;left:50%;
+  transform:translateX(-50%);
+  display:flex;gap:4px;
+}
+.case-visual .phone-mock .nav-dots .dot{
+  width:4px;height:4px;border-radius:50%;
+  background:#4B5563;
+}
+.case-body{padding:16px}
+.case-body h4{
+  font-size:15px;font-weight:600;
+  margin-bottom:6px;
+}
+.case-body p{
+  font-size:13px;color:var(--text-dim);
+  margin:0;line-height:1.6;
+}
+.case-tag{
+  display:inline-block;
+  padding:2px 8px;
+  background:var(--green-soft);
+  color:var(--green);
+  border-radius:4px;
+  font-size:11px;font-weight:600;
+  margin-bottom:8px;
+}
+
+/* ========== Related ========== */
+.related-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:24px 0;
+}
+.related-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px 20px;
+  text-decoration:none;
+  color:var(--text);
+  transition:all .2s;
+  display:flex;gap:14px;align-items:center;
+}
+.related-card:hover{
+  border-color:var(--accent);
+  box-shadow:var(--shadow);
+}
+.related-card .rel-icon{
+  width:44px;height:44px;
+  border-radius:10px;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.related-card .rel-info h4{
+  font-size:14px;font-weight:600;
+  margin-bottom:2px;
+}
+.related-card .rel-info p{
+  font-size:12px;color:var(--text-soft);
+  margin:0;
+}
+
+/* ========== Tip Box ========== */
+.tip-box{
+  background:var(--orange-soft);
+  border-radius:10px;
+  padding:16px 20px;
+  margin:20px 0;
+  border-left:3px solid var(--orange);
+}
+.tip-box .tip-label{
+  font-size:12px;font-weight:700;
+  color:#B45309;
+  margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.tip-box p{
+  font-size:14px;color:#92400E;
+  margin:0;line-height:1.7;
+}
+
+/* ========== Footer Nav ========== */
+.footer-nav{
+  margin-top:60px;
+  padding-top:32px;
+  border-top:1px solid var(--border-soft);
+  display:flex;justify-content:space-between;
+  gap:20px;
+}
+.footer-nav a{
+  display:flex;align-items:center;gap:10px;
+  text-decoration:none;color:var(--text-dim);
+  font-size:14px;font-weight:500;
+  transition:color .2s;
+  padding:12px 16px;
+  border-radius:8px;
+  background:var(--card);
+  border:1px solid var(--border);
+}
+.footer-nav a:hover{color:var(--accent);border-color:var(--accent)}
+.footer-nav .next{margin-left:auto}
+.footer-nav .nav-label{
+  font-size:11px;color:var(--text-soft);
+  margin-bottom:2px;
+}
+.footer-nav .nav-title{
+  font-size:14px;font-weight:600;color:var(--text);
+}
+
+/* ========== Responsive ========== */
+@media(max-width:768px){
+  .header-inner{padding:0 20px}
+  .article{padding:40px 20px 60px}
+  .article h1{font-size:30px}
+  .article-subtitle{font-size:15px}
+  .content-section h2{font-size:22px}
+  .demo-box{padding:20px}
+  .cases-grid{grid-template-columns:1fr}
+  .related-grid{grid-template-columns:1fr}
+  .demo-stats{grid-template-columns:repeat(3,1fr)}
+  .footer-nav{flex-direction:column}
+  .footer-nav .next{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">D</div>
+      <span>Design Guide</span>
+    </a>
+    <div class="breadcrumb">
+      <a href="index.html">首页</a>
+      <span>/</span>
+      <a href="index.html#theory">理论知识</a>
+      <span>/</span>
+      <span>费茨定律</span>
+    </div>
+  </div>
+</header>
+
+<!-- Article -->
+<article class="article">
+
+  <header class="article-header">
+    <span class="article-tag">K04 · 交互定律</span>
+    <h1>费茨定律</h1>
+    <p class="article-subtitle">
+      目标越大、距离越近，点击越快。这是交互设计中最基础也最实用的定律之一，深刻影响着按钮尺寸、导航布局和操作效率。
+    </p>
+    <div class="article-meta">
+      <span>⏱️ 7 分钟阅读</span>
+      <span>📅 交互设计</span>
+      <span>🏷️ 基础定律</span>
+    </div>
+  </header>
+
+  <!-- 核心定义 -->
+  <section class="content-section">
+    <h2><span class="icon">📖</span>核心定义</h2>
+    <p>
+      费茨定律（Fitts's Law）由心理学家 <b>Paul Fitts</b> 于 1954 年提出。它描述了人类运动系统的一个基本规律：<b>移动到目标所需的时间，取决于目标的距离和大小</b>。
+    </p>
+
+    <div class="def-box">
+      <div class="label">核心公式</div>
+      <div class="formula">
+        MT = a + b · log<sub>2</sub>(<span class="accent">D</span> / <span class="accent">W</span> + 1)
+      </div>
+      <div class="desc">
+        <b>MT</b>（Movement Time）= 运动时间<br>
+        <b>D</b>（Distance）= 起点到目标的距离<br>
+        <b>W</b>（Width）= 目标的宽度（大小）<br>
+        <b>a、b</b> = 常数，由具体设备和操作方式决定
+      </div>
+    </div>
+
+    <p>
+      简单来说：<b>距离越远、目标越小，操作时间越长，错误率越高。</b>这个定律在触控时代变得更加重要——因为手指比鼠标指针更"粗"，对目标大小和间距的要求更高。
+    </p>
+  </section>
+
+  <!-- 交互演示 -->
+  <section class="content-section">
+    <h2><span class="icon">🎮</span>交互演示</h2>
+    <p>
+      亲自试试吧！先点击左侧红色圆点（起点），然后尽快点击右侧绿色目标。切换不同的目标大小，感受目标宽度 W 如何影响你的点击速度。
+    </p>
+
+    <div class="demo-box">
+      <h3>🏃 费茨定律实验</h3>
+      <p class="demo-desc">点击红点开始 → 点击绿点结束。对比不同目标大小的操作时间。</p>
+      <div class="demo-canvas" id="fittsCanvas">
+        <div class="fitts-start" id="fittsStart" onclick="fittsStart()"></div>
+        <div class="fitts-target" id="fittsTarget" onclick="fittsTargetClick()"></div>
+      </div>
+      <div class="size-controls">
+        <span style="font-size:13px;color:var(--text-dim);display:flex;align-items:center">目标大小：</span>
+        <button class="size-btn" onclick="setTargetSize(24, this)">24 px</button>
+        <button class="size-btn active" onclick="setTargetSize(44, this)">44 px</button>
+        <button class="size-btn" onclick="setTargetSize(80, this)">80 px</button>
+      </div>
+      <div class="demo-stats">
+        <div class="demo-stat size">
+          <div class="stat-label">目标宽度</div>
+          <div class="stat-value" id="demoSize">44 px</div>
+        </div>
+        <div class="demo-stat speed">
+          <div class="stat-label">本次用时</div>
+          <div class="stat-value" id="demoTime">— ms</div>
+        </div>
+        <div class="demo-stat best">
+          <div class="stat-label">最佳成绩</div>
+          <div class="stat-value" id="demoBest">— ms</div>
+        </div>
+      </div>
+      <div class="demo-feedback" id="demoFeedback">
+        👆 点击左侧红点开始计时
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-label">💡 你发现了吗？</div>
+      <p>当目标从 24 px 增加到 80 px 时，你的点击速度和准确率都会明显提升。这就是为什么移动端规范要求触控热区至少 44 × 44 pt——这是在视觉密度和操作效率之间的最佳平衡点。</p>
+    </div>
+  </section>
+
+  <!-- 设计要点 -->
+  <section class="content-section">
+    <h2><span class="icon">📌</span>设计要点</h2>
+    <p>
+      在实际的界面设计中，费茨定律的应用可以总结为以下三个核心策略：
+    </p>
+
+    <div class="takeaway-list">
+      <div class="takeaway-item">
+        <div class="takeaway-num">1</div>
+        <div class="takeaway-content">
+          <h4>缩短距离 D</h4>
+          <p>把常用操作放在用户容易到达的位置。移动端的"拇指热区"（屏幕底部 1/3 区域）就是最好的例子——主操作按钮放在底部通栏，用户不需要调整握姿就能轻松点击。</p>
+        </div>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-num">2</div>
+        <div class="takeaway-content">
+          <h4>放大目标 W</h4>
+          <p>重要按钮要足够大。移动端触控热区建议不小于 44 × 44 pt，桌面端按钮也要有足够的点击面积。但也不是越大越好——过大的按钮会占用过多空间，需要在效率和布局之间找到平衡。</p>
+        </div>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-num">3</div>
+        <div class="takeaway-content">
+          <h4>利用边缘效应</h4>
+          <p>屏幕边缘的目标"等效无限大"——用户只要把鼠标/手指往边缘一推就能命中，不需要精准定位。这就是为什么 macOS 的 Dock 栏放在屏幕最底部、Windows 的开始菜单放在左下角。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 真实案例 -->
+  <section class="content-section">
+    <h2><span class="icon">📱</span>真实案例</h2>
+    <p>
+      费茨定律在真实产品中的应用无处不在。下面是几个最经典的例子：
+    </p>
+
+    <div class="cases-grid">
+      <div class="case-card">
+        <div class="case-visual">
+          <div class="phone-mock">
+            <div class="nav-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div class="bottom-bar">
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="case-body">
+          <span class="case-tag">移动端</span>
+          <h4>底部导航栏</h4>
+          <p>主流 App 都把主导航放在屏幕底部，正好落在拇指热区内，操作距离最短。</p>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-visual" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">
+          <div style="width:120px;height:100px;background:#1E40AF;border-radius:8px;position:relative;overflow:hidden">
+            <div style="position:absolute;bottom:0;left:0;right:0;height:28px;background:#3B82F6;display:flex;align-items:center;padding:0 8px;gap:6px">
+              <div style="width:40px;height:18px;background:rgba(255,255,255,0.9);border-radius:4px;font-size:8px;color:#1E40AF;display:flex;align-items:center;justify-content:center;font-weight:700">开始</div>
+            </div>
+          </div>
+        </div>
+        <div class="case-body">
+          <span class="case-tag">桌面端</span>
+          <h4>Windows 开始菜单</h4>
+          <p>开始按钮在屏幕左下角，利用边缘效应——鼠标"砸"向角落就能命中，无需精准定位。</p>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-visual" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="width:80px;height:32px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:600">立即购买</div>
+            <div style="width:120px;height:1px;background:#ddd"></div>
+            <div style="width:80px;height:28px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:600">加入购物车</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <span class="case-tag">电商</span>
+          <h4>悬浮固定购买按钮</h4>
+          <p>电商详情页的"立即购买"按钮固定在屏幕底部通栏，始终可见且易于点击，提升转化率。</p>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-visual" style="background:linear-gradient(135deg,#F0FDF4,#86EFAC)">
+          <div style="display:flex;gap:2px">
+            <div style="width:30px;height:60px;background:#10B981;border-radius:4px 0 0 4px;display:flex;align-items:center;justify-content:center;font-size:16px">✂️</div>
+            <div style="width:30px;height:60px;background:#059669;display:flex;align-items:center;justify-content:center;font-size:16px">📋</div>
+            <div style="width:30px;height:60px;background:#047857;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:center;font-size:16px">🗑️</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <span class="case-tag">工具类</span>
+          <h4>侧边工具栏</h4>
+          <p>Figma、Photoshop 等设计软件把工具放在屏幕侧边，紧贴边缘，移动鼠标时顺势就能命中。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 相关知识 -->
+  <section class="content-section">
+    <h2><span class="icon">🔗</span>相关知识</h2>
+    <p>
+      费茨定律不是孤立存在的，它和以下设计理论紧密相关：
+    </p>
+
+    <div class="related-grid">
+      <a href="k05.html" class="related-card">
+        <div class="rel-icon">⚖️</div>
+        <div class="rel-info">
+          <h4>席克定律</h4>
+          <p>选项数量与决策时间的关系</p>
+        </div>
+      </a>
+      <a href="k03.html" class="related-card">
+        <div class="rel-icon">🧩</div>
+        <div class="rel-info">
+          <h4>格式塔原理</h4>
+          <p>视觉组织的六大规律</p>
+        </div>
+      </a>
+      <a href="k01.html" class="related-card">
+        <div class="rel-icon">🎯</div>
+        <div class="rel-info">
+          <h4>UI 设计四大原则</h4>
+          <p>一致性 / 易用性 / 层级性 / 规范性</p>
+        </div>
+      </a>
+      <a href="c01.html" class="related-card">
+        <div class="rel-icon">🟦</div>
+        <div class="rel-info">
+          <h4>扁平风格图标设计</h4>
+          <p>相关实践：图标可点击区域设计</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer Nav -->
+  <div class="footer-nav">
+    <a href="k03.html" class="prev">
+      <span>←</span>
+      <div>
+        <div class="nav-label">上一篇</div>
+        <div class="nav-title">格式塔原理</div>
+      </div>
+    </a>
+    <a href="k05.html" class="next">
+      <div style="text-align:right">
+        <div class="nav-label">下一篇</div>
+        <div class="nav-title">席克定律与米勒定律</div>
+      </div>
+      <span>→</span>
+    </a>
+  </div>
+
+</article>
+
+<script>
+// ========== Fitts's Law Demo ==========
+let fittsState = 'idle'; // idle, ready, done
+let fittsStartTime = 0;
+let fittsCurrentSize = 44;
+const fittsBestTimes = {24: null, 44: null, 80: null};
+
+function setTargetSize(size, btn) {
+  fittsCurrentSize = size;
+  fittsState = 'idle';
+
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const target = document.getElementById('fittsTarget');
+  target.style.width = size + 'px';
+  target.style.height = size + 'px';
+
+  document.getElementById('demoSize').textContent = size + ' px';
+  document.getElementById('demoTime').textContent = '— ms';
+
+  const best = fittsBestTimes[size];
+  document.getElementById('demoBest').textContent = best ? best + ' ms' : '— ms';
+
+  document.getElementById('demoFeedback').textContent = '👆 点击左侧红点开始计时';
+  document.getElementById('demoFeedback').style.background = 'var(--orange-soft)';
+  document.getElementById('demoFeedback').style.color = '#B45309';
+
+  document.getElementById('fittsStart').classList.remove('active');
+}
+
+function fittsStart() {
+  if (fittsState === 'ready') return;
+  fittsState = 'ready';
+  fittsStartTime = performance.now();
+  document.getElementById('fittsStart').classList.add('active');
+  document.getElementById('demoFeedback').textContent = '⚡ 快点击右侧绿色目标！';
+  document.getElementById('demoFeedback').style.background = '#DBEAFE';
+  document.getElementById('demoFeedback').style.color = '#1E40AF';
+}
+
+function fittsTargetClick() {
+  if (fittsState !== 'ready') {
+    document.getElementById('demoFeedback').textContent = '⚠️ 请先点击左侧红点开始';
+    document.getElementById('demoFeedback').style.background = 'var(--red-soft)';
+    document.getElementById('demoFeedback').style.color = 'var(--red)';
+    return;
+  }
+
+  const endTime = performance.now();
+  const elapsed = Math.round(endTime - fittsStartTime);
+  fittsState = 'done';
+
+  document.getElementById('fittsStart').classList.remove('active');
+  document.getElementById('demoTime').textContent = elapsed + ' ms';
+
+  const sz = fittsCurrentSize;
+  if (fittsBestTimes[sz] === null || elapsed < fittsBestTimes[sz]) {
+    fittsBestTimes[sz] = elapsed;
+    document.getElementById('demoBest').textContent = elapsed + ' ms';
+  }
+
+  let feedback = '';
+  if (elapsed < 300) {
+    feedback = `🏆 超快！${sz} px 的目标对你来说太简单了`;
+  } else if (elapsed < 500) {
+    feedback = `👍 不错！${sz} px 的目标`;
+  } else if (elapsed < 800) {
+    feedback = `⏱️ 正常速度。${sz} px 的目标`;
+  } else {
+    feedback = `😅 有点慢呢。${sz} px 的目标`;
+  }
+
+  if (fittsBestTimes[sz] === elapsed) {
+    feedback += '（新纪录！）';
+  }
+
+  document.getElementById('demoFeedback').textContent = feedback;
+  document.getElementById('demoFeedback').style.background = 'var(--green-soft)';
+  document.getElementById('demoFeedback').style.color = 'var(--green)';
+
+  setTimeout(() => {
+    fittsState = 'idle';
+    document.getElementById('demoFeedback').textContent = '🔄 再试一次，或切换目标大小对比';
+    document.getElementById('demoFeedback').style.background = 'var(--orange-soft)';
+    document.getElementById('demoFeedback').style.color = '#B45309';
+  }, 2500);
+}
+
+// Init demo
+window.addEventListener('load', () => {
+  setTargetSize(44, document.querySelector('.size-btn.active'));
+});
+</script>
+</body>
+</html>
