@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI 设计四大基本原则 — 好设计的底层逻辑</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF7;
+  --text:#2C2C2C;
+  --text-dim:#8A8A8A;
+  --text-soft:#B5B5B5;
+  --accent:#06B6D4;
+  --accent-soft:#E0F7FA;
+  --blue:#3B6BD5;
+  --blue-soft:#E3ECFA;
+  --green:#2D9A5E;
+  --green-soft:#DFF2E6;
+  --yellow:#F2C14E;
+  --yellow-soft:#FFF6DB;
+  --red:#E85D4A;
+  --red-soft:#FCE8E5;
+  --purple:#6366f1;
+  --purple-soft:#EEF2FF;
+  --border:#E8E5E0;
+  --card:#FFFFFF;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.9;
+  font-size:16px;
+  text-align:left;
+}
+
+/* Nav */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:700;font-size:14px;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;font-size:13px}
+.nav-links a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+
+/* Hero */
+.hero{
+  padding:80px 32px 60px;
+  text-align:center;
+  max-width:780px;
+  margin:0 auto;
+}
+.hero .icon{font-size:48px;margin-bottom:16px}
+.hero .label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:42px;font-weight:700;
+  line-height:1.4;margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:17px;color:var(--text-dim);
+  line-height:1.8;max-width:600px;margin:0 auto;
+}
+.hero .tags{
+  display:flex;gap:8px;justify-content:center;margin-top:28px;
+}
+.hero .tag{
+  border:1px solid var(--border);
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;color:var(--text-dim);
+}
+
+/* Step Nav */
+.step-nav{
+  display:flex;gap:0;justify-content:center;
+  padding:24px 32px;flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+}
+.step-nav a{
+  padding:10px 20px;font-size:14px;
+  color:var(--text-dim);text-decoration:none;
+  border-right:1px solid var(--border);
+  transition:all .2s;
+}
+.step-nav a:first-child{border-left:1px solid var(--border)}
+.step-nav a:hover,.step-nav a.active{color:var(--accent)}
+
+/* Sections */
+.section{
+  max-width:780px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.step-label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.section h2{
+  font-family:var(--serif);
+  font-size:30px;font-weight:700;
+  margin-bottom:28px;line-height:1.5;
+}
+.section h3{
+  font-family:var(--serif);
+  font-size:20px;font-weight:700;
+  margin-bottom:12px;line-height:1.5;
+  display:flex;align-items:center;gap:10px;
+}
+.section h3 .emoji{font-size:24px}
+.section p{margin-bottom:16px;color:#444}
+.section p b{color:var(--text);font-weight:600}
+.section .lead{
+  font-size:17px;line-height:2;
+  color:var(--text);margin-bottom:28px;
+}
+
+/* Principle Cards Grid */
+.principle-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:24px 0;
+}
+.principle-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+  transition:all .3s ease;
+}
+.principle-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  border-color:var(--accent);
+}
+.principle-card .emoji{font-size:32px;margin-bottom:12px}
+.principle-card h3{font-size:18px;margin-bottom:6px}
+.principle-card .en{font-size:12px;color:var(--text-soft);letter-spacing:1px;margin-bottom:10px}
+.principle-card p{font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+.principle-card .tag{
+  display:inline-block;padding:3px 10px;
+  background:var(--accent-soft);color:var(--accent);
+  border-radius:12px;font-size:11px;font-weight:600;
+  margin-top:10px;
+}
+
+/* Knowledge Cards */
+.know-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-bottom:20px;
+}
+.know-card .emoji{font-size:28px;margin-bottom:12px}
+.know-card h3{margin-bottom:8px}
+
+/* Conclusion */
+.conclusion{
+  background:var(--yellow-soft);
+  border-radius:12px;
+  padding:24px 28px;
+  margin:24px 0;
+  font-size:16px;line-height:2;
+}
+.conclusion b{color:#92400e}
+
+/* Standard Table */
+.std-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;font-size:14px;
+  background:var(--card);
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.std-table th{
+  background:#F6F5F2;padding:14px 16px;
+  text-align:left;font-weight:600;
+  border-bottom:2px solid var(--border);
+}
+.std-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.std-table tr:last-child td{border-bottom:none}
+
+/* Three pillars visual */
+.pillars-visual{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.pillar-row{
+  display:flex;gap:16px;margin-bottom:16px;align-items:stretch;
+}
+.pillar-row:last-child{margin-bottom:0}
+.pillar-item{
+  flex:1;
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:20px;
+  text-align:center;
+  position:relative;
+}
+.pillar-item .pillar-icon{font-size:28px;margin-bottom:8px}
+.pillar-item .pillar-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.pillar-item .pillar-desc{font-size:12px;color:var(--text-dim);line-height:1.6}
+
+/* Quiz Section */
+.quiz-section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.quiz-progress{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score b{color:var(--green);font-size:16px}
+.quiz-q{
+  font-size:18px;font-weight:600;
+  line-height:1.7;margin-bottom:20px;
+}
+.quiz-options{
+  display:flex;gap:12px;margin-bottom:20px;
+}
+.quiz-btn{
+  flex:1;padding:16px 20px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+}
+.quiz-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.quiz-btn.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.quiz-btn.wrong{
+  border-color:var(--red);
+  background:var(--red-soft);
+  color:var(--red);
+}
+.quiz-feedback{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:16px 20px;
+  font-size:14px;line-height:1.8;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:all .4s;
+}
+.quiz-feedback.show{
+  opacity:1;max-height:300px;
+  margin-bottom:16px;
+}
+.quiz-feedback b{color:var(--text)}
+.quiz-nav{
+  display:flex;justify-content:flex-end;
+  gap:12px;margin-top:20px;
+  padding-top:20px;border-top:1px solid var(--border);
+}
+.quiz-nav button{
+  padding:10px 20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.quiz-nav button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+}
+.quiz-nav button.primary{
+  background:var(--text);color:#fff;
+  border-color:var(--text);
+}
+.quiz-nav button.primary:hover{
+  background:#000;
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.quiz-nav button:disabled{
+  opacity:.4;cursor:not-allowed;
+}
+
+/* MCQ Options */
+.mcq-options{
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:20px;
+}
+.mcq-option{
+  padding:14px 18px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+  text-align:left;
+}
+.mcq-option:hover{
+  transform:translateY(-1px);
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.mcq-option.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.mcq-option.wrong{
+  border-color:var(--red);
+  background:var(--red-soft);
+  color:var(--red);
+}
+.mcq-option .opt-label{
+  font-weight:700;margin-right:8px;
+}
+
+/* Result Screen */
+.quiz-result{
+  text-align:center;padding:40px 20px;
+  display:none;
+}
+.quiz-result.show{display:block}
+.quiz-result .score-circle{
+  width:140px;height:140px;
+  border-radius:50%;
+  margin:0 auto 24px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--green-soft);
+  border:4px solid var(--green);
+}
+.quiz-result .score-num{
+  font-size:42px;font-weight:800;
+  color:var(--green);
+}
+.quiz-result .score-total{
+  font-size:14px;color:var(--text-dim);
+}
+.quiz-result h3{
+  font-family:var(--serif);
+  font-size:24px;margin-bottom:12px;
+  justify-content:center;
+}
+.quiz-result p{
+  color:var(--text-dim);font-size:15px;
+  max-width:400px;margin:0 auto 24px;
+}
+.quiz-result button{
+  padding:12px 28px;
+  background:var(--text);color:#fff;
+  border:none;border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+}
+
+/* Mock Interview */
+.interview-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.interview-bubble{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.interview-avatar{
+  width:52px;height:52px;
+  background:#EEF2FF;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+}
+.interview-question{
+  flex:1;
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:18px 22px;
+  font-size:15px;line-height:1.9;
+  position:relative;
+}
+.interview-question::before{
+  content:'';
+  position:absolute;
+  left:-8px;top:20px;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:8px solid #F6F5F2;
+}
+.interview-question b{color:#6366f1}
+.interview-think{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:14px;
+  margin:28px 0 16px;
+  font-style:italic;
+}
+.interview-btn{
+  display:block;
+  width:100%;
+  padding:14px 20px;
+  background:#EEF2FF;
+  border:2px dashed #6366f1;
+  color:#6366f1;
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+}
+.interview-btn:hover{
+  background:#E0E7FF;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(99,102,241,.15);
+}
+.interview-btn:active{
+  transform:translateY(0);
+}
+.interview-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .5s ease, margin-top .4s ease;
+}
+.interview-answer.show{
+  max-height:1200px;
+  margin-top:20px;
+}
+.answer-intro{
+  background:var(--green-soft);
+  color:var(--green);
+  padding:14px 20px;
+  border-radius:10px 10px 0 0;
+  font-size:14px;font-weight:600;
+}
+.answer-list{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 10px 10px;
+  padding:20px 24px;
+}
+.answer-item{
+  display:flex;gap:14px;
+  margin-bottom:16px;
+  align-items:flex-start;
+}
+.answer-item:last-child{margin-bottom:0}
+.answer-item-num{
+  width:28px;height:28px;
+  background:#6366f1;
+  color:#fff;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.answer-item-content b{
+  color:var(--text);font-size:14px;
+  display:block;margin-bottom:4px;
+}
+.answer-item-content{
+  font-size:13px;color:var(--text-dim);line-height:1.8;
+}
+
+/* Tips Section */
+.tips-list{margin:20px 0}
+.tip-item{
+  background:var(--card);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:18px 24px;
+  margin-bottom:12px;
+}
+.tip-item h4{
+  font-family:var(--serif);
+  font-size:17px;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.tip-item p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+.footer-links{
+  display:flex;gap:16px;justify-content:center;
+  margin-bottom:16px;
+}
+.footer-links a{color:var(--text-dim);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--text)}
+
+/* Copy Value */
+.copy-value{
+  position:relative;
+  cursor:pointer;
+  padding:2px 8px;
+  border-radius:5px;
+  background:rgba(6,182,212,.08);
+  transition:all .2s;
+  font-weight:600;
+  display:inline-block;
+  font-family:'JetBrains Mono',Menlo,monospace;
+}
+.copy-value:hover{
+  background:rgba(6,182,212,.18);
+}
+.copy-tooltip{
+  position:absolute;
+  top:-32px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--text);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:12px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s;
+  z-index:10;
+  font-family:var(--sans);
+  font-weight:500;
+}
+.copy-tooltip.show{
+  opacity:1;
+}
+
+/* Related Knowledge */
+.related-knowledge{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px 28px;
+  margin-top:32px;
+}
+.related-knowledge h4{
+  font-family:var(--serif);
+  font-size:16px;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.rk-list{display:flex;flex-direction:column;gap:10px}
+.rk-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;
+  background:#F6F5F2;
+  border-radius:8px;
+  font-size:14px;
+}
+.rk-item .rk-type{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:12px;
+  font-weight:600;
+  flex-shrink:0;
+  letter-spacing:.5px;
+}
+.rk-item .rk-type.pre{background:var(--blue-soft);color:var(--blue)}
+.rk-item .rk-type.post{background:var(--green-soft);color:var(--green)}
+.rk-item .rk-type.practice{background:var(--yellow-soft);color:#B8860B}
+.rk-item .rk-content{flex:1}
+.rk-item .rk-content a{color:var(--text);text-decoration:none;font-weight:500;transition:color .2s}
+.rk-item .rk-content a:hover{color:var(--accent)}
+.rk-item.disabled .rk-content{color:var(--text-soft);cursor:not-allowed}
+.rk-badge{
+  font-size:10px;
+  padding:2px 6px;
+  background:var(--text-soft);
+  color:#fff;
+  border-radius:4px;
+  margin-left:8px;
+  font-weight:500;
+}
+
+/* Shortcut */
+.shortcut{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:2px 8px;
+  background:#F6F5F2;
+  border-radius:4px;
+  font-size:12px;
+  font-family:'JetBrains Mono',Menlo,monospace;
+  color:var(--text);
+  border:1px solid var(--border);
+  white-space:nowrap;
+}
+.shortcut .shortcut-mac,.shortcut .shortcut-win{white-space:nowrap}
+.shortcut .divider{color:var(--text-soft)}
+body.os-mac .shortcut .shortcut-win,
+body.os-mac .shortcut .divider{display:none}
+body.os-win .shortcut .shortcut-mac,
+body.os-win .shortcut .divider{display:none}
+
+.tip-shortcut{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--text-dim);
+  display:flex;align-items:center;gap:8px;
+}
+.tip-shortcut .label{font-weight:600;color:var(--text-soft)}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .section{padding:40px 20px}
+  .section h2{font-size:24px}
+  .principle-grid{grid-template-columns:1fr}
+  .pillar-row{flex-direction:column}
+  .step-nav{flex-wrap:wrap}
+  .step-nav a{border-right:none;border-bottom:1px solid var(--border)}
+  .interview-card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">UI<span>设计</span>基础</div>
+  <div class="nav-links">
+    <a href="#step1">STEP 1</a>
+    <a href="#step2">STEP 2</a>
+    <a href="#step3">STEP 3</a>
+    <a href="#step4">STEP 4</a>
+    <a href="#plus">PLUS</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="icon">🏛️</div>
+  <div class="label">FOUR PRINCIPLES — FOUNDATION OF UI DESIGN</div>
+  <h1>好设计的底层逻辑<br>是什么？</h1>
+  <p class="subtitle">
+    为什么有的 App 用起来"顺眼又顺手"，有的却让人处处碰壁？<br>
+    答案藏在 UI 设计的四大基本原则里——它们是所有好设计的共同基因。
+  </p>
+  <div class="tags">
+    <span class="tag">设计基础</span>
+    <span class="tag">理论知识</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</section>
+
+<!-- Step Nav -->
+<div class="step-nav">
+  <a href="#step1">STEP 1 四大原则</a>
+  <a href="#step2">STEP 2 判断题</a>
+  <a href="#step3">STEP 3 选择题</a>
+  <a href="#step4">STEP 4 模拟面试</a>
+  <a href="#plus">PLUS 口诀总结</a>
+</div>
+
+<!-- STEP 1: Knowledge -->
+<section class="section" id="step1">
+  <div class="step-label">STEP 1</div>
+  <h2>UI 设计四大基本原则</h2>
+  <p class="lead">
+    UI 设计不是"凭感觉"的艺术，而是有章可循的科学。<br>
+    以下四大原则，是判断一个设计"好不好用"的基本标尺。
+  </p>
+
+  <!-- Four Principle Cards -->
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="emoji">🎯</div>
+      <h3>一致性原则</h3>
+      <div class="en">CONSISTENCY</div>
+      <p>视觉、操作、术语三统一，降低用户的学习成本和认知负担。</p>
+      <span class="tag">基础 · 最关键</span>
+    </div>
+
+    <div class="principle-card">
+      <div class="emoji">🧠</div>
+      <h3>易用性原则</h3>
+      <div class="en">USABILITY</div>
+      <p>降低认知成本，让用户"凭直觉"就能操作，不需要读说明书。</p>
+      <span class="tag">目标 · 用户友好</span>
+    </div>
+
+    <div class="principle-card">
+      <div class="emoji">📐</div>
+      <h3>层级性原则</h3>
+      <div class="en">HIERARCHY</div>
+      <p>信息主次分明，通过视觉权重建立优先级，引导用户视线。</p>
+      <span class="tag">手段 · 信息架构</span>
+    </div>
+
+    <div class="principle-card">
+      <div class="emoji">📱</div>
+      <h3>规范性原则</h3>
+      <div class="en">STANDARDIZATION</div>
+      <p>遵循平台设计规范（iOS HIG / Material Design），利用用户已有的心智模型。</p>
+      <span class="tag">保障 · 平台共识</span>
+    </div>
+  </div>
+
+  <!-- Consistency Deep Dive -->
+  <div class="know-card">
+    <div class="emoji">🎯</div>
+    <h3>一致性原则（Consistency）— 三统一</h3>
+    <p>一致性是四大原则的<b>基础</b>。一个不一致的设计，会让用户每到一个新页面都要"重新学习"，认知负担大大增加。</p>
+    <div class="pillar-row">
+      <div class="pillar-item">
+        <div class="pillar-icon">🎨</div>
+        <div class="pillar-title">视觉统一</div>
+        <div class="pillar-desc">颜色、字体、图标风格、圆角大小、间距规范保持一致</div>
+      </div>
+      <div class="pillar-item">
+        <div class="pillar-icon">👆</div>
+        <div class="pillar-title">操作统一</div>
+        <div class="pillar-desc">相同功能的交互方式一致，如返回按钮始终在同一位置</div>
+      </div>
+      <div class="pillar-item">
+        <div class="pillar-icon">📝</div>
+        <div class="pillar-title">术语统一</div>
+        <div class="pillar-desc">同一概念在不同场景用相同表述，不混用同义词</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usability Deep Dive -->
+  <div class="know-card">
+    <div class="emoji">🧠</div>
+    <h3>易用性原则（Usability）— 直觉化</h3>
+    <p>易用性是设计的<b>目标</b>。好的设计应该让用户"不用想就会用"——操作符合直觉，出错了也能轻松补救。</p>
+    <table class="std-table">
+      <tr><th>易用性维度</th><th>说明</th><th>设计方法</th></tr>
+      <tr><td><b>可识别性</b></td><td>用户能快速理解元素功能</td><td>使用通用图标 + 文字标签</td></tr>
+      <tr><td><b>可预测性</b></td><td>操作结果符合预期</td><td>遵循常见交互模式，不"反常识"</td></tr>
+      <tr><td><b>容错性</b></td><td>出错后能轻松挽回</td><td>提供撤销、确认、错误提示</td></tr>
+    </table>
+  </div>
+
+  <!-- Hierarchy Deep Dive -->
+  <div class="know-card">
+    <div class="emoji">📐</div>
+    <h3>层级性原则（Hierarchy）— 主次分明</h3>
+    <p>层级性是信息传达的<b>手段</b>。用户的注意力是有限的——通过大小、颜色、间距、留白的差异化，告诉用户"先看什么，后看什么"。</p>
+    <div class="conclusion" style="background:var(--accent-soft)">
+      <b>💡 层级四要素：</b>大小 ↑ / 颜色对比 ↑ / 间距留白 ↑ / 位置优势<br>
+      —— 越重要的元素，这四个维度的权重越高。
+    </div>
+  </div>
+
+  <!-- Standardization Deep Dive -->
+  <div class="know-card">
+    <div class="emoji">📱</div>
+    <h3>规范性原则（Standardization）— 遵循平台</h3>
+    <p>规范性是设计的<b>保障</b>。每个平台（iOS / Android / Web）都有自己的设计语言和用户习惯。遵循规范，就是利用用户已经建立的心智模型，降低学习成本。</p>
+    <table class="std-table">
+      <tr><th>平台</th><th>设计规范</th><th>核心理念</th></tr>
+      <tr><td>iOS</td><td><b>Human Interface Guidelines</b> (HIG)</td><td>简洁、优雅、重内容轻装饰</td></tr>
+      <tr><td>Android</td><td><b>Material Design</b></td><td>拟物化纸片、投影、动效</td></tr>
+      <tr><td>Web</td><td><b>WAI-ARIA / WCAG</b></td><td>无障碍访问、通用可用性</td></tr>
+    </table>
+  </div>
+
+  <div class="conclusion">
+    <b>📌 四原则的关系：</b><br>
+    一致性是<b>基础</b>，易用性是<b>目标</b>，层级性是<b>手段</b>，规范性是<b>保障</b>。<br>
+    四者相辅相成，共同构成了好设计的底层框架。
+  </div>
+
+  <!-- Related Knowledge -->
+  <div class="related-knowledge">
+    <h4>🔗 相关知识</h4>
+    <div class="rk-list">
+      <div class="rk-item">
+        <span class="rk-type pre">前置知识</span>
+        <div class="rk-content"><a href="../K03_格式塔原理/K03_交互课件.html">格式塔原理（K03）— 视觉认知的心理学基础</a></div>
+      </div>
+      <div class="rk-item disabled">
+        <span class="rk-type post">后续知识</span>
+        <div class="rk-content">尼尔森十大可用性启发式（K14）— 更系统的评估体系 <span class="rk-badge">即将上线</span></div>
+      </div>
+      <div class="rk-item">
+        <span class="rk-type practice">相关实践</span>
+        <div class="rk-content"><a href="../C01_扁平风格图标/C01_交互课件.html">扁平图标基础（C01）— 一致性在图标中的应用</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: True/False Quiz -->
+<section class="section" id="step2">
+  <div class="step-label">STEP 2</div>
+  <h2>「对吗？」判断题</h2>
+  <p class="lead">
+    判断下面关于设计原则的说法是对是错。<br>
+    觉得对就点 <b>✓</b>，觉得错就点 <b>✗</b>，每道题都有详细解析。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q1Progress">Q1 / 4</div>
+      <div class="quiz-score">答对 <b id="q1Score">0</b> / 4</div>
+    </div>
+
+    <div id="q1Container">
+      <div class="quiz-q" id="q1Question">
+        同一个 App 里，首页的返回按钮在左边，详情页的返回按钮在右边，这样可以增加新鲜感。
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-btn" onclick="checkTF(1, true)">✓ 对</button>
+        <button class="quiz-btn" onclick="checkTF(1, false)">✗ 错</button>
+      </div>
+      <div class="quiz-feedback" id="q1Feedback">
+        <b style="color:var(--red)">✗ 答错了</b><br>
+        这违反了<b>一致性原则</b>。返回按钮的位置属于"操作一致性"的范畴——用户已经形成了"返回按钮在左边"的肌肉记忆，随意改变位置会增加误触率和认知负担。设计应该追求一致，而不是"新鲜感"。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevTF()" id="q1Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextTF()" id="q1Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q1Result">
+      <div class="score-circle">
+        <div class="score-num" id="q1FinalScore">0</div>
+        <div class="score-total">/ 4 题</div>
+      </div>
+      <h3>🎉 判断题完成！</h3>
+      <p>四大原则是判断设计好坏的基本标尺。<br>记住：一致、易用、层级、规范——好设计缺一不可。</p>
+      <button onclick="resetTF()">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: Multiple Choice -->
+<section class="section" id="step3">
+  <div class="step-label">STEP 3</div>
+  <h2>选择：最符合原则的设计</h2>
+  <p class="lead">
+    从四个选项中，选出最符合 UI 设计原则的答案。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q2Progress">Q1 / 3</div>
+      <div class="quiz-score">答对 <b id="q2Score">0</b> / 3</div>
+    </div>
+
+    <div id="q2Container">
+      <div class="quiz-q" id="q2Question">
+        以下哪项不属于一致性原则的范畴？
+      </div>
+      <div class="mcq-options" id="q2Options">
+        <button class="mcq-option" onclick="checkMCQ(1, 'A')"><span class="opt-label">A.</span>视觉风格统一</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'B')"><span class="opt-label">B.</span>操作逻辑统一</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'C')"><span class="opt-label">C.</span>颜色越多越好</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'D')"><span class="opt-label">D.</span>术语表述统一</button>
+      </div>
+      <div class="quiz-feedback" id="q2Feedback">
+        <b style="color:var(--green)">✓ 正确答案：C</b><br>
+        一致性原则包含三个维度：<b>视觉统一</b>（颜色、字体、风格一致）、<b>操作统一</b>（交互方式一致）、<b>术语统一</b>（用词一致）。颜色越多反而会破坏视觉一致性——好的设计通常只用 2-3 种主色 + 少量辅助色。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevMCQ()" id="q2Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextMCQ()" id="q2Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q2Result">
+      <div class="score-circle" style="background:var(--accent-soft);border-color:var(--accent)">
+        <div class="score-num" id="q2FinalScore" style="color:var(--accent)">0</div>
+        <div class="score-total">/ 3 题</div>
+      </div>
+      <h3>🌟 选择题完成！</h3>
+      <p>把四大原则变成设计的"肌肉记忆"——<br>每次做完设计，用这四条原则自我检查一遍。</p>
+      <button onclick="resetMCQ()" style="background:var(--accent)">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4: Mock Interview -->
+<section class="section" id="step4">
+  <div class="step-label">STEP 4</div>
+  <h2>模拟面试</h2>
+  <p class="lead">
+    试试用四大原则回答真实的面试题，<br>
+    检验一下你对 UI 设计基础的理解深度。
+  </p>
+
+  <div class="interview-card">
+    <div class="interview-bubble">
+      <div class="interview-avatar">👨‍💼</div>
+      <div class="interview-question">
+        <b>面试官：</b>请说说你对 UI 设计四大基本原则的理解，并举一个你做过的例子说明如何运用一致性原则。
+      </div>
+    </div>
+    
+    <div class="interview-think">
+      🤔 先想想你的答案
+    </div>
+    
+    <button class="interview-btn" onclick="toggleInterviewAnswer()" id="interviewBtn">
+      💡 查看参考答案
+    </button>
+    
+    <div class="interview-answer" id="interviewAnswer">
+      <div class="answer-intro">
+        ✅ 参考答案：从以下 5 个要点展开回答
+      </div>
+      <div class="answer-list">
+        <div class="answer-item">
+          <div class="answer-item-num">1</div>
+          <div class="answer-item-content">
+            <b>一致性（Consistency）：视觉/操作/术语三统一</b>
+            一致性是四大原则的基础。通过统一的视觉语言、交互方式和术语表述，降低用户的学习成本和认知负担。例如，所有页面的返回按钮都放在左上角，用户不需要每次重新寻找。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">2</div>
+          <div class="answer-item-content">
+            <b>易用性（Usability）：操作直觉化，减少思考和出错</b>
+            易用性是设计的目标。好的设计应该让用户"凭感觉"就能操作，不需要读说明书。核心是可识别性、可预测性和容错性——让用户一眼看懂、操作有预期、出错能挽回。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">3</div>
+          <div class="answer-item-content">
+            <b>层级性（Hierarchy）：通过视觉权重建立信息优先级</b>
+            层级性是信息传达的手段。通过大小、颜色、间距、留白的差异化，引导用户的视线流动——让用户先看到最重要的信息，再看次要信息，避免"信息一片平"。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">4</div>
+          <div class="answer-item-content">
+            <b>规范性（Standardization）：遵循平台规范，利用心智模型</b>
+            规范性是设计的保障。每个平台有自己的设计语言和用户习惯（iOS HIG / Material Design）。遵循规范就是利用用户已有的心智模型，降低学习成本，让产品"看起来就会用"。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">5</div>
+          <div class="answer-item-content">
+            <b>四原则相辅相成：基础 · 目标 · 手段 · 保障</b>
+            一致性是基础，易用性是目标，层级性是手段，规范性是保障。四个原则不是孤立的，而是相互支撑的整体——一致的设计更易用，清晰的层级帮助规范落地，平台规范提供一致性的参考。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLUS: Tips -->
+<section class="section" id="plus">
+  <div class="step-label">PLUS</div>
+  <h2>设计四原则口诀</h2>
+  <p class="lead">
+    四大原则记不住？试试这个口诀——<br>
+    一句话一个原则，好记又好用。
+  </p>
+
+  <div class="tips-list">
+    <div class="tip-item">
+      <h4>🎯 ① 统一不混乱</h4>
+      <p>视觉、操作、术语三统一。颜色不乱用、字体不混搭、按钮位置不变来变去。一致性是用户体验的基石——用户越熟悉，用起来越顺手。</p>
+    </div>
+    <div class="tip-item">
+      <h4>🧠 ② 好用不费脑</h4>
+      <p>操作直觉化，用户"凭感觉"就能用。图标要通用、交互要可预测、出错能撤销。好设计就是让用户不用"停下来想"。</p>
+    </div>
+    <div class="tip-item">
+      <h4>📐 ③ 分明不迷路</h4>
+      <p>信息有主次，层级要清晰。通过大小、颜色、间距、留白建立视觉权重，告诉用户"先看什么、后看什么"。页面越有层级，用户越不容易迷路。</p>
+    </div>
+    <div class="tip-item">
+      <h4>📱 ④ 规范不犯错</h4>
+      <p>遵循平台设计规范，不" reinvent the wheel"。iOS 用 HIG、Android 用 Material Design，利用用户已经建立的心智模型——站在巨人的肩膀上做设计。</p>
+      <div class="tip-shortcut">
+        <span class="label">设计自查</span>
+        <span class="shortcut"><span class="shortcut-mac">⌘ + ⇧ + ?</span><span class="divider">|</span><span class="shortcut-win">Ctrl + Shift + ?</span></span>
+        <span>调出设计规范快速参考</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="conclusion" style="margin-top:32px">
+    <b>💡 四原则速记口诀：</b><br>
+    ① 统一不混乱 ② 好用不费脑 ③ 分明不迷路 ④ 规范不犯错<br>
+    —— 设计四原则，是好设计的"四条腿"，缺一条都站不稳。
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#step1">STEP 1 知识</a>
+    <a href="#step2">STEP 2 判断</a>
+    <a href="#step3">STEP 3 选择</a>
+    <a href="#step4">STEP 4 面试</a>
+    <a href="#plus">PLUS 口诀</a>
+  </div>
+  <p>UI 设计四大基本原则 — 好设计的底层逻辑</p>
+  <p style="margin-top:4px">UI 设计理论知识点 K01 · 交互课件</p>
+</footer>
+
+<script>
+// ========== True/False Quiz ==========
+const tfQuestions = [
+  {
+    q: '同一个 App 里，首页的返回按钮在左边，详情页的返回按钮在右边，这样可以增加新鲜感。',
+    answer: false,
+    explain: '<b style="color:var(--red)">✗ 答错了</b><br>这违反了<b>一致性原则</b>。返回按钮的位置属于"操作一致性"的范畴——用户已经形成了"返回按钮在左边"的肌肉记忆，随意改变位置会增加误触率和认知负担。设计应该追求一致，而不是"新鲜感"。'
+  },
+  {
+    q: '好的设计应该让用户"凭感觉"就能操作，不需要读说明书。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>这正是<b>易用性原则</b>的核心理念。好的设计追求"直觉化操作"——用户不需要思考就能理解界面如何使用。可识别性、可预测性、容错性，都是为了让用户"不用想就会用"。'
+  },
+  {
+    q: '页面上所有的文字大小都差不多，这样显得整齐统一。',
+    answer: false,
+    explain: '<b style="color:var(--red)">✗ 答错了</b><br>这违反了<b>层级性原则</b>。文字大小一致意味着信息没有主次之分，用户不知道先看什么、后看什么，反而增加了认知负担。好的设计通过字号差异建立视觉层级——标题大、正文小、辅助文字更小。'
+  },
+  {
+    q: 'iOS 应用应该遵循 iOS 的设计规范，Android 应用应该遵循 Android 的设计规范。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>这是<b>规范性原则</b>的要求。每个平台都有自己的设计语言（iOS HIG / Material Design）和用户习惯。遵循平台规范，就是利用用户已经建立的心智模型，降低学习成本。跨平台应用也应该尽量"入乡随俗"。'
+  }
+];
+
+let tfCur = 0;
+let tfScore = 0;
+let tfAnswered = new Array(tfQuestions.length).fill(false);
+let tfUserAnswer = new Array(tfQuestions.length).fill(null);
+
+function renderTF() {
+  const q = tfQuestions[tfCur];
+  document.getElementById('q1Question').textContent = q.q;
+  document.getElementById('q1Progress').textContent = `Q${tfCur+1} / ${tfQuestions.length}`;
+  document.getElementById('q1Score').textContent = tfScore;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  btns.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = false; });
+
+  const fb = document.getElementById('q1Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q1Prev').disabled = tfCur === 0;
+  document.getElementById('q1Next').disabled = !tfAnswered[tfCur];
+
+  if (tfAnswered[tfCur]) {
+    const correct = tfUserAnswer[tfCur] === q.answer;
+    const idx = tfUserAnswer[tfCur] ? 0 : 1;
+    btns[idx].classList.add(correct ? 'correct' : 'wrong');
+    btns.forEach(b => b.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q1Next').disabled = false;
+  }
+}
+
+function checkTF(idx, userAnswer) {
+  if (tfAnswered[tfCur]) return;
+  const correct = userAnswer === tfQuestions[tfCur].answer;
+  tfAnswered[tfCur] = true;
+  tfUserAnswer[tfCur] = userAnswer;
+  if (correct) tfScore++;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  const correctIdx = tfQuestions[tfCur].answer ? 0 : 1;
+  btns[correctIdx].classList.add('correct');
+  if (!correct) {
+    const wrongIdx = userAnswer ? 0 : 1;
+    btns[wrongIdx].classList.add('wrong');
+  }
+  btns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('q1Feedback');
+  fb.innerHTML = tfQuestions[tfCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q1Score').textContent = tfScore;
+  document.getElementById('q1Next').disabled = false;
+}
+
+function nextTF() {
+  if (tfCur < tfQuestions.length - 1) {
+    tfCur++;
+    renderTF();
+  } else {
+    document.getElementById('q1Container').style.display = 'none';
+    document.getElementById('q1Result').classList.add('show');
+    document.getElementById('q1FinalScore').textContent = tfScore;
+  }
+}
+
+function prevTF() {
+  if (tfCur > 0) {
+    tfCur--;
+    renderTF();
+  }
+}
+
+function resetTF() {
+  tfCur = 0;
+  tfScore = 0;
+  tfAnswered = new Array(tfQuestions.length).fill(false);
+  tfUserAnswer = new Array(tfQuestions.length).fill(null);
+  document.getElementById('q1Container').style.display = 'block';
+  document.getElementById('q1Result').classList.remove('show');
+  renderTF();
+}
+
+// ========== Multiple Choice Quiz ==========
+const mcqQuestions = [
+  {
+    q: '以下哪项不属于一致性原则的范畴？',
+    options: [
+      '视觉风格统一',
+      '操作逻辑统一',
+      '颜色越多越好',
+      '术语表述统一'
+    ],
+    answer: 2,
+    explain: '<b style="color:var(--green)">✓ 正确答案：C</b><br>一致性原则包含三个维度：<b>视觉统一</b>（颜色、字体、风格一致）、<b>操作统一</b>（交互方式一致）、<b>术语统一</b>（用词一致）。颜色越多反而会破坏视觉一致性——好的设计通常只用 2-3 种主色 + 少量辅助色。'
+  },
+  {
+    q: '层级性原则主要通过什么来实现？',
+    options: [
+      '只用一种颜色',
+      '大小/颜色/间距/留白的差异化',
+      '全部居中对齐',
+      '加更多装饰'
+    ],
+    answer: 1,
+    explain: '<b style="color:var(--green)">✓ 正确答案：B</b><br>层级性原则通过<b>视觉权重的差异化</b>来建立信息优先级：大小差异（重要的更大）、颜色差异（关键的更突出）、间距/留白差异（重要内容周围更透气）、位置差异（黄金位置放最重要的信息）。A 和 C 反而会让层级消失，D 是装饰不是层级。'
+  },
+  {
+    q: '为什么要遵循平台设计规范？',
+    options: [
+      '这样设计更省事',
+      '用户已经形成使用习惯，学习成本低',
+      '设计师必须这么做',
+      '规范规定不能改'
+    ],
+    answer: 1,
+    explain: '<b style="color:var(--green)">✓ 正确答案：B</b><br>遵循平台规范的核心原因是<b>利用用户已有的心智模型</b>。用户在使用 iOS 或 Android 时已经形成了固定的使用习惯（比如返回手势、通知中心、设置入口等）。遵循规范意味着用户不用重新学习，上手成本最低，这正是规范性原则的价值所在。'
+  }
+];
+
+let mcqCur = 0;
+let mcqScore = 0;
+let mcqAnswered = new Array(mcqQuestions.length).fill(false);
+let mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+
+function renderMCQ() {
+  const q = mcqQuestions[mcqCur];
+  document.getElementById('q2Question').textContent = q.q;
+  document.getElementById('q2Progress').textContent = `Q${mcqCur+1} / ${mcqQuestions.length}`;
+  document.getElementById('q2Score').textContent = mcqScore;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts.forEach((o, i) => {
+    o.classList.remove('correct','wrong');
+    o.disabled = false;
+    o.innerHTML = `<span class="opt-label">${String.fromCharCode(65+i)}.</span> ${q.options[i]}`;
+  });
+
+  const fb = document.getElementById('q2Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q2Prev').disabled = mcqCur === 0;
+  document.getElementById('q2Next').disabled = !mcqAnswered[mcqCur];
+
+  if (mcqAnswered[mcqCur]) {
+    const correct = mcqUserAnswer[mcqCur] === q.answer;
+    opts[q.answer].classList.add('correct');
+    if (!correct) opts[mcqUserAnswer[mcqCur]].classList.add('wrong');
+    opts.forEach(o => o.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q2Next').disabled = false;
+  }
+}
+
+function checkMCQ(idx, letter) {
+  if (mcqAnswered[mcqCur]) return;
+  const userIdx = letter.charCodeAt(0) - 65;
+  const correct = userIdx === mcqQuestions[mcqCur].answer;
+  mcqAnswered[mcqCur] = true;
+  mcqUserAnswer[mcqCur] = userIdx;
+  if (correct) mcqScore++;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts[mcqQuestions[mcqCur].answer].classList.add('correct');
+  if (!correct) opts[userIdx].classList.add('wrong');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('q2Feedback');
+  fb.innerHTML = mcqQuestions[mcqCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q2Score').textContent = mcqScore;
+  document.getElementById('q2Next').disabled = false;
+}
+
+function nextMCQ() {
+  if (mcqCur < mcqQuestions.length - 1) {
+    mcqCur++;
+    renderMCQ();
+  } else {
+    document.getElementById('q2Container').style.display = 'none';
+    document.getElementById('q2Result').classList.add('show');
+    document.getElementById('q2FinalScore').textContent = mcqScore;
+  }
+}
+
+function prevMCQ() {
+  if (mcqCur > 0) {
+    mcqCur--;
+    renderMCQ();
+  }
+}
+
+function resetMCQ() {
+  mcqCur = 0;
+  mcqScore = 0;
+  mcqAnswered = new Array(mcqQuestions.length).fill(false);
+  mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+  document.getElementById('q2Container').style.display = 'block';
+  document.getElementById('q2Result').classList.remove('show');
+  renderMCQ();
+}
+
+// ========== Copy Value ==========
+function copyValue(el) {
+  let text = el.textContent.replace(/📋/g, '').trim();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showCopyTooltip(el);
+    }).catch(() => {
+      fallbackCopy(text, el);
+    });
+  } else {
+    fallbackCopy(text, el);
+  }
+}
+
+function fallbackCopy(text, el) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    showCopyTooltip(el);
+  } catch (e) {
+    console.error('Copy failed:', e);
+  }
+  document.body.removeChild(textarea);
+}
+
+function showCopyTooltip(el) {
+  const existing = el.querySelector('.copy-tooltip');
+  if (existing) existing.remove();
+  
+  const tooltip = document.createElement('span');
+  tooltip.className = 'copy-tooltip show';
+  tooltip.textContent = '✓ 已复制';
+  el.appendChild(tooltip);
+  
+  setTimeout(() => {
+    tooltip.classList.remove('show');
+    setTimeout(() => {
+      if (tooltip.parentNode) tooltip.parentNode.removeChild(tooltip);
+    }, 200);
+  }, 1200);
+}
+
+// ========== Mock Interview Toggle ==========
+function toggleInterviewAnswer() {
+  const panel = document.getElementById('interviewAnswer');
+  const btn = document.getElementById('interviewBtn');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    btn.textContent = '🙈 收起参考答案';
+  } else {
+    btn.textContent = '💡 查看参考答案';
+  }
+}
+
+// ========== OS Shortcut Detection ==========
+function initShortcuts() {
+  const platform = navigator.platform || '';
+  const userAgent = navigator.userAgent || '';
+  const isMac = /Mac|iPod|iPhone|iPad/.test(platform) || /Macintosh|Mac OS X|iOS/.test(userAgent);
+  
+  if (isMac) {
+    document.body.classList.add('os-mac');
+  } else {
+    document.body.classList.add('os-win');
+  }
+}
+
+// Init
+window.addEventListener('load', () => {
+  initShortcuts();
+});
+
+renderTF();
+renderMCQ();
+</script>
+
+</body>
+</html>

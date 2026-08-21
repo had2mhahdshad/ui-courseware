@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K05 席克定律与米勒定律 | 图文教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#d97706;--accent:#F59E0B;--success:#10b981;--danger:#ef4444;--purple:#8b5cf6;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-dim:#64748b;--border:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.tutorial{max-width:720px;margin:0 auto;background:var(--card);min-height:100vh}
+.hero{background:linear-gradient(135deg,#92400e,#d97706);color:#fff;padding:48px 40px;text-align:center}
+.hero .ep{font-size:13px;opacity:.8;letter-spacing:2px;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero .subtitle{font-size:16px;opacity:.9}
+.hero .tags{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero .tag{background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px}
+.section{padding:32px 40px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h2::before{content:'';width:4px;height:24px;background:var(--primary);border-radius:2px}
+.formula-card{background:#1e293b;border-radius:16px;padding:32px;text-align:center;margin:16px 0}
+.formula-card .formula{font-family:'JetBrains Mono',monospace;font-size:26px;color:#fcd34d;font-weight:700;margin-bottom:16px}
+.formula-card .formula .n{color:#f59e0b}
+.formula-card .formula .magic{color:#34d399}
+.var-row{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.var-pill{background:#334155;border-radius:8px;padding:8px 16px;flex:1;min-width:120px;text-align:left}
+.var-pill .name{font-size:12px;color:#94a3b8}
+.var-pill .desc{font-size:14px;color:#e2e8f0;font-weight:600;margin-top:2px}
+.conclusion-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:20px;margin:16px 0;font-size:17px;font-weight:700;color:#92400e;text-align:center;line-height:1.9}
+.conclusion-box .arrow{font-size:24px;margin:0 8px}
+.demo-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.demo-col{background:var(--bg);border-radius:12px;padding:20px;text-align:center;border:2px solid var(--border)}
+.demo-col.fast{border-color:var(--success);background:#d1fae5}
+.demo-col.mid{border-color:var(--accent);background:#fef3c7}
+.demo-col.slow{border-color:var(--danger);background:#fee2e2}
+.demo-col .icon{font-size:28px;margin-bottom:8px}
+.demo-col .title{font-size:14px;font-weight:700;margin-bottom:4px}
+.demo-col .mt{font-size:13px;color:var(--text-dim)}
+.standard-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.standard-table th{background:var(--primary);color:#fff;padding:10px;text-align:left}
+.standard-table td{padding:10px;border-bottom:1px solid var(--border)}
+.standard-table tr:hover td{background:#f1f5f9}
+.chunk-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.chunk-card{background:var(--bg);border-radius:12px;padding:20px;text-align:center;border:2px solid transparent}
+.chunk-card.bad{border-color:var(--danger);background:#fef2f2}
+.chunk-card.good{border-color:var(--success);background:#f0fdf4}
+.chunk-card .label{font-weight:700;font-size:14px;margin-bottom:10px}
+.chunk-card.bad .label{color:var(--danger)}
+.chunk-card.good .label{color:var(--success)}
+.chunk-card .number{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.chunk-card.bad .number{color:var(--danger)}
+.chunk-card.good .number{color:var(--success)}
+.chunk-card .desc{font-size:13px;color:var(--text-dim);line-height:1.7}
+.magic-number{background:var(--bg);border-radius:16px;padding:24px;margin:16px 0;text-align:center}
+.magic-number .big-num{font-size:64px;font-weight:900;color:var(--success);line-height:1}
+.magic-number .range{font-size:18px;color:var(--text-dim);margin-top:4px}
+.magic-number .desc{font-size:14px;color:var(--text-dim);margin-top:12px}
+.disclosure-flow{display:flex;align-items:center;gap:10px;margin:16px 0;flex-wrap:wrap;justify-content:center}
+.disclosure-step{background:var(--bg);border-radius:12px;padding:16px;text-align:center;min-width:100px;flex:1}
+.disclosure-step .level{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.disclosure-step .count{font-size:22px;font-weight:800;color:var(--accent)}
+.disclosure-step .desc{font-size:12px;color:var(--text-dim);margin-top:4px}
+.disclosure-arrow{font-size:18px;color:var(--text-dim)}
+.case-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.case-card{border-radius:12px;padding:20px;border:2px solid}
+.case-card.bad{border-color:var(--danger);background:#fef2f2}
+.case-card.good{border-color:var(--success);background:#f0fdf4}
+.case-card h4{font-size:16px;margin-bottom:8px}
+.case-card.bad h4{color:var(--danger)}
+.case-card.good h4{color:var(--success)}
+.case-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+.checklist{background:var(--bg);border-radius:12px;padding:20px;margin:16px 0}
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.checklist-item:last-child{border-bottom:none}
+.checklist-item .check{width:24px;height:24px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
+.checklist-item .text{font-size:14px}
+.checklist-item .text b{color:var(--text)}
+.checklist-item .text .method{display:block;color:var(--text-dim);font-size:13px;margin-top:2px}
+.footer{text-align:center;padding:32px 40px;background:var(--bg);color:var(--text-dim);font-size:13px}
+.footer .next{margin-top:12px;font-size:14px;color:var(--primary);font-weight:600}
+.formula-note{background:#fef3c7;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#92400e}
+.formula-note b{color:#78350f}
+.chunk-examples{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.chunk-example{background:var(--bg);border-radius:8px;padding:12px;text-align:center;font-size:12px}
+.chunk-example .ex-num{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--primary);font-size:14px;margin-bottom:4px}
+.chunk-example .ex-label{color:var(--text-dim);font-size:12px}
+</style>
+</head>
+<body>
+<div class="tutorial">
+
+<div class="hero">
+  <div class="ep">EPISODE K05 · 理论知识点 · 图文教程</div>
+  <h1>席克定律与米勒定律</h1>
+  <div class="subtitle">决策心理学与信息分块</div>
+  <div class="tags">
+    <span class="tag">认知心理学定律</span>
+    <span class="tag">信息架构</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</div>
+
+<!-- Section 1: What are they -->
+<div class="section">
+  <h2>两个定律，一个目标</h2>
+  <p>席克定律（Hick's Law）和米勒定律（Miller's Law）是认知心理学中最经典的两个定律，也是 UI 信息架构设计的理论基石。</p>
+  <p style="margin-top:12px"><b>席克定律</b>讲的是<b>选择速度</b>：选项越多，决策越慢。<br>
+  <b>米勒定律</b>讲的是<b>记忆容量</b>：人脑一次只能 hold 住 7±2 个信息块。</p>
+  <p style="margin-top:12px">它们共同回答了一个问题：<b>你的界面应该放多少个选项？</b></p>
+</div>
+
+<!-- Section 2: Hick's Law -->
+<div class="section">
+  <h2>席克定律（Hick's Law）</h2>
+  <p>1952年，心理学家 <b>William Edmund Hick</b> 提出：人面对的选项越多，做出决策所需的时间就越长。</p>
+  <div class="formula-card">
+    <div class="formula">RT = a + b · log₂(<span class="n">n</span> + 1)</div>
+    <div class="var-row">
+      <div class="var-pill"><div class="name">RT</div><div class="desc">反应时间</div></div>
+      <div class="var-pill"><div class="name"><span style="color:#f59e0b">n</span> — 选项数</div><div class="desc">可供选择的数量</div></div>
+      <div class="var-pill"><div class="name">a, b</div><div class="desc">经验常数</div></div>
+    </div>
+  </div>
+  <div class="formula-note">
+    <b>设计师视角</b>：a和b是与人和设备相关的经验常数，设计师无法控制。我们能控制的是<b>n（选项数量）</b>——减少选项，就能加快决策。
+  </div>
+  <div class="conclusion-box">
+    选项越多 <span class="arrow">→</span> 决策越慢<br>
+    <span style="font-size:16px;margin-top:8px;display:block">核心策略：控制选项数量</span>
+  </div>
+</div>
+
+<!-- Section 3: Options Comparison -->
+<div class="section">
+  <h2>三种选项数量对比</h2>
+  <div class="demo-3col">
+    <div class="demo-col fast">
+      <div class="icon">🟢</div>
+      <div class="title">3 个选项</div>
+      <div class="mt">RT 最小<br>秒选</div>
+    </div>
+    <div class="demo-col mid">
+      <div class="icon">🟡</div>
+      <div class="title">6 个选项</div>
+      <div class="mt">RT 较大<br>需要扫一眼</div>
+    </div>
+    <div class="demo-col slow">
+      <div class="icon">🔴</div>
+      <div class="title">12 个选项</div>
+      <div class="mt">RT 最大<br>找半天</div>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">席克定律指出：反应时间与选项数量呈<b>对数关系</b>。选项翻倍，决策时间不会翻倍，但会显著增加。</p>
+</div>
+
+<!-- Section 4: Hick's Law Applications -->
+<div class="section">
+  <h2>席克定律的 UI 应用</h2>
+  <table class="standard-table">
+    <thead>
+      <tr><th>设计场景</th><th>建议数量</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>底部导航 Tab</td><td><b>3-5 个</b></td><td>移动端主流 App 的标准做法</td></tr>
+      <tr><td>下拉菜单</td><td><b>5-7 个</b></td><td>超过则考虑分组或折叠</td></tr>
+      <tr><td>设置页面</td><td><b>分组呈现</b></td><td>每组不超过 7 个选项</td></tr>
+      <tr><td>筛选条件</td><td><b>常用前置</b></td><td>高频选项露出，其余收起</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">主流 App 如微信、支付宝、Instagram 的底部导航都是 4-5 个 Tab，这不是巧合——而是席克定律的最佳实践。</p>
+</div>
+
+<!-- Section 5: Miller's Law -->
+<div class="section">
+  <h2>米勒定律（Miller's Law）</h2>
+  <p>1956年，认知心理学家 <b>George A. Miller</b> 发表了著名论文《神奇数字 7 ± 2》，指出人的<b>工作记忆</b>（working memory）容量是有限的。</p>
+  <div class="magic-number">
+    <div class="big-num">7</div>
+    <div class="range">± 2（5 ~ 9 个信息块）</div>
+    <div class="desc">人的工作记忆一次大约能 hold 住的信息"块"数量</div>
+  </div>
+  <div class="conclusion-box">
+    核心策略：<b>信息分块（Chunking）</b><br>
+    把大信息拆成 7 个以内的"块"<br>
+    <span style="font-size:16px;margin-top:8px;display:block">每块再继续拆 → 层层深入</span>
+  </div>
+</div>
+
+<!-- Section 6: Chunking Example -->
+<div class="section">
+  <h2>信息分块案例</h2>
+  <p>生活中最常见的分块例子就是手机号。同样是 11 位数字，哪种写法更好记？</p>
+  <div class="chunk-compare">
+    <div class="chunk-card bad">
+      <div class="label">✗ 不分块</div>
+      <div class="number">13812345678</div>
+      <div class="desc">11 个数字 → 超过 7±2<br>很难一口气记住</div>
+    </div>
+    <div class="chunk-card good">
+      <div class="label">✓ 分块记</div>
+      <div class="number">138-1234-5678</div>
+      <div class="desc">3 个"块" → 远小于 7<br>轻松记住</div>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:12px"><b>更多分块例子：</b></p>
+  <div class="chunk-examples">
+    <div class="chunk-example">
+      <div class="ex-num">6225 8812 3456 7890</div>
+      <div class="ex-label">银行卡号（4位一组）</div>
+    </div>
+    <div class="chunk-example">
+      <div class="ex-num">110101 19900101 1234</div>
+      <div class="ex-label">身份证号（6-8-4）</div>
+    </div>
+    <div class="chunk-example">
+      <div class="ex-num">8 6 4 2</div>
+      <div class="ex-label">验证码（4-6位）</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 7: Progressive Disclosure -->
+<div class="section">
+  <h2>联合应用：渐进式披露</h2>
+  <p>把席克定律（控制选项数量）和米勒定律（信息分块）结合起来，就得到了 UI 设计中最重要的策略之一——<b>渐进式披露（Progressive Disclosure）</b>。</p>
+  <p style="margin-top:8px">核心思想：<b>先给核心选项，次要内容收起来，需要时再展开。</b></p>
+  <div class="disclosure-flow">
+    <div class="disclosure-step">
+      <div class="level">第一层</div>
+      <div class="count">5 个</div>
+      <div class="desc">核心分类</div>
+    </div>
+    <div class="disclosure-arrow">→</div>
+    <div class="disclosure-step">
+      <div class="level">第二层</div>
+      <div class="count">6 个</div>
+      <div class="desc">每类子项</div>
+    </div>
+    <div class="disclosure-arrow">→</div>
+    <div class="disclosure-step">
+      <div class="level">第三层</div>
+      <div class="count">7 个</div>
+      <div class="desc">详细选项</div>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">每一层的选项数量都控制在 7±2 范围内，既降低了决策成本，又不丢失信息深度。</p>
+</div>
+
+<!-- Section 8: Good vs Bad -->
+<div class="section">
+  <h2>正反面案例</h2>
+  <div class="case-compare">
+    <div class="case-card bad">
+      <h4>✗ 反面：一屏堆 30 个设置</h4>
+      <p>所有选项平铺展示<br>用户在 30+ 选项中搜索<br><br>→ 决策慢、容易看错<br>→ 违反双定律<br>→ 用户说"找不到"</p>
+    </div>
+    <div class="case-card good">
+      <h4>✓ 正面：5 组 × 每组 6 个</h4>
+      <p>按功能分组（账户/隐私/通知/通用/关于）<br>每组 5-7 个选项<br><br>→ 先选组再找项<br>→ 每层都在 7±2 内<br>→ 清晰高效</p>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">设计的艺术不在于"功能多"，而在于"信息组织得好"。同样的功能，不同的组织方式，体验天差地别。</p>
+</div>
+
+<!-- Section 9: Design Checklist -->
+<div class="section">
+  <h2>设计自查清单</h2>
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>底部导航 Tab 数量在 3-5 个</b><span class="method">检查主导航的 Tab 数量，超过5个考虑"更多"收纳</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>下拉/菜单选项控制在 7 个以内</b><span class="method">超过则分组或折叠，用分隔线区隔</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>设置页按功能分组，每组 5-7 个</b><span class="method">30+ 选项拆成 5-6 组，高频组放顶部</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>长表单分步填写，每步 ≤ 7 个字段</b><span class="method">用进度条显示步骤，降低心理压力</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>数字/验证码分段显示</b><span class="method">手机号 3-4-4、银行卡 4位一组</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>"查看更多"模式收纳次要选项</b><span class="method">核心前置、次要收起，渐进式披露</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 10: Summary -->
+<div class="section">
+  <h2>三句口诀</h2>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--accent)">
+      <div style="width:36px;height:36px;background:var(--accent);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</div>
+      <div><b>选项少一点</b><br><span style="font-size:13px;color:var(--text-dim)">席克定律：3-5 个最舒服</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--success)">
+      <div style="width:36px;height:36px;background:var(--success);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</div>
+      <div><b>信息分块记</b><br><span style="font-size:13px;color:var(--text-dim)">米勒定律：7 ± 2 是上限</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--purple)">
+      <div style="width:36px;height:36px;background:var(--purple);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">3</div>
+      <div><b>先少后多变</b><br><span style="font-size:13px;color:var(--text-dim)">渐进式披露，层层深入</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>席克定律（1952）· 米勒定律（1956）</p>
+  <p>UI设计理论知识点 K05 · 图文教程</p>
+  <div class="next">上节回顾：K04 费茨定律——从数学公式到触控热区设计</div>
+</div>
+
+</div>
+</body>
+</html>

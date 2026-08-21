@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>扁平图标基础 — 从 0 到 1 设计「首页」图标</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF7;
+  --text:#2C2C2C;
+  --text-dim:#8A8A8A;
+  --text-soft:#B5B5B5;
+  --accent:#6366f1;
+  --accent-soft:#EEF2FF;
+  --green:#2D9A5E;
+  --green-soft:#DFF2E6;
+  --danger:#E85D4A;
+  --danger-soft:#FCE8E5;
+  --yellow:#F2C14E;
+  --yellow-soft:#FFF6DB;
+  --border:#E8E5E0;
+  --card:#FFFFFF;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.9;
+  font-size:16px;
+}
+
+/* Nav */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:700;font-size:14px;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;font-size:13px}
+.nav-links a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+
+/* Hero */
+.hero{
+  padding:80px 32px 60px;
+  text-align:center;
+  max-width:780px;
+  margin:0 auto;
+}
+.hero .icon{font-size:48px;margin-bottom:16px}
+.hero .label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:42px;font-weight:700;
+  line-height:1.4;margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:17px;color:var(--text-dim);
+  line-height:1.8;max-width:600px;margin:0 auto;
+}
+.hero .tags{
+  display:flex;gap:8px;justify-content:center;margin-top:28px;
+}
+.hero .tag{
+  border:1px solid var(--border);
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;color:var(--text-dim);
+}
+
+/* Step Nav */
+.step-nav{
+  display:flex;gap:0;justify-content:center;
+  padding:24px 32px;flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+}
+.step-nav a{
+  padding:10px 20px;font-size:14px;
+  color:var(--text-dim);text-decoration:none;
+  border-right:1px solid var(--border);
+  transition:all .2s;
+}
+.step-nav a:first-child{border-left:1px solid var(--border)}
+.step-nav a:hover,.step-nav a.active{color:var(--accent)}
+
+/* Sections */
+.section{
+  max-width:780px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.step-label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.section h2{
+  font-family:var(--serif);
+  font-size:30px;font-weight:700;
+  margin-bottom:28px;line-height:1.5;
+}
+.section h3{
+  font-family:var(--serif);
+  font-size:20px;font-weight:700;
+  margin-bottom:12px;line-height:1.5;
+  display:flex;align-items:center;gap:10px;
+}
+.section h3 .emoji{font-size:24px}
+.section p{margin-bottom:16px;color:#444}
+.section p b{color:var(--text);font-weight:600}
+.section .lead{
+  font-size:17px;line-height:2;
+  color:var(--text);margin-bottom:28px;
+}
+
+/* Knowledge Cards */
+.know-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-bottom:20px;
+}
+.know-card .emoji{font-size:28px;margin-bottom:12px}
+.know-card h3{margin-bottom:8px}
+
+/* Preview */
+.icon-preview{
+  display:flex;gap:24px;justify-content:center;
+  align-items:flex-start;
+  margin:24px 0;
+}
+.icon-item{
+  text-align:center;
+  cursor:pointer;
+  transition:transform .3s ease;
+  flex:0 0 auto;
+  width:160px;
+}
+.icon-item:hover{
+  transform:scale(1.05);
+}
+.icon-item:hover .icon-box{
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.icon-box{
+  width:100px;height:100px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--border);
+  transition:box-shadow .3s ease;
+  margin:0 auto;
+}
+.icon-box.light{background:#f8fafc}
+.icon-box.dark{background:#1e293b}
+.icon-box.gray{background:#94a3b8}
+.icon-label{font-size:13px;color:var(--text-dim);margin-top:8px}
+.icon-detail-panel{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .4s ease, margin-top .3s ease, padding-top .3s ease, border-top .3s ease;
+  text-align:left;
+  font-size:13px;
+  color:var(--text-dim);
+  line-height:1.8;
+}
+.icon-detail-panel.show{
+  max-height:300px;
+  margin-top:12px;
+  padding-top:12px;
+  padding-bottom:4px;
+  border-top:1px solid var(--border);
+}
+
+/* Step Flow */
+.step-flow{
+  display:flex;flex-direction:column;gap:0;
+  margin:24px 0;
+  position:relative;
+}
+.step-flow::before{
+  content:'';position:absolute;
+  left:24px;top:30px;bottom:30px;
+  width:2px;background:var(--border);
+}
+.flow-item{
+  display:flex;gap:20px;
+  padding:16px 0;
+  position:relative;
+}
+.flow-num{
+  width:50px;height:50px;
+  background:var(--card);
+  border:2px solid var(--accent);
+  color:var(--accent);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:18px;
+  flex-shrink:0;
+  position:relative;z-index:1;
+}
+.flow-content{
+  flex:1;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px 24px;
+}
+.flow-content h4{
+  font-size:16px;font-weight:700;margin-bottom:8px;
+}
+.flow-content p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Shortcut dual platform */
+.shortcut{
+  display:inline-flex;
+  align-items:center;
+  background:#F6F5F2;
+  padding:3px 10px;
+  border-radius:6px;
+  font-family:monospace;
+  font-size:12px;
+  margin-top:8px;
+  gap:6px;
+  color:var(--text-dim);
+}
+.shortcut-mac{color:#555}
+.shortcut-win{color:#555}
+.shortcut-divider{color:var(--text-soft);font-size:11px}
+/* OS-based shortcut hiding */
+body.os-mac .shortcut-win,
+body.os-mac .shortcut-divider{display:none}
+body.os-win .shortcut-mac,
+body.os-win .shortcut-divider{display:none}
+
+/* Boolean Compare */
+.boolean-compare{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:24px 0;
+}
+.bool-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;padding:24px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .3s ease;
+}
+.bool-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(0,0,0,.1);
+}
+.bool-card .title{
+  font-weight:700;font-size:15px;margin-bottom:12px;
+}
+.bool-visual{
+  height:90px;background:#F6F5F2;
+  border-radius:8px;position:relative;
+  margin-bottom:12px;display:flex;
+  align-items:center;justify-content:center;
+}
+.bool-visual svg{width:56px;height:56px}
+.bool-card .desc{font-size:13px;color:var(--text-dim);line-height:1.8;text-align:left}
+.bool-card .detail-panel{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .4s ease, margin-top .3s ease, padding-top .3s ease;
+  font-size:13px;
+  color:var(--text-dim);
+  text-align:left;
+  line-height:1.8;
+}
+.bool-card .detail-panel.show{
+  max-height:300px;
+  margin-top:12px;
+  padding-top:12px;
+  padding-bottom:4px;
+  border-top:1px solid var(--border);
+}
+
+/* Standard Table */
+.std-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;font-size:14px;
+  background:var(--card);
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.std-table th{
+  background:#F6F5F2;padding:14px 16px;
+  text-align:left;font-weight:600;
+  border-bottom:2px solid var(--border);
+}
+.std-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.std-table tr:last-child td{border-bottom:none}
+.std-table code{
+  background:#E8ECF4;padding:2px 6px;
+  border-radius:3px;font-family:monospace;
+  font-size:12px;color:var(--accent);
+}
+
+/* Export */
+.export-tags{
+  display:flex;gap:12px;margin:16px 0;flex-wrap:wrap
+}
+.export-tag{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;padding:12px 16px;
+  text-align:center;flex:1;min-width:120px;
+}
+.export-tag .format{font-size:18px;font-weight:700;color:var(--accent)}
+.export-tag .use{font-size:12px;color:var(--text-dim);margin-top:4px}
+
+/* Copy Value */
+.copy-value{
+  cursor:pointer;
+  background:var(--accent-soft);
+  padding:2px 8px;
+  border-radius:5px;
+  transition:background .2s;
+  font-family:monospace;
+  font-size:13px;
+  color:var(--accent);
+  display:inline-block;
+}
+.copy-value:hover{
+  background:#E0E7FF;
+}
+.copy-tooltip{
+  position:fixed;
+  background:var(--text);
+  color:#fff;
+  padding:6px 12px;
+  border-radius:6px;
+  font-size:12px;
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:all .2s;
+  z-index:1000;
+}
+.copy-tooltip.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Related Knowledge */
+.related-knowledge{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-top:24px;
+}
+.related-knowledge h3{
+  margin-bottom:16px;
+  font-size:18px;
+}
+.knowledge-chips{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.knowledge-chip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  transition:all .2s;
+  text-decoration:none;
+  color:var(--text);
+}
+.knowledge-chip.available{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  cursor:pointer;
+}
+.knowledge-chip.available:hover{
+  transform:translateX(4px);
+  box-shadow:0 4px 12px rgba(99,102,241,.15);
+}
+.knowledge-chip.disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+.knowledge-chip .chip-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+}
+.knowledge-chip .chip-label .chip-icon{font-size:18px}
+.knowledge-chip .chip-label .chip-type{
+  font-size:11px;
+  color:var(--text-dim);
+  margin-right:4px;
+}
+.knowledge-chip .chip-badge{
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+}
+.knowledge-chip.disabled .chip-badge{
+  background:var(--text-soft);
+}
+
+/* Interactive Boolean Demo */
+.bool-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.bool-demo h3{margin-bottom:16px}
+.bool-demo-canvas{
+  height:180px;
+  background:#F6F5F2;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:16px;
+  position:relative;
+  overflow:hidden;
+}
+.bool-demo-canvas svg{
+  width:140px;
+  height:140px;
+}
+.bool-demo-buttons{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.bool-demo-btn{
+  flex:1;
+  min-width:80px;
+  padding:10px 12px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:8px;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+  font-weight:600;
+  color:var(--text);
+}
+.bool-demo-btn:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(99,102,241,.1)}
+.bool-demo-btn:active{transform:translateY(0)}
+.bool-demo-btn.active{
+  background:var(--accent);
+  color:#fff;
+  border-color:var(--accent);
+  transform:translateY(0);
+  box-shadow:none;
+}
+.bool-demo-desc{
+  font-size:13px;
+  color:var(--text-dim);
+  margin-top:12px;
+  line-height:1.8;
+  text-align:left;
+}
+
+/* Pixel Grid Demo */
+.pixel-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.pixel-demo h3{margin-bottom:16px}
+.pixel-grid-wrap{
+  display:flex;
+  justify-content:center;
+  gap:24px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.pixel-grid-compare{
+  text-align:center;
+}
+.pixel-grid-compare h4{
+  font-size:13px;
+  color:var(--text-dim);
+  margin-bottom:8px;
+  font-weight:600;
+}
+.pixel-grid{
+  display:grid;
+  grid-template-columns:repeat(8, 1fr);
+  gap:1px;
+  background:var(--border);
+  border:2px solid var(--border);
+  border-radius:4px;
+  width:160px;
+}
+.pixel-cell{
+  aspect-ratio:1;
+  background:#fff;
+  cursor:pointer;
+  transition:background .1s;
+}
+.pixel-cell.filled{
+  background:var(--accent);
+}
+.pixel-cell:hover{
+  background:var(--accent-soft);
+}
+.pixel-cell.filled:hover{
+  background:var(--accent);
+}
+.pixel-cell.offgrid{
+  background:var(--accent);
+  opacity:.6;
+}
+.pixel-demo-controls{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+.pixel-demo-controls button{
+  padding:6px 14px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:6px;
+  font-size:12px;
+  cursor:pointer;
+  font-family:var(--sans);
+  color:var(--text);
+}
+.pixel-demo-controls button:hover{border-color:var(--text)}
+.pixel-demo-hint{
+  font-size:13px;
+  color:var(--text-dim);
+  text-align:left;
+  line-height:1.8;
+}
+
+/* Quiz Section */
+.quiz-section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.quiz-progress{font-size:13px;color:var(--text-dim)}
+.quiz-score{font-size:13px;color:var(--text-dim)}
+.quiz-score b{color:var(--green);font-size:16px}
+.quiz-q{
+  font-size:18px;font-weight:600;
+  line-height:1.7;margin-bottom:20px;
+}
+.quiz-options{
+  display:flex;gap:12px;margin-bottom:20px;
+}
+.quiz-btn{
+  flex:1;padding:16px 20px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .25s ease;
+  font-family:var(--sans);
+}
+.quiz-btn:hover{border-color:var(--text);background:var(--card);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.quiz-btn:active{transform:translateY(0)}
+.quiz-btn.correct{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.quiz-btn.wrong{border-color:var(--danger);background:var(--danger-soft);color:var(--danger)}
+.quiz-feedback{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:16px 20px;
+  font-size:14px;line-height:1.8;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:all .4s;
+}
+.quiz-feedback.show{opacity:1;max-height:300px;margin-bottom:16px}
+.quiz-feedback b{color:var(--text)}
+.quiz-nav{
+  display:flex;justify-content:flex-end;
+  gap:12px;margin-top:20px;
+  padding-top:20px;border-top:1px solid var(--border);
+}
+.quiz-nav button{
+  padding:10px 20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.quiz-nav button:hover{border-color:var(--text)}
+.quiz-nav button.primary{background:var(--text);color:#fff;border-color:var(--text)}
+.quiz-nav button.primary:hover{background:#000}
+.quiz-nav button:disabled{opacity:.4;cursor:not-allowed}
+
+/* MCQ */
+.mcq-options{
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:20px;
+}
+.mcq-option{
+  padding:14px 18px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;transition:all .25s ease;
+  font-family:var(--sans);
+  text-align:left;
+}
+.mcq-option:hover{border-color:var(--text);background:var(--card);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.mcq-option:active{transform:translateY(0)}
+.mcq-option.correct{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.mcq-option.wrong{border-color:var(--danger);background:var(--danger-soft);color:var(--danger)}
+.mcq-option .opt-label{font-weight:700;margin-right:8px}
+
+/* Result Screen */
+.quiz-result{
+  text-align:center;padding:40px 20px;
+  display:none;
+}
+.quiz-result.show{display:block}
+.quiz-result .score-circle{
+  width:140px;height:140px;
+  border-radius:50%;
+  margin:0 auto 24px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--accent-soft);
+  border:4px solid var(--accent);
+}
+.quiz-result .score-num{
+  font-size:42px;font-weight:800;
+  color:var(--accent);
+}
+.quiz-result .score-total{
+  font-size:14px;color:var(--text-dim);
+}
+.quiz-result h3{
+  font-family:var(--serif);
+  font-size:24px;margin-bottom:12px;
+  justify-content:center;
+}
+.quiz-result p{
+  color:var(--text-dim);font-size:15px;
+  max-width:400px;margin:0 auto 24px;
+}
+.quiz-result button{
+  padding:12px 28px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+}
+
+/* Matching Quiz */
+.match-area{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:20px 0;
+}
+.match-col h4{
+  font-size:14px;color:var(--text-dim);
+  margin-bottom:10px;font-weight:600;
+}
+.match-item{
+  padding:12px 16px;
+  background:var(--bg);
+  border:2px solid var(--border);
+  border-radius:8px;
+  font-size:14px;
+  cursor:pointer;transition:all .25s ease;
+  margin-bottom:8px;
+}
+.match-item:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(99,102,241,.1)}
+.match-item:active{transform:translateY(0)}
+.match-item.selected{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+.match-item.matched-ok{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+  cursor:default;
+}
+.match-item.matched-wrong{
+  border-color:var(--danger);
+  background:var(--danger-soft);
+  color:var(--danger);
+}
+
+/* Mock Interview */
+.interview-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.interview-bubble{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.interview-avatar{
+  width:52px;height:52px;
+  background:var(--accent-soft);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+}
+.interview-question{
+  flex:1;
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:18px 22px;
+  font-size:15px;line-height:1.9;
+  position:relative;
+}
+.interview-question::before{
+  content:'';
+  position:absolute;
+  left:-8px;top:20px;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:8px solid #F6F5F2;
+}
+.interview-question b{color:var(--accent)}
+.interview-think{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:14px;
+  margin:28px 0 16px;
+  font-style:italic;
+}
+.interview-btn{
+  display:block;
+  width:100%;
+  padding:14px 20px;
+  background:var(--accent-soft);
+  border:2px dashed var(--accent);
+  color:var(--accent);
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+}
+.interview-btn:hover{
+  background:#E0E7FF;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(99,102,241,.15);
+}
+.interview-btn:active{
+  transform:translateY(0);
+}
+.interview-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .5s ease, margin-top .4s ease;
+}
+.interview-answer.show{
+  max-height:1200px;
+  margin-top:20px;
+}
+.answer-intro{
+  background:var(--green-soft);
+  color:var(--green);
+  padding:14px 20px;
+  border-radius:10px 10px 0 0;
+  font-size:14px;font-weight:600;
+}
+.answer-list{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 10px 10px;
+  padding:20px 24px;
+}
+.answer-item{
+  display:flex;gap:14px;
+  margin-bottom:16px;
+  align-items:flex-start;
+}
+.answer-item:last-child{margin-bottom:0}
+.answer-item-num{
+  width:28px;height:28px;
+  background:var(--accent);
+  color:#fff;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.answer-item-content b{
+  color:var(--text);font-size:14px;
+  display:block;margin-bottom:4px;
+}
+.answer-item-content{
+  font-size:13px;color:var(--text-dim);line-height:1.8;
+}
+
+/* Tips */
+.tips-list{margin:20px 0}
+.tip-item{
+  background:var(--card);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:18px 24px;
+  margin-bottom:12px;
+}
+.tip-item h4{
+  font-family:var(--serif);
+  font-size:17px;margin-bottom:6px;
+}
+.tip-item p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Conclusion */
+.conclusion{
+  background:var(--yellow-soft);
+  border-radius:12px;
+  padding:24px 28px;
+  margin:24px 0;
+  font-size:16px;line-height:2;
+}
+.conclusion b{color:#92400e}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+.footer-links{
+  display:flex;gap:16px;justify-content:center;
+  margin-bottom:16px;
+}
+.footer-links a{color:var(--text-dim);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--text)}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .section{padding:40px 20px}
+  .section h2{font-size:24px}
+  .icon-preview{flex-wrap:wrap}
+  .boolean-compare{grid-template-columns:1fr}
+  .match-area{grid-template-columns:1fr}
+  .step-nav{flex-wrap:wrap}
+  .step-nav a{border-right:none;border-bottom:1px solid var(--border)}
+  .bool-demo-buttons .bool-demo-btn{min-width:60px;font-size:12px;padding:8px 6px}
+  .pixel-grid-wrap{flex-direction:column;align-items:center}
+  .interview-card{padding:24px 20px}
+  .interview-avatar{width:44px;height:44px;font-size:22px}
+  .interview-question{padding:14px 16px;font-size:14px}
+  .answer-list{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">UI<span>设计</span>基础</div>
+  <div class="nav-links">
+    <a href="#step1">STEP 1</a>
+    <a href="#step2">STEP 2</a>
+    <a href="#step3">STEP 3</a>
+    <a href="#step4">STEP 4</a>
+    <a href="#plus">PLUS</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="icon">🎨</div>
+  <div class="label">FLAT ICON — LEARNING BY MAKING</div>
+  <h1>只用矩形和三角形<br>能画出一个图标吗？</h1>
+  <p class="subtitle">
+    当然可以。扁平风格（Flat Design）图标就是用最基本的几何形状，<br>
+    加上 Boolean 运算，组合出千变万化的视觉符号。
+  </p>
+  <div class="tags">
+    <span class="tag">Figma 实操</span>
+    <span class="tag">扁平风格</span>
+    <span class="tag">约 5 分钟</span>
+  </div>
+</section>
+
+<!-- Step Nav -->
+<div class="step-nav">
+  <a href="#step1">STEP 1 扁平图标基础</a>
+  <a href="#step2">STEP 2 连连看</a>
+  <a href="#step3">STEP 3 选择题</a>
+  <a href="#step4">STEP 4 模拟面试</a>
+  <a href="#plus">PLUS 设计四要素</a>
+</div>
+
+<!-- STEP 1: Knowledge -->
+<section class="section" id="step1">
+  <div class="step-label">STEP 1</div>
+  <h2>扁平图标基础</h2>
+  <p class="lead">
+    扁平风格是 UI 设计中最基础的图标风格。<br>
+    它的核心只有一句话——<b>用纯色块和简单几何形状传递信息</b>。
+  </p>
+
+  <div class="icon-preview">
+    <div class="icon-item" onclick="toggleIconDetail('light-detail')">
+      <div class="icon-box light">
+        <svg width="56" height="56" viewBox="0 0 48 48">
+          <path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/>
+          <rect x="21" y="26" width="6" height="10" fill="white"/>
+          <circle cx="30" cy="23" r="2" fill="white"/>
+        </svg>
+      </div>
+      <div class="icon-label">浅色背景</div>
+      <div class="icon-detail-panel" id="light-detail">
+        <b>浅色背景适配要点：</b><br>
+        · 使用饱和的主色（<span class="copy-value" onclick="copyValue(this);event.stopPropagation()">#6366f1</span>）作为图标填充色<br>
+        · 镂空部分透出背景色（白色/浅灰），形成负形对比<br>
+        · 适用于导航栏、工具栏等浅色界面
+      </div>
+    </div>
+    <div class="icon-item" onclick="toggleIconDetail('dark-detail')">
+      <div class="icon-box dark">
+        <svg width="56" height="56" viewBox="0 0 48 48">
+          <path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/>
+          <rect x="21" y="26" width="6" height="10" fill="#1e293b"/>
+          <circle cx="30" cy="23" r="2" fill="#1e293b"/>
+        </svg>
+      </div>
+      <div class="icon-label">深色背景</div>
+      <div class="icon-detail-panel" id="dark-detail">
+        <b>深色背景适配要点：</b><br>
+        · 镂空部分透出深色背景（<span class="copy-value" onclick="copyValue(this);event.stopPropagation()">#1e293b</span>）<br>
+        · 深色模式下图标颜色可适当提亮，保证对比度<br>
+        · 检查图标在深色模式下的辨识度，避免颜色过暗
+      </div>
+    </div>
+    <div class="icon-item" onclick="toggleIconDetail('gray-detail')">
+      <div class="icon-box gray">
+        <svg width="56" height="56" viewBox="0 0 48 48">
+          <path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/>
+          <rect x="21" y="26" width="6" height="10" fill="#94a3b8"/>
+          <circle cx="30" cy="23" r="2" fill="#94a3b8"/>
+        </svg>
+      </div>
+      <div class="icon-label">灰色背景</div>
+      <div class="icon-detail-panel" id="gray-detail">
+        <b>中灰背景测试要点：</b><br>
+        · 中灰色（<span class="copy-value" onclick="copyValue(this);event.stopPropagation()">#94a3b8</span>）是检验图标的"试金石"<br>
+        · 如果在中灰背景下图标依然清晰，说明对比度足够<br>
+        · 常用于验证图标在各种场景下的可识别性
+      </div>
+    </div>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">✨</div>
+    <h3>扁平风格三要素</h3>
+    <table class="std-table">
+      <tr><th>要素</th><th>说明</th><th>示例</th></tr>
+      <tr><td><b>纯色填充</b></td><td>只用单一颜色，不加渐变</td><td><span class="copy-value" onclick="copyValue(this)">#6366f1</span> 纯紫色</td></tr>
+      <tr><td><b>无阴影</b></td><td>不使用投影、内阴影</td><td>干净的色块边缘</td></tr>
+      <tr><td><b>简洁形状</b></td><td>用基础几何形状组合</td><td>矩形 + 三角形 = 房屋</td></tr>
+    </table>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">📐</div>
+    <h3>设计流程：6步完成一个图标</h3>
+    <div class="step-flow">
+      <div class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <h4>创建画板（Frame） + 网格</h4>
+          <p><span class="copy-value" onclick="copyValue(this)">48 × 48 px</span> Frame + <span class="copy-value" onclick="copyValue(this)">4 px</span> 细网格 + <span class="copy-value" onclick="copyValue(this)">24 px</span> 安全区，确保对齐精准</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">F</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">F</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <h4>绘制基础形状</h4>
+          <p>用矩形工具（Rectangle Tool）画墙体，用钢笔工具（Pen Tool）画屋顶三角形，组合出主体轮廓</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">R 矩形 / P 钢笔</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">R 矩形 / P 钢笔</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <h4>布尔运算（Boolean Operation）合并</h4>
+          <p>Union 把墙体和屋顶合并为单一路径，消除重叠边线</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">⌘ + Shift + U</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">Ctrl + Shift + U</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <h4>Subtract 镂空</h4>
+          <p>用矩形和圆形，在主体上"挖"出门和窗户</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">⌘ + Shift + S</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">Ctrl + Shift + S</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <h4>视觉平衡检查</h4>
+          <p>检查对称、留白、重心，在深色背景上预览镂空效果</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-content">
+          <h4>组件（Component）化 + 导出</h4>
+          <p>创建 Component 方便复用，导出 SVG / PNG / PDF 三种格式</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">⌘ + Option + K</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">Ctrl + Alt + K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Boolean Demo -->
+  <div class="bool-demo">
+    <div class="emoji" style="font-size:28px;margin-bottom:12px">🔗</div>
+    <h3>交互式布尔运算演示</h3>
+    <p style="font-size:14px;color:var(--text-dim);margin-bottom:16px">点击下方按钮，观察方形和圆形组合后的不同效果。</p>
+    <div class="bool-demo-canvas">
+      <svg id="boolDemoSvg" viewBox="0 0 100 100">
+        <defs>
+          <clipPath id="boolClip">
+            <rect x="20" y="30" width="40" height="40" rx="4"/>
+          </clipPath>
+        </defs>
+        <!-- Union: both shapes filled -->
+        <g id="boolUnion">
+          <rect x="20" y="30" width="40" height="40" rx="4" fill="#6366f1"/>
+          <circle cx="55" cy="50" r="22" fill="#6366f1"/>
+        </g>
+        <!-- Subtract: square with circle cut out -->
+        <g id="boolSubtract" style="display:none">
+          <rect x="20" y="30" width="40" height="40" rx="4" fill="#6366f1"/>
+          <circle cx="55" cy="50" r="22" fill="#F6F5F2"/>
+        </g>
+        <!-- Intersect: only overlapping area -->
+        <g id="boolIntersect" style="display:none">
+          <path d="M55,30 L55,70 A22,22 0 0,1 40,48 L40,30 Z" fill="#6366f1"/>
+        </g>
+        <!-- Exclude: non-overlapping areas -->
+        <g id="boolExclude" style="display:none">
+          <path d="M20,30 L40,30 L40,48 A22,22 0 0,0 55,70 L20,70 Z" fill="#6366f1"/>
+          <path d="M55,30 A22,22 0 0,1 77,50 A22,22 0 0,1 55,70 L55,30 Z" fill="#6366f1" opacity="0.5"/>
+          <circle cx="55" cy="50" r="22" fill="none" stroke="#6366f1" stroke-width="2" stroke-dasharray="4 3"/>
+        </g>
+      </svg>
+    </div>
+    <div class="bool-demo-buttons">
+      <button class="bool-demo-btn active" onclick="setBoolMode('union', this)">Union 合并</button>
+      <button class="bool-demo-btn" onclick="setBoolMode('subtract', this)">Subtract 减去</button>
+      <button class="bool-demo-btn" onclick="setBoolMode('intersect', this)">Intersect 交集</button>
+      <button class="bool-demo-btn" onclick="setBoolMode('exclude', this)">Exclude 差集</button>
+    </div>
+    <div class="bool-demo-desc" id="boolDemoDesc">
+      <b>Union（合并）：</b>两个形状合并为一个整体，重叠区域融合。
+    </div>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">🔗</div>
+    <h3>Boolean 运算：图标设计的核心</h3>
+    <p>布尔运算是把多个形状组合成新形状的操作。最常用的是两种：</p>
+    <div class="boolean-compare">
+      <div class="bool-card" onclick="toggleBoolDetail('union-detail')">
+        <div class="title">Union（合并）</div>
+        <div class="bool-visual">
+          <svg viewBox="0 0 48 48">
+            <rect x="12" y="20" width="24" height="16" rx="2" fill="#6366f1" opacity="0.6"/>
+            <path d="M12 20 L24 8 L36 20 Z" fill="#6366f1" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="desc">两个形状 → 合并成一个<br>消除重叠的边线</div>
+        <div class="detail-panel" id="union-detail">
+          <b>Union 使用场景：</b><br>
+          · 将墙体和屋顶合并为完整的房屋轮廓<br>
+          · 多个基础形状组合成复杂图标主体<br>
+          · 合并后锚点自动融合，路径更简洁
+        </div>
+      </div>
+      <div class="bool-card" onclick="toggleBoolDetail('subtract-detail')">
+        <div class="title">Subtract（减去）</div>
+        <div class="bool-visual">
+          <svg viewBox="0 0 48 48">
+            <path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/>
+            <rect x="21" y="26" width="6" height="10" fill="white"/>
+          </svg>
+        </div>
+        <div class="desc">顶层形状 → 在底层"挖洞"<br>形成镂空效果</div>
+        <div class="detail-panel" id="subtract-detail">
+          <b>Subtract 使用场景：</b><br>
+          · 在主体上"挖"出门、窗户等细节<br>
+          · 创建甜甜圈、环形等中空形状<br>
+          · 注意图层顺序：顶层形状决定镂空区域
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pixel Grid Interactive Demo -->
+  <div class="pixel-demo">
+    <div class="emoji" style="font-size:28px;margin-bottom:12px">🔲</div>
+    <h3>像素对齐（Pixel Align）互动演示</h3>
+    <p style="font-size:14px;color:var(--text-dim);margin-bottom:16px">点击左侧对齐网格的像素，画出一条线。对比右侧未对齐的效果，理解为什么对齐很重要。</p>
+    <div class="pixel-grid-wrap">
+      <div class="pixel-grid-compare">
+        <h4>✓ 像素对齐</h4>
+        <div class="pixel-grid" id="pixelGridAligned"></div>
+      </div>
+      <div class="pixel-grid-compare">
+        <h4>✗ 未对齐（模糊）</h4>
+        <div class="pixel-grid" id="pixelGridBlurred"></div>
+      </div>
+    </div>
+    <div class="pixel-demo-controls">
+      <button onclick="resetPixelGrid()">重置</button>
+      <button onclick="drawPixelExample()">画示例线</button>
+    </div>
+    <div class="pixel-demo-hint">
+      锚点对齐到像素网格 → 导出后边缘锐利清晰<br>
+      锚点偏离像素 → 抗锯齿导致边缘模糊发虚
+    </div>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">📤</div>
+    <h3>导出格式与用途</h3>
+    <div class="export-tags">
+      <div class="export-tag">
+        <div class="format">SVG</div>
+        <div class="use">开发使用 · 矢量（Vector）</div>
+      </div>
+      <div class="export-tag">
+        <div class="format">PNG</div>
+        <div class="use">演示展示 · 1x / 2x / 3x</div>
+      </div>
+      <div class="export-tag">
+        <div class="format">PDF</div>
+        <div class="use">打印存档 · 矢量</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--text-dim);margin-top:8px">
+      SVG 和 PDF 是矢量图形（Vector Graphics）格式——放大不模糊、文件小，是开发和打印的首选。
+    </p>
+  </div>
+
+  <!-- Related Knowledge -->
+  <div class="related-knowledge">
+    <h3>📚 相关知识</h3>
+    <div class="knowledge-chips">
+      <a class="knowledge-chip available" href="../K04_费茨定律/K04_交互课件.html">
+        <div class="chip-label">
+          <span class="chip-icon">🎯</span>
+          <span><span class="chip-type">前置知识</span>费茨定律基础（K04）</span>
+        </div>
+        <span class="chip-badge">已上线</span>
+      </a>
+      <div class="knowledge-chip disabled">
+        <div class="chip-label">
+          <span class="chip-icon">🔮</span>
+          <span><span class="chip-type">后续知识</span>磨砂玻璃风格图标（C02）</span>
+        </div>
+        <span class="chip-badge">即将上线</span>
+      </div>
+      <div class="knowledge-chip disabled">
+        <div class="chip-label">
+          <span class="chip-icon">📐</span>
+          <span><span class="chip-type">相关知识</span>UI 设计四大原则（K01）</span>
+        </div>
+        <span class="chip-badge">即将上线</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: Matching Quiz -->
+<section class="section" id="step2">
+  <div class="step-label">STEP 2</div>
+  <h2>连连看：工具和用途</h2>
+  <p class="lead">
+    左边是 Figma 工具，右边是它的用途。<br>
+    点一个左边的，再点一个右边的，看看配不配。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="mProgress">进度 0 / 5</div>
+      <div class="quiz-score">答对 <b id="mScore">0</b> / 5</div>
+    </div>
+
+    <div id="mContainer">
+      <div class="match-area">
+        <div class="match-col">
+          <h4>Figma 工具</h4>
+          <div class="match-item" data-left="0" onclick="matchSelect('left', 0)">R — Rectangle（矩形工具）</div>
+          <div class="match-item" data-left="1" onclick="matchSelect('left', 1)">P — Pen Tool（钢笔工具）</div>
+          <div class="match-item" data-left="2" onclick="matchSelect('left', 2)"><span class="shortcut-mac">⌘</span><span class="shortcut-win">Ctrl</span> + Shift + U — Union</div>
+          <div class="match-item" data-left="3" onclick="matchSelect('left', 3)"><span class="shortcut-mac">⌘</span><span class="shortcut-win">Ctrl</span> + Shift + S — Subtract</div>
+          <div class="match-item" data-left="4" onclick="matchSelect('left', 4)"><span class="shortcut-mac">⌘ + Option</span><span class="shortcut-win">Ctrl + Alt</span> + K — Component</div>
+        </div>
+        <div class="match-col">
+          <h4>用途</h4>
+          <div class="match-item" data-right="2" onclick="matchSelect('right', 2)">合并多个形状为一个路径</div>
+          <div class="match-item" data-right="4" onclick="matchSelect('right', 4)">把设计创建为可复用组件</div>
+          <div class="match-item" data-right="0" onclick="matchSelect('right', 0)">绘制矩形、方形等规则形状</div>
+          <div class="match-item" data-right="3" onclick="matchSelect('right', 3)">用顶层形状在底层挖洞</div>
+          <div class="match-item" data-right="1" onclick="matchSelect('right', 1)">绘制自由曲线和任意多边形</div>
+        </div>
+      </div>
+      <div class="quiz-feedback" id="mFeedback">
+        点击左侧一个工具，再点击右侧对应的用途，完成配对。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="resetMatch()">重新开始</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="mResult">
+      <div class="score-circle">
+        <div class="score-num" id="mFinalScore">0</div>
+        <div class="score-total">/ 5 对</div>
+      </div>
+      <h3>🎉 连连看完成！</h3>
+      <p>5个工具和用途都配对成功了。<br>这些快捷键是 Figma 图标设计的基本功，多练几次就记住了。</p>
+      <button onclick="resetMatch()">再玩一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: Multiple Choice -->
+<section class="section" id="step3">
+  <div class="step-label">STEP 3</div>
+  <h2>选择：正确的操作方式</h2>
+  <p class="lead">
+    从四个选项中选出正确答案，每道题都有详细解析。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="mcqProgress">Q1 / 4</div>
+      <div class="quiz-score">答对 <b id="mcqScore">0</b> / 4</div>
+    </div>
+
+    <div id="mcqContainer">
+      <div class="quiz-q" id="mcqQuestion">
+        在 Figma 中，想要在一个蓝色圆形上"挖"一个小圆洞，形成甜甜圈效果，应该用什么操作？
+      </div>
+      <div class="mcq-options" id="mcqOptions">
+        <button class="mcq-option" onclick="checkMCQ('A')"><span class="opt-label">A.</span>Union（合并）</button>
+        <button class="mcq-option" onclick="checkMCQ('B')"><span class="opt-label">B.</span>Subtract（减去顶层）</button>
+        <button class="mcq-option" onclick="checkMCQ('C')"><span class="opt-label">C.</span>Intersect（交集）</button>
+        <button class="mcq-option" onclick="checkMCQ('D')"><span class="opt-label">D.</span>Exclude（差集）</button>
+      </div>
+      <div class="quiz-feedback" id="mcqFeedback">
+        <b>正确答案：B</b><br>
+        Subtract（减去顶层）会用顶层形状在底层形状上"挖洞"，正好是甜甜圈效果。Union 是合并（反而会变成一个更大的形状），Intersect 是取两个形状的交集，Exclude 是保留不重叠的部分。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevMCQ()" id="mcqPrev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextMCQ()" id="mcqNext" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="mcqResult">
+      <div class="score-circle">
+        <div class="score-num" id="mcqFinalScore">0</div>
+        <div class="score-total">/ 4 题</div>
+      </div>
+      <h3>🌟 选择题完成！</h3>
+      <p>扁平风格图标设计的核心知识你已经掌握了。<br>打开 Figma 试试看，做一个属于你的图标吧！</p>
+      <button onclick="resetMCQ()">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4: Mock Interview -->
+<section class="section" id="step4">
+  <div class="step-label">STEP 4</div>
+  <h2>模拟面试</h2>
+  <p class="lead">
+    来试试这道图标设计师的经典面试题，<br>
+    检验一下你对图标系统的理解深度。
+  </p>
+
+  <div class="interview-card">
+    <div class="interview-bubble">
+      <div class="interview-avatar">👨‍💼</div>
+      <div class="interview-question">
+        <b>面试官：</b>请你说一下，在一套完整的图标系统中，如何保证几十个甚至上百个图标的视觉一致性？
+      </div>
+    </div>
+    
+    <div class="interview-think">
+      🤔 先想想你的答案
+    </div>
+    
+    <button class="interview-btn" onclick="toggleInterviewAnswer()" id="interviewBtn">
+      💡 查看参考答案
+    </button>
+    
+    <div class="interview-answer" id="interviewAnswer">
+      <div class="answer-intro">
+        ✅ 参考答案：从以下 7 个维度保证图标视觉一致性
+      </div>
+      <div class="answer-list">
+        <div class="answer-item">
+          <div class="answer-item-num">1</div>
+          <div class="answer-item-content">
+            <b>统一网格系统</b>
+            所有图标基于同一套 24 px / 48 px 网格 + 2 px 安全边距设计，确保每个图标的大小和留白比例完全一致。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">2</div>
+          <div class="answer-item-content">
+            <b>统一线宽</b>
+            描边图标统一线宽（如 2 px），面性图标统一视觉重量，避免有的图标"粗"有的"细"。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">3</div>
+          <div class="answer-item-content">
+            <b>统一圆角</b>
+            所有图标圆角半径统一（如外圆角 4 px、内圆角 2 px），不要一个圆润一个尖锐。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">4</div>
+          <div class="answer-item-content">
+            <b>统一端点和拐点</b>
+            线条端点（round / butt / square）和拐点样式保持一致，从头到尾使用同一种风格。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">5</div>
+          <div class="answer-item-content">
+            <b>统一视觉风格</b>
+            扁平 / 线性 / 双色 / 填充风格统一，不混用。一套图标里不要既有扁平又有线性。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">6</div>
+          <div class="answer-item-content">
+            <b>组件化管理</b>
+            用 Figma Component + Variants 管理图标，修改主组件时所有实例同步更新，从机制上保证一致性。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">7</div>
+          <div class="answer-item-content">
+            <b>命名规范</b>
+            统一命名规则（如 <span class="copy-value" onclick="copyValue(this)">ic_功能_状态_尺寸</span>），便于检索、维护和团队协作。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLUS: Tips -->
+<section class="section" id="plus">
+  <div class="step-label">PLUS</div>
+  <h2>图标设计的四要素</h2>
+  <p class="lead">
+    一个"好"的扁平图标，不只是画得像，<br>
+    还要满足这四个条件。
+  </p>
+
+  <div class="tips-list">
+    <div class="tip-item">
+      <h4>① 👁️ 可识别性</h4>
+      <p>用户在一秒钟内就能看懂图标的含义。用最经典的视觉隐喻——首页用房子、搜索用放大镜、设置用齿轮，不要自创看不懂的图形。</p>
+    </div>
+    <div class="tip-item">
+      <h4>② 🎯 一致性</h4>
+      <p>一套图标要有统一的风格——相同的圆角、相同的线宽、相同的视觉重量、相同的品牌色。不要一个图标圆润一个图标尖锐。</p>
+    </div>
+    <div class="tip-item">
+      <h4>③ 🔲 像素对齐</h4>
+      <p>所有形状的锚点都对齐到像素网格，导出后边缘才清晰不模糊。开启 Snap to pixel，检查 <span class="copy-value" onclick="copyValue(this)">24 px</span> 小尺寸下是否锐利。</p>
+    </div>
+    <div class="tip-item">
+      <h4>④ 🧩 组件化</h4>
+      <p>创建为 Component，一套图标放在同一个 Library 里。修改主组件时所有使用的地方同步更新，保持一致性就靠它。</p>
+    </div>
+  </div>
+
+  <div class="conclusion" style="margin-top:32px">
+    <b>💡 扁平图标要点口诀：</b><br>
+    ① 形状要简洁 ② 对齐要精准 ③ Boolean 要熟练 ④ 风格要统一<br>
+    —— 这四点做到了，图标就"像样"了。
+  </div>
+</section>
+
+<!-- Copy Tooltip -->
+<div class="copy-tooltip" id="copyTooltip">✓ 已复制</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#step1">STEP 1 知识</a>
+    <a href="#step2">STEP 2 连连看</a>
+    <a href="#step3">STEP 3 选择</a>
+    <a href="#step4">STEP 4 面试</a>
+    <a href="#plus">PLUS 要素</a>
+  </div>
+  <p>扁平图标基础 — 从 0 到 1 设计「首页」图标</p>
+  <p style="margin-top:4px">UI 设计案例教程 C01 · 交互课件</p>
+</footer>
+
+<script>
+// ========== Copy Value ==========
+function copyValue(element) {
+  const text = element.textContent.replace('📋', '').replace('✓', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    showCopyTooltip(element);
+  }).catch(() => {
+    // fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showCopyTooltip(element);
+  });
+}
+
+function showCopyTooltip(element) {
+  const tooltip = document.getElementById('copyTooltip');
+  const rect = element.getBoundingClientRect();
+  tooltip.textContent = '✓ 已复制';
+  tooltip.style.left = rect.left + rect.width / 2 - 30 + 'px';
+  tooltip.style.top = rect.top - 32 + 'px';
+  tooltip.classList.add('show');
+  clearTimeout(window._copyTimer);
+  window._copyTimer = setTimeout(() => {
+    tooltip.classList.remove('show');
+  }, 1200);
+}
+
+// ========== OS-based Shortcut Detection ==========
+function initShortcuts() {
+  const platform = navigator.platform || navigator.userAgent;
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(platform);
+  if (isMac) {
+    document.body.classList.add('os-mac');
+  } else {
+    document.body.classList.add('os-win');
+  }
+}
+
+// ========== Icon Detail Toggle ==========
+function toggleIconDetail(id) {
+  const panel = document.getElementById(id);
+  // Close other icon detail panels
+  document.querySelectorAll('.icon-detail-panel').forEach(p => {
+    if (p.id !== id) p.classList.remove('show');
+  });
+  panel.classList.toggle('show');
+}
+
+// ========== Boolean Card Detail Toggle ==========
+function toggleBoolDetail(id) {
+  const panel = document.getElementById(id);
+  panel.classList.toggle('show');
+}
+
+// ========== Interactive Boolean Demo ==========
+const boolDescriptions = {
+  union: '<b>Union（合并）：</b>两个形状合并为一个整体，重叠区域融合成单一路径。',
+  subtract: '<b>Subtract（减去）：</b>用顶层形状在底层形状上"挖洞"，形成镂空效果。',
+  intersect: '<b>Intersect（交集）：</b>只保留两个形状重叠的部分，其余区域被移除。',
+  exclude: '<b>Exclude（差集）：</b>保留两个形状不重叠的部分，重叠区域被移除。'
+};
+
+function setBoolMode(mode, btn) {
+  // Update buttons
+  document.querySelectorAll('.bool-demo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  // Update SVG visibility
+  document.getElementById('boolUnion').style.display = 'none';
+  document.getElementById('boolSubtract').style.display = 'none';
+  document.getElementById('boolIntersect').style.display = 'none';
+  document.getElementById('boolExclude').style.display = 'none';
+  
+  const target = document.getElementById('bool' + mode.charAt(0).toUpperCase() + mode.slice(1));
+  if (target) target.style.display = 'block';
+  
+  // Update description
+  document.getElementById('boolDemoDesc').innerHTML = boolDescriptions[mode];
+}
+
+// ========== Pixel Grid Demo ==========
+const GRID_SIZE = 8;
+let pixelDrawing = false;
+
+function initPixelGrids() {
+  const alignedGrid = document.getElementById('pixelGridAligned');
+  const blurredGrid = document.getElementById('pixelGridBlurred');
+  
+  for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
+    const cellA = document.createElement('div');
+    cellA.className = 'pixel-cell';
+    cellA.dataset.index = i;
+    cellA.addEventListener('click', () => togglePixel(i));
+    cellA.addEventListener('mouseenter', (e) => {
+      if (pixelDrawing) togglePixel(i);
+    });
+    alignedGrid.appendChild(cellA);
+    
+    const cellB = document.createElement('div');
+    cellB.className = 'pixel-cell';
+    cellB.dataset.index = i;
+    blurredGrid.appendChild(cellB);
+  }
+  
+  // Mouse down/up for drawing
+  alignedGrid.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('pixel-cell')) {
+      pixelDrawing = true;
+    }
+  });
+  document.addEventListener('mouseup', () => {
+    pixelDrawing = false;
+  });
+}
+
+function togglePixel(index) {
+  const alignedCells = document.querySelectorAll('#pixelGridAligned .pixel-cell');
+  const blurredCells = document.querySelectorAll('#pixelGridBlurred .pixel-cell');
+  
+  alignedCells[index].classList.toggle('filled');
+  
+  // For blurred version, shift the pattern by half a pixel to simulate misalignment
+  updateBlurredGrid();
+}
+
+function updateBlurredGrid() {
+  const alignedCells = document.querySelectorAll('#pixelGridAligned .pixel-cell');
+  const blurredCells = document.querySelectorAll('#pixelGridBlurred .pixel-cell');
+  
+  blurredCells.forEach((cell, i) => {
+    cell.classList.remove('filled', 'offgrid');
+  });
+  
+  // Create a "blurred" effect: fill adjacent cells with reduced opacity
+  alignedCells.forEach((cell, i) => {
+    if (cell.classList.contains('filled')) {
+      const row = Math.floor(i / GRID_SIZE);
+      const col = i % GRID_SIZE;
+      // Simulate half-pixel offset by filling corners of 4 cells
+      const neighbors = [
+        i,
+        i + 1,
+        i + GRID_SIZE,
+        i + GRID_SIZE + 1
+      ];
+      neighbors.forEach((n, idx) => {
+        if (n >= 0 && n < GRID_SIZE * GRID_SIZE) {
+          const nRow = Math.floor(n / GRID_SIZE);
+          const nCol = n % GRID_SIZE;
+          if (Math.abs(nRow - row) <= 1 && Math.abs(nCol - col) <= 1) {
+            if (idx === 0) {
+              blurredCells[n].classList.add('filled');
+            } else {
+              blurredCells[n].classList.add('offgrid');
+            }
+          }
+        }
+      });
+    }
+  });
+}
+
+function resetPixelGrid() {
+  document.querySelectorAll('#pixelGridAligned .pixel-cell').forEach(c => c.classList.remove('filled'));
+  document.querySelectorAll('#pixelGridBlurred .pixel-cell').forEach(c => c.classList.remove('filled', 'offgrid'));
+}
+
+function drawPixelExample() {
+  resetPixelGrid();
+  const alignedCells = document.querySelectorAll('#pixelGridAligned .pixel-cell');
+  // Draw a simple house shape (diagonal line + base)
+  const pattern = [
+    3, 12, 13, 14, 21, 26, 29, 34, 37, 42, 45, 50, 53
+  ];
+  pattern.forEach(i => {
+    if (alignedCells[i]) alignedCells[i].classList.add('filled');
+  });
+  updateBlurredGrid();
+}
+
+// ========== Matching Quiz ==========
+const matchPairs = [
+  { left: 'R — Rectangle（矩形工具）', right: '绘制矩形、方形等规则形状' },
+  { left: 'P — Pen Tool（钢笔工具）', right: '绘制自由曲线和任意多边形' },
+  { left: '<span class="shortcut-mac">⌘</span><span class="shortcut-win">Ctrl</span> + Shift + U — Union', right: '合并多个形状为一个路径' },
+  { left: '<span class="shortcut-mac">⌘</span><span class="shortcut-win">Ctrl</span> + Shift + S — Subtract', right: '用顶层形状在底层挖洞' },
+  { left: '<span class="shortcut-mac">⌘ + Option</span><span class="shortcut-win">Ctrl + Alt</span> + K — Component', right: '把设计创建为可复用组件' }
+];
+
+let selectedLeft = null;
+let selectedRight = null;
+let matchCount = 0;
+let matchScore = 0;
+let matchedLeft = new Set();
+let matchedRight = new Set();
+
+function matchSelect(side, idx) {
+  if (side === 'left') {
+    if (matchedLeft.has(idx)) return;
+    document.querySelectorAll('[data-left]').forEach(el => el.classList.remove('selected'));
+    selectedLeft = idx;
+    document.querySelector(`[data-left="${idx}"]`).classList.add('selected');
+  } else {
+    if (matchedRight.has(idx)) return;
+    document.querySelectorAll('[data-right]').forEach(el => el.classList.remove('selected'));
+    selectedRight = idx;
+    document.querySelector(`[data-right="${idx}"]`).classList.add('selected');
+  }
+
+  if (selectedLeft !== null && selectedRight !== null) {
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  const leftEl = document.querySelector(`[data-left="${selectedLeft}"]`);
+  const rightEl = document.querySelector(`[data-right="${selectedRight}"]`);
+  const correct = selectedLeft === selectedRight;
+
+  if (correct) {
+    leftEl.classList.add('matched-ok');
+    rightEl.classList.add('matched-ok');
+    leftEl.classList.remove('selected');
+    rightEl.classList.remove('selected');
+    matchedLeft.add(selectedLeft);
+    matchedRight.add(selectedRight);
+    matchScore++;
+    matchCount++;
+    document.getElementById('mFeedback').innerHTML =
+      '<b style="color:var(--green)">✓ 配对成功！</b><br>' +
+      matchPairs[selectedLeft].left + ' → ' + matchPairs[selectedRight].right;
+    document.getElementById('mFeedback').classList.add('show');
+  } else {
+    leftEl.classList.add('matched-wrong');
+    rightEl.classList.add('matched-wrong');
+    setTimeout(() => {
+      leftEl.classList.remove('matched-wrong', 'selected');
+      rightEl.classList.remove('matched-wrong', 'selected');
+    }, 600);
+    document.getElementById('mFeedback').innerHTML =
+      '<b style="color:var(--danger)">✗ 不对哦，再试试</b><br>' +
+      '提示：想想每个工具名的英文意思，Union是"联合"，Subtract是"减去"。';
+    document.getElementById('mFeedback').classList.add('show');
+  }
+
+  document.getElementById('mProgress').textContent = `进度 ${matchScore} / 5`;
+  document.getElementById('mScore').textContent = matchScore;
+  selectedLeft = null;
+  selectedRight = null;
+
+  if (matchScore === 5) {
+    setTimeout(() => {
+      document.getElementById('mContainer').style.display = 'none';
+      document.getElementById('mResult').classList.add('show');
+      document.getElementById('mFinalScore').textContent = matchScore;
+    }, 800);
+  }
+}
+
+function resetMatch() {
+  selectedLeft = null;
+  selectedRight = null;
+  matchCount = 0;
+  matchScore = 0;
+  matchedLeft = new Set();
+  matchedRight = new Set();
+  document.querySelectorAll('[data-left], [data-right]').forEach(el => {
+    el.classList.remove('matched-ok', 'matched-wrong', 'selected');
+  });
+  document.getElementById('mContainer').style.display = 'block';
+  document.getElementById('mResult').classList.remove('show');
+  document.getElementById('mProgress').textContent = '进度 0 / 5';
+  document.getElementById('mScore').textContent = '0';
+  document.getElementById('mFeedback').innerHTML = '点击左侧一个工具，再点击右侧对应的用途，完成配对。';
+}
+
+// ========== Multiple Choice Quiz ==========
+const mcqQuestions = [
+  {
+    q: '在 Figma 中，想要在一个蓝色圆形上"挖"一个小圆洞，形成甜甜圈效果，应该用什么操作？',
+    options: [
+      'Union（合并）',
+      'Subtract（减去顶层）',
+      'Intersect（交集）',
+      'Exclude（差集）'
+    ],
+    answer: 1,
+    explain: '<b>正确答案：B</b><br>Subtract（减去顶层）会用顶层形状在底层形状上"挖洞"，正好是甜甜圈效果。Union 是合并（反而会变成一个更大的形状），Intersect 是取两个形状的交集，Exclude 是保留不重叠的部分。'
+  },
+  {
+    q: '扁平风格图标设计时，为什么要设置 4 px 的细网格？',
+    options: [
+      '让图标看起来更有设计感',
+      '确保所有锚点对齐，导出后边缘清晰不模糊',
+      '方便计算图标文件大小',
+      '这是 Figma 的默认设置，改不了'
+    ],
+    answer: 1,
+    explain: '<b>正确答案：B</b><br>4 px 网格的作用是让所有锚点都对齐到像素网格上。如果锚点不在像素上，导出的 PNG 图标边缘会模糊发虚（抗锯齿导致）。开启 Snap to grid 可以自动吸附，这是像素级精修的基本功。'
+  },
+  {
+    q: '一套图标集里，每个图标的圆角大小不一样，有的 2 px 有的 4 px，这违反了什么原则？',
+    options: [
+      '可识别性',
+      '像素对齐',
+      '一致性',
+      '组件化'
+    ],
+    answer: 2,
+    explain: '<b>正确答案：C</b><br>一致性原则要求一套图标有统一的视觉语言——相同的圆角、相同的线宽、相同的视觉重量、相同的配色。圆角不统一会让图标看起来"不是一套的"，破坏整体感。'
+  },
+  {
+    q: '把图标创建为 Figma Component 的最大好处是什么？',
+    options: [
+      '文件体积变小',
+      '修改主组件时，所有使用的地方同步更新',
+      '导出速度更快',
+      '可以用更多颜色'
+    ],
+    answer: 1,
+    explain: '<b>正确答案：B</b><br>Component（组件）的核心价值是"一处修改，处处更新"。当你有几十个页面在用同一个图标时，只要修改主组件，所有实例自动同步，保证一致性又节省时间。这就是组件化思维。'
+  }
+];
+
+let mcqCur = 0;
+let mcqScoreVal = 0;
+let mcqAnswered = new Array(mcqQuestions.length).fill(false);
+let mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+
+function renderMCQ() {
+  const q = mcqQuestions[mcqCur];
+  document.getElementById('mcqQuestion').textContent = q.q;
+  document.getElementById('mcqProgress').textContent = `Q${mcqCur+1} / ${mcqQuestions.length}`;
+  document.getElementById('mcqScore').textContent = mcqScoreVal;
+
+  const opts = document.querySelectorAll('#mcqOptions .mcq-option');
+  opts.forEach((o, i) => {
+    o.classList.remove('correct','wrong');
+    o.disabled = false;
+    o.innerHTML = `<span class="opt-label">${String.fromCharCode(65+i)}.</span> ${q.options[i]}`;
+  });
+
+  const fb = document.getElementById('mcqFeedback');
+  fb.classList.remove('show');
+
+  document.getElementById('mcqPrev').disabled = mcqCur === 0;
+  document.getElementById('mcqNext').disabled = !mcqAnswered[mcqCur];
+
+  if (mcqAnswered[mcqCur]) {
+    const correct = mcqUserAnswer[mcqCur] === q.answer;
+    opts[q.answer].classList.add('correct');
+    if (!correct) opts[mcqUserAnswer[mcqCur]].classList.add('wrong');
+    opts.forEach(o => o.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('mcqNext').disabled = false;
+  }
+}
+
+function checkMCQ(letter) {
+  if (mcqAnswered[mcqCur]) return;
+  const userIdx = letter.charCodeAt(0) - 65;
+  const correct = userIdx === mcqQuestions[mcqCur].answer;
+  mcqAnswered[mcqCur] = true;
+  mcqUserAnswer[mcqCur] = userIdx;
+  if (correct) mcqScoreVal++;
+
+  const opts = document.querySelectorAll('#mcqOptions .mcq-option');
+  opts[mcqQuestions[mcqCur].answer].classList.add('correct');
+  if (!correct) opts[userIdx].classList.add('wrong');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('mcqFeedback');
+  fb.innerHTML = mcqQuestions[mcqCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('mcqScore').textContent = mcqScoreVal;
+  document.getElementById('mcqNext').disabled = false;
+}
+
+function nextMCQ() {
+  if (mcqCur < mcqQuestions.length - 1) {
+    mcqCur++;
+    renderMCQ();
+  } else {
+    document.getElementById('mcqContainer').style.display = 'none';
+    document.getElementById('mcqResult').classList.add('show');
+    document.getElementById('mcqFinalScore').textContent = mcqScoreVal;
+  }
+}
+
+function prevMCQ() {
+  if (mcqCur > 0) {
+    mcqCur--;
+    renderMCQ();
+  }
+}
+
+function resetMCQ() {
+  mcqCur = 0;
+  mcqScoreVal = 0;
+  mcqAnswered = new Array(mcqQuestions.length).fill(false);
+  mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+  document.getElementById('mcqContainer').style.display = 'block';
+  document.getElementById('mcqResult').classList.remove('show');
+  renderMCQ();
+}
+
+// ========== Mock Interview Toggle ==========
+function toggleInterviewAnswer() {
+  const panel = document.getElementById('interviewAnswer');
+  const btn = document.getElementById('interviewBtn');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    btn.textContent = '🙈 收起参考答案';
+  } else {
+    btn.textContent = '💡 查看参考答案';
+  }
+}
+
+// Init
+initShortcuts();
+renderMCQ();
+resetMatch();
+initPixelGrids();
+</script>
+
+</body>
+</html>

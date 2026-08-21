@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K03 格式塔原理 | 图文教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#059669;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--purple:#8b5cf6;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-dim:#64748b;--border:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.tutorial{max-width:720px;margin:0 auto;background:var(--card);min-height:100vh}
+.hero{background:linear-gradient(135deg,#047857,#10b981);color:#fff;padding:48px 40px;text-align:center}
+.hero .ep{font-size:13px;opacity:.8;letter-spacing:2px;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero .subtitle{font-size:16px;opacity:.9}
+.hero .tags{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero .tag{background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px}
+.section{padding:32px 40px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h2::before{content:'';width:4px;height:24px;background:var(--primary);border-radius:2px}
+.section h3{font-size:18px;font-weight:700;margin:20px 0 10px;color:var(--text)}
+
+/* Principle Card */
+.principle-card{background:var(--bg);border-radius:16px;padding:24px;margin:16px 0;border-left:4px solid var(--primary)}
+.principle-card h4{font-size:18px;font-weight:700;color:var(--primary);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.principle-card .en{font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.principle-card p{font-size:14px;color:var(--text-dim);line-height:1.7}
+.principle-visual{height:80px;background:#fff;border-radius:10px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;position:relative;border:1px solid var(--border)}
+
+/* Visuals */
+.pv-proximity{gap:30px}
+.pv-proximity .group{display:flex;gap:8px}
+.pv-proximity .dot{width:12px;height:12px;border-radius:50%;background:var(--primary)}
+
+.pv-similarity{gap:6px;flex-wrap:wrap;justify-content:center}
+.pv-similarity .shape{width:14px;height:14px;border-radius:3px}
+.pv-similarity .shape.circle{border-radius:50%}
+.pv-similarity .shape.teal{background:var(--primary)}
+.pv-similarity .shape.orange{background:#F59E0B}
+
+.pv-continuity{overflow:hidden;position:relative}
+.pv-continuity .line{position:absolute;height:3px;background:var(--primary);top:50%}
+.pv-continuity .line.l1{left:10%;width:30%;transform:rotate(-15deg);transform-origin:left center}
+.pv-continuity .line.l2{right:10%;width:30%;transform:rotate(-15deg);transform-origin:right center}
+.pv-continuity .curve{width:100%;height:40px;border:none;border-top:3px solid var(--primary);border-radius:50%/40px 40px 0 0;position:relative;top:10px}
+
+.pv-closure{position:relative}
+.pv-closure .pacman{width:40px;height:40px;border-radius:50%;background:conic-gradient(var(--primary) 0 75%, transparent 75% 100%);position:relative}
+.pv-closure .brain{margin-left:12px;font-size:12px;color:var(--text-dim)}
+.pv-closure .brain b{color:var(--primary)}
+
+.pv-symmetry{gap:0}
+.pv-symmetry .sym-shape{width:30px;height:40px;background:var(--primary);border-radius:50% 50% 0 0;opacity:.7}
+.pv-symmetry .sym-shape.left{transform:scaleX(-1)}
+.pv-symmetry .sym-center{width:2px;height:44px;background:var(--border);margin:0 4px}
+
+.pv-common-fate{gap:10px}
+.pv-common-fate .cf-group{display:flex;gap:4px}
+.pv-common-fate .cf-group.g1 .cf-dot{background:var(--primary)}
+.pv-common-fate .cf-group.g2 .cf-dot{background:#F59E0B}
+.pv-common-fate .cf-dot{width:8px;height:8px;border-radius:50%}
+.pv-common-fate .arrow{font-size:12px;color:var(--text-dim);margin-left:8px}
+
+.conclusion-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:12px;padding:20px;margin:16px 0;font-size:16px;font-weight:700;color:#064e3b;text-align:center;line-height:1.8}
+
+.case-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.case-card{border-radius:12px;padding:20px;border:2px solid}
+.case-card.bad{border-color:var(--danger);background:#fef2f2}
+.case-card.good{border-color:var(--success);background:#f0fdf4}
+.case-card h4{font-size:16px;margin-bottom:8px}
+.case-card.bad h4{color:var(--danger)}
+.case-card.good h4{color:var(--success)}
+.case-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+
+.checklist{background:var(--bg);border-radius:12px;padding:20px;margin:16px 0}
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.checklist-item:last-child{border-bottom:none}
+.checklist-item .check{width:24px;height:24px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
+.checklist-item .text{font-size:14px}
+.checklist-item .text b{color:var(--text)}
+.checklist-item .text .method{display:block;color:var(--text-dim);font-size:13px;margin-top:2px}
+
+.footer{text-align:center;padding:32px 40px;background:var(--bg);color:var(--text-dim);font-size:13px}
+.footer .next{margin-top:12px;font-size:14px;color:var(--primary);font-weight:600}
+
+.mnemonic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.mnemonic-item{background:var(--bg);border-radius:10px;padding:14px;border-left:3px solid var(--primary)}
+.mnemonic-item h4{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:4px}
+.mnemonic-item p{font-size:12px;color:var(--text-dim)}
+</style>
+</head>
+<body>
+<div class="tutorial">
+
+<div class="hero">
+  <div class="ep">EPISODE K03 · 理论知识点 · 图文教程</div>
+  <h1>格式塔原理</h1>
+  <div class="subtitle">视觉感知的六大组织法则</div>
+  <div class="tags">
+    <span class="tag">认知心理学</span>
+    <span class="tag">视觉感知</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</div>
+
+<!-- Section 1: What is Gestalt -->
+<div class="section">
+  <h2>什么是格式塔原理</h2>
+  <p>20世纪初，德国格式塔（Gestalt）心理学派提出了一个重要观点：<b>人类的视觉系统会自动对看到的元素进行组织和分组</b>，我们感知到的不是一个个孤立的元素，而是它们之间的关系和整体结构。</p>
+  <p style="margin-top:12px">"格式塔"是德语"整体"的意思。这个学派最著名的论断是：<b>整体大于部分之和</b>。六大组织法则（Principle of Organization）描述了大脑自动分组的规律，是所有UI排版、图标、布局设计的底层认知基础。</p>
+</div>
+
+<!-- Section 2: Core Idea -->
+<div class="section">
+  <h2>核心理念</h2>
+  <div class="conclusion-box">
+    大脑在自动"找规律"和"分组"<br>
+    你感知到的界面结构 ≠ 你画出来的结构<br>
+    <span style="font-size:14px;margin-top:8px;display:block;font-weight:500">好设计 → 顺应规律 → 用户一眼就懂<br>差设计 → 违背规律 → 用户觉得"别扭"</span>
+  </div>
+</div>
+
+<!-- Section 3: Six Principles -->
+<div class="section">
+  <h2>六大原理详解</h2>
+
+  <!-- Proximity -->
+  <div class="principle-card">
+    <h4>📐 一、接近性</h4>
+    <div class="en">Proximity</div>
+    <div class="principle-visual pv-proximity">
+      <div class="group">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="group">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <p><b>规律：</b>间距越小的元素，大脑越倾向于把它们归为一组。距离越近，关联性越强。</p>
+    <p style="margin-top:8px"><b>设计应用：</b>用"组内小间距 + 组间大间距"来表达信息分组。组间间距至少是组内间距的 1.5-2 倍，用户才能明显感知到分组。</p>
+  </div>
+
+  <!-- Similarity -->
+  <div class="principle-card">
+    <h4>🎨 二、相似性</h4>
+    <div class="en">Similarity</div>
+    <div class="principle-visual pv-similarity">
+      <div class="shape teal"></div>
+      <div class="shape orange circle"></div>
+      <div class="shape teal"></div>
+      <div class="shape orange circle"></div>
+      <div class="shape teal"></div>
+      <div class="shape orange circle"></div>
+    </div>
+    <p><b>规律：</b>颜色、形状、大小、方向等视觉特征相似的元素，会被认为是同类或具有相同功能。</p>
+    <p style="margin-top:8px"><b>设计应用：</b>同类功能用相同样式（按钮都长一个样），异类功能用不同样式（主按钮 vs 次按钮）。也可反向使用——选中态用不同颜色，从"相似组"中凸显出来。</p>
+  </div>
+
+  <!-- Continuity -->
+  <div class="principle-card">
+    <h4>📈 三、连续性</h4>
+    <div class="en">Continuity</div>
+    <div class="principle-visual pv-continuity">
+      <div class="line l1"></div>
+      <div class="curve"></div>
+      <div class="line l2"></div>
+    </div>
+    <p><b>规律：</b>视线会沿着最平滑、最连续的方向流动，倾向于看到连续的图形而非断裂或弯折的。</p>
+    <p style="margin-top:8px"><b>设计应用：</b>用对齐、引导线、连续的布局来引导用户的阅读顺序和视觉流。列表、表格、时间线都是连续性原理的应用。</p>
+  </div>
+
+  <!-- Closure -->
+  <div class="principle-card">
+    <h4>⭕ 四、闭合性</h4>
+    <div class="en">Closure</div>
+    <div class="principle-visual pv-closure">
+      <div class="pacman"></div>
+      <div class="brain">→ 大脑脑补成 <b>完整的圆</b></div>
+    </div>
+    <p><b>规律：</b>大脑会自动补全不完整的图形，把残缺的轮廓"脑补"成完整、熟悉的形状。</p>
+    <p style="margin-top:8px"><b>设计应用：</b>骨架屏（Skeleton Screen）——灰色占位条块，用户能脑补出完整内容结构；简约图标——用最少的线条表达完整含义；进度环——不完整的圆环也能被识别。</p>
+  </div>
+
+  <!-- Symmetry -->
+  <div class="principle-card">
+    <h4>⚖️ 五、对称性</h4>
+    <div class="en">Symmetry</div>
+    <div class="principle-visual pv-symmetry">
+      <div class="sym-shape left"></div>
+      <div class="sym-center"></div>
+      <div class="sym-shape right"></div>
+    </div>
+    <p><b>规律：</b>对称的图形给人稳定、舒适、有序的感觉，大脑天生偏好对称的布局。</p>
+    <p style="margin-top:8px"><b>设计应用：</b>弹窗、卡片、表单等容器类设计常用对称布局，给用户稳定、可信赖的感觉。左右分栏、居中对齐也是对称性的体现。</p>
+  </div>
+
+  <!-- Common Fate -->
+  <div class="principle-card">
+    <h4>🚀 六、共同命运</h4>
+    <div class="en">Common Fate</div>
+    <div class="principle-visual pv-common-fate">
+      <div class="cf-group g1">
+        <div class="cf-dot"></div><div class="cf-dot"></div><div class="cf-dot"></div>
+      </div>
+      <div class="arrow">→ 同向</div>
+      <div class="cf-group g2">
+        <div class="cf-dot"></div><div class="cf-dot"></div><div class="cf-dot"></div>
+      </div>
+    </div>
+    <p><b>规律：</b>以相同方向、相同速度运动的元素，会被认为是同一组。运动状态比静态特征的分组力更强。</p>
+    <p style="margin-top:8px"><b>设计应用：</b>侧边栏展开收起（同组元素同向运动）、轮播图（图片同向滑动）、滚动视差（同层元素同速运动）。</p>
+  </div>
+
+</div>
+
+<!-- Section 4: Good vs Bad -->
+<div class="section">
+  <h2>正反面案例</h2>
+  <div class="case-compare">
+    <div class="case-card bad">
+      <h4>✗ 反面案例</h4>
+      <p>所有元素间距一致 → 看不出分组<br>按钮颜色形状各异 → 分不清功能<br>布局不对称 → 感觉不稳定<br><br>→ 用户认知负担重<br>→ 容易误操作<br>→ 觉得"界面很乱"</p>
+    </div>
+    <div class="case-card good">
+      <h4>✓ 正面案例</h4>
+      <p>组内间距小、组间间距大 → 分组清晰<br>同类组件样式统一 → 一眼识别<br>对称居中布局 → 稳定舒适<br><br>→ 用户快速理解结构<br>→ 操作效率高<br>→ 觉得"界面很清爽"</p>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">格式塔原理是"隐性"的——用户说不出为什么，但能直接感受到"舒服"或"别扭"。</p>
+</div>
+
+<!-- Section 5: Checklist -->
+<div class="section">
+  <h2>设计自查清单</h2>
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>信息分组清晰吗？</b><span class="method">检查接近性：组内/组间间距比例是否 ≥ 1:1.5</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>同类元素样式统一吗？</b><span class="method">检查相似性：按钮、标签、图标是否有统一的设计语言</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>视觉流连续吗？</b><span class="method">检查连续性：用户的阅读路径是否平滑、有引导</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>加载状态可理解吗？</b><span class="method">检查闭合性：骨架屏/占位图能否让用户脑补出内容结构</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>布局稳定舒适吗？</b><span class="method">检查对称性：重要容器是否有对称或均衡的布局</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>动效分组正确吗？</b><span class="method">检查共同命运：同组元素运动方向/速度是否一致</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 6: Mnemonic -->
+<div class="section">
+  <h2>记忆口诀</h2>
+  <div class="mnemonic-grid">
+    <div class="mnemonic-item">
+      <h4>📐 近了就一伙</h4>
+      <p>接近性 Proximity</p>
+    </div>
+    <div class="mnemonic-item">
+      <h4>🎨 像了就一类</h4>
+      <p>相似性 Similarity</p>
+    </div>
+    <div class="mnemonic-item">
+      <h4>📈 顺着看下去</h4>
+      <p>连续性 Continuity</p>
+    </div>
+    <div class="mnemonic-item">
+      <h4>⭕ 缺了能脑补</h4>
+      <p>闭合性 Closure</p>
+    </div>
+    <div class="mnemonic-item">
+      <h4>⚖️ 对称才舒服</h4>
+      <p>对称性 Symmetry</p>
+    </div>
+    <div class="mnemonic-item">
+      <h4>🚀 同动是一组</h4>
+      <p>共同命运 Common Fate</p>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px;text-align:center">六个字概括：<b style="color:var(--primary);font-size:16px">近 · 像 · 顺 · 补 · 对 · 动</b></p>
+</div>
+
+<div class="footer">
+  <p>格式塔原理 · Gestalt Principles · 1912 by Max Wertheimer</p>
+  <p>UI设计理论知识点 K03 · 图文教程</p>
+  <div class="next">下集预告：K04 费茨定律——从数学公式到触控热区设计</div>
+</div>
+
+</div>
+</body>
+</html>

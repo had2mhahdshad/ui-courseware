@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>席克定律与米勒定律 — 决策心理学与信息分块</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF7;
+  --text:#2C2C2C;
+  --text-dim:#8A8A8A;
+  --text-soft:#B5B5B5;
+  --accent:#F59E0B;
+  --accent-soft:#FEF3C7;
+  --red:#E85D4A;
+  --red-soft:#FCE8E5;
+  --blue:#3B6BD5;
+  --blue-soft:#E3ECFA;
+  --green:#2D9A5E;
+  --green-soft:#DFF2E6;
+  --purple:#6366f1;
+  --purple-soft:#EEF2FF;
+  --yellow:#F2C14E;
+  --yellow-soft:#FFF6DB;
+  --border:#E8E5E0;
+  --card:#FFFFFF;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.9;
+  font-size:16px;
+  text-align:left;
+}
+
+/* Nav */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:700;font-size:14px;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;font-size:13px}
+.nav-links a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+
+/* Hero */
+.hero{
+  padding:80px 32px 60px;
+  text-align:center;
+  max-width:780px;
+  margin:0 auto;
+}
+.hero .icon{font-size:48px;margin-bottom:16px}
+.hero .label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:42px;font-weight:700;
+  line-height:1.4;margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:17px;color:var(--text-dim);
+  line-height:1.8;max-width:600px;margin:0 auto;
+}
+.hero .tags{
+  display:flex;gap:8px;justify-content:center;margin-top:28px;
+}
+.hero .tag{
+  border:1px solid var(--border);
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;color:var(--text-dim);
+}
+
+/* Step Nav */
+.step-nav{
+  display:flex;gap:0;justify-content:center;
+  padding:24px 32px;flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+}
+.step-nav a{
+  padding:10px 20px;font-size:14px;
+  color:var(--text-dim);text-decoration:none;
+  border-right:1px solid var(--border);
+  transition:all .2s;
+}
+.step-nav a:first-child{border-left:1px solid var(--border)}
+.step-nav a:hover,.step-nav a.active{color:var(--accent)}
+
+/* Sections */
+.section{
+  max-width:780px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.step-label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.section h2{
+  font-family:var(--serif);
+  font-size:30px;font-weight:700;
+  margin-bottom:28px;line-height:1.5;
+}
+.section h3{
+  font-family:var(--serif);
+  font-size:20px;font-weight:700;
+  margin-bottom:12px;line-height:1.5;
+  display:flex;align-items:center;gap:10px;
+}
+.section h3 .emoji{font-size:24px}
+.section p{margin-bottom:16px;color:#444}
+.section p b{color:var(--text);font-weight:600}
+.section .lead{
+  font-size:17px;line-height:2;
+  color:var(--text);margin-bottom:28px;
+}
+
+/* Knowledge Cards */
+.know-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-bottom:20px;
+}
+.know-card .emoji{font-size:28px;margin-bottom:12px}
+.know-card h3{margin-bottom:8px}
+
+/* Formula Box */
+.formula-box{
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:40px 32px;
+  text-align:center;
+  margin:24px 0;
+}
+.formula{
+  font-family:'JetBrains Mono',Menlo,monospace;
+  font-size:28px;font-weight:600;
+  color:var(--blue);
+  letter-spacing:1px;
+}
+.formula .n{color:var(--accent);font-weight:700}
+.formula .magic{color:var(--green);font-weight:700}
+.var-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:24px;
+}
+.var-item{
+  background:var(--card);
+  border-radius:8px;padding:14px 12px;
+  text-align:left;
+}
+.var-item .name{
+  font-size:11px;letter-spacing:1px;
+  color:var(--text-soft);text-transform:uppercase;
+}
+.var-item .desc{
+  font-size:14px;font-weight:600;
+  margin-top:4px;
+}
+
+/* Conclusion */
+.conclusion{
+  background:var(--yellow-soft);
+  border-radius:12px;
+  padding:24px 28px;
+  margin:24px 0;
+  font-size:16px;line-height:2;
+}
+.conclusion b{color:#92400e}
+
+/* Standard Table */
+.std-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;font-size:14px;
+  background:var(--card);
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.std-table th{
+  background:#F6F5F2;padding:14px 16px;
+  text-align:left;font-weight:600;
+  border-bottom:2px solid var(--border);
+}
+.std-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.std-table tr:last-child td{border-bottom:none}
+
+/* Chunking Demo */
+.chunk-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.chunk-compare{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:16px 0;
+}
+.chunk-card{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:20px;
+  text-align:center;
+  border:2px solid transparent;
+  transition:all .3s;
+}
+.chunk-card.bad{border-color:var(--accent)}
+.chunk-card.good{border-color:var(--green)}
+.chunk-card .number{
+  font-family:'JetBrains Mono',Menlo,monospace;
+  font-size:22px;font-weight:700;
+  letter-spacing:2px;
+  margin-bottom:12px;
+}
+.chunk-card.bad .number{color:var(--accent)}
+.chunk-card.good .number{color:var(--green)}
+.chunk-card .desc{
+  font-size:13px;color:var(--text-dim);line-height:1.7;
+}
+.chunk-card .label{
+  font-weight:700;font-size:14px;margin-bottom:8px;
+}
+.chunk-card.bad .label{color:var(--accent)}
+.chunk-card.good .label{color:var(--green)}
+
+/* Options Demo */
+.options-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.options-row{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:16px 0;
+}
+.options-card{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:20px;
+  border:2px solid transparent;
+  transition:all .3s;
+}
+.options-card.bad{border-color:var(--accent)}
+.options-card.good{border-color:var(--green)}
+.options-card .label{
+  font-weight:700;font-size:14px;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.options-card.bad .label{color:var(--accent)}
+.options-card.good .label{color:var(--green)}
+.options-list{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-bottom:10px;
+}
+.option-pill{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:6px 12px;
+  border-radius:16px;
+  font-size:12px;
+}
+.options-card.bad .option-pill{border-color:#FECACA;color:#991B1B;background:#FEF2F2}
+.options-card.good .option-pill{border-color:#BBF7D0;color:#166534;background:#F0FDF4}
+.options-card .desc{
+  font-size:13px;color:var(--text-dim);line-height:1.7;
+}
+
+/* Progressive Disclosure */
+.disclosure-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.disclosure-flow{
+  display:flex;align-items:center;gap:12px;
+  margin:16px 0;flex-wrap:wrap;justify-content:center;
+}
+.disclosure-step{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:16px 20px;
+  text-align:center;
+  min-width:120px;
+}
+.disclosure-step .level{
+  font-size:11px;color:var(--text-soft);
+  text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:6px;
+}
+.disclosure-step .count{
+  font-size:24px;font-weight:800;color:var(--accent);
+}
+.disclosure-step .desc{
+  font-size:12px;color:var(--text-dim);margin-top:4px;
+}
+.disclosure-arrow{
+  font-size:20px;color:var(--text-soft);
+}
+
+/* Compare */
+.compare-row{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:24px 0;
+}
+.compare-card{
+  background:var(--card);
+  border:2px solid var(--border);
+  border-radius:12px;padding:24px;
+}
+.compare-card.bad{border-color:var(--accent)}
+.compare-card.good{border-color:var(--green)}
+.compare-card h4{
+  font-size:16px;font-weight:700;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.compare-card.bad h4{color:var(--accent)}
+.compare-card.good h4{color:var(--green)}
+.compare-card p{font-size:14px;color:var(--text-dim);line-height:1.8}
+
+/* Quiz Section */
+.quiz-section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.quiz-progress{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score b{color:var(--green);font-size:16px}
+.quiz-q{
+  font-size:18px;font-weight:600;
+  line-height:1.7;margin-bottom:20px;
+}
+.quiz-options{
+  display:flex;gap:12px;margin-bottom:20px;
+}
+.quiz-btn{
+  flex:1;padding:16px 20px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+}
+.quiz-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.quiz-btn.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.quiz-btn.wrong{
+  border-color:var(--red);
+  background:var(--red-soft);
+  color:var(--red);
+}
+.quiz-feedback{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:16px 20px;
+  font-size:14px;line-height:1.8;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:all .4s;
+}
+.quiz-feedback.show{
+  opacity:1;max-height:300px;
+  margin-bottom:16px;
+}
+.quiz-feedback b{color:var(--text)}
+.quiz-nav{
+  display:flex;justify-content:flex-end;
+  gap:12px;margin-top:20px;
+  padding-top:20px;border-top:1px solid var(--border);
+}
+.quiz-nav button{
+  padding:10px 20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.quiz-nav button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+}
+.quiz-nav button.primary{
+  background:var(--text);color:#fff;
+  border-color:var(--text);
+}
+.quiz-nav button.primary:hover{
+  background:#000;
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.quiz-nav button:disabled{
+  opacity:.4;cursor:not-allowed;
+}
+
+/* MCQ Options */
+.mcq-options{
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:20px;
+}
+.mcq-option{
+  padding:14px 18px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+  text-align:left;
+}
+.mcq-option:hover{
+  transform:translateY(-1px);
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.mcq-option.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.mcq-option.wrong{
+  border-color:var(--red);
+  background:var(--red-soft);
+  color:var(--red);
+}
+.mcq-option .opt-label{
+  font-weight:700;margin-right:8px;
+}
+
+/* Result Screen */
+.quiz-result{
+  text-align:center;padding:40px 20px;
+  display:none;
+}
+.quiz-result.show{display:block}
+.quiz-result .score-circle{
+  width:140px;height:140px;
+  border-radius:50%;
+  margin:0 auto 24px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--green-soft);
+  border:4px solid var(--green);
+}
+.quiz-result .score-num{
+  font-size:42px;font-weight:800;
+  color:var(--green);
+}
+.quiz-result .score-total{
+  font-size:14px;color:var(--text-dim);
+}
+.quiz-result h3{
+  font-family:var(--serif);
+  font-size:24px;margin-bottom:12px;
+  justify-content:center;
+}
+.quiz-result p{
+  color:var(--text-dim);font-size:15px;
+  max-width:400px;margin:0 auto 24px;
+}
+.quiz-result button{
+  padding:12px 28px;
+  background:var(--text);color:#fff;
+  border:none;border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+}
+
+/* Mock Interview */
+.interview-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.interview-bubble{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.interview-avatar{
+  width:52px;height:52px;
+  background:#EEF2FF;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+}
+.interview-question{
+  flex:1;
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:18px 22px;
+  font-size:15px;line-height:1.9;
+  position:relative;
+}
+.interview-question::before{
+  content:'';
+  position:absolute;
+  left:-8px;top:20px;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:8px solid #F6F5F2;
+}
+.interview-question b{color:#6366f1}
+.interview-think{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:14px;
+  margin:28px 0 16px;
+  font-style:italic;
+}
+.interview-btn{
+  display:block;
+  width:100%;
+  padding:14px 20px;
+  background:#EEF2FF;
+  border:2px dashed #6366f1;
+  color:#6366f1;
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+}
+.interview-btn:hover{
+  background:#E0E7FF;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(99,102,241,.15);
+}
+.interview-btn:active{
+  transform:translateY(0);
+}
+.interview-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .5s ease, margin-top .4s ease;
+}
+.interview-answer.show{
+  max-height:1200px;
+  margin-top:20px;
+}
+.answer-intro{
+  background:var(--green-soft);
+  color:var(--green);
+  padding:14px 20px;
+  border-radius:10px 10px 0 0;
+  font-size:14px;font-weight:600;
+}
+.answer-list{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 10px 10px;
+  padding:20px 24px;
+}
+.answer-item{
+  display:flex;gap:14px;
+  margin-bottom:16px;
+  align-items:flex-start;
+}
+.answer-item:last-child{margin-bottom:0}
+.answer-item-num{
+  width:28px;height:28px;
+  background:#6366f1;
+  color:#fff;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.answer-item-content b{
+  color:var(--text);font-size:14px;
+  display:block;margin-bottom:4px;
+}
+.answer-item-content{
+  font-size:13px;color:var(--text-dim);line-height:1.8;
+}
+
+/* Tips Section */
+.tips-list{margin:20px 0}
+.tip-item{
+  background:var(--card);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:18px 24px;
+  margin-bottom:12px;
+}
+.tip-item h4{
+  font-family:var(--serif);
+  font-size:17px;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.tip-item p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+.footer-links{
+  display:flex;gap:16px;justify-content:center;
+  margin-bottom:16px;
+}
+.footer-links a{color:var(--text-dim);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--text)}
+
+/* Copy Value */
+.copy-value{
+  position:relative;
+  cursor:pointer;
+  padding:2px 8px;
+  border-radius:5px;
+  background:rgba(245,158,11,.12);
+  transition:all .2s;
+  font-weight:600;
+  display:inline-block;
+  font-family:'JetBrains Mono',Menlo,monospace;
+}
+.copy-value:hover{
+  background:rgba(245,158,11,.25);
+}
+.copy-tooltip{
+  position:absolute;
+  top:-32px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--text);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:12px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s;
+  z-index:10;
+  font-family:var(--sans);
+  font-weight:500;
+}
+.copy-tooltip.show{
+  opacity:1;
+}
+
+/* Related Knowledge */
+.related-knowledge{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px 28px;
+  margin-top:32px;
+}
+.related-knowledge h4{
+  font-family:var(--serif);
+  font-size:16px;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.rk-list{display:flex;flex-direction:column;gap:10px}
+.rk-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;
+  background:#F6F5F2;
+  border-radius:8px;
+  font-size:14px;
+}
+.rk-item .rk-type{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:12px;
+  font-weight:600;
+  flex-shrink:0;
+  letter-spacing:.5px;
+}
+.rk-item .rk-type.pre{background:var(--blue-soft);color:var(--blue)}
+.rk-item .rk-type.post{background:var(--green-soft);color:var(--green)}
+.rk-item .rk-type.practice{background:var(--yellow-soft);color:#B8860B}
+.rk-item .rk-content{flex:1}
+.rk-item .rk-content a{color:var(--text);text-decoration:none;font-weight:500;transition:color .2s}
+.rk-item .rk-content a:hover{color:var(--accent)}
+.rk-item.disabled .rk-content{color:var(--text-soft);cursor:not-allowed}
+.rk-badge{
+  font-size:10px;
+  padding:2px 6px;
+  background:var(--text-soft);
+  color:#fff;
+  border-radius:4px;
+  margin-left:8px;
+  font-weight:500;
+}
+
+/* Interactive Hick Demo */
+.hick-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.hick-demo h3{
+  font-family:var(--serif);
+  font-size:20px;
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+.hick-demo .demo-desc{
+  font-size:14px;
+  color:var(--text-dim);
+  margin-bottom:20px;
+  line-height:1.8;
+}
+.demo-controls{
+  display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;
+  align-items:center;
+}
+.demo-controls .label{
+  font-size:13px;color:var(--text-dim);margin-right:4px;
+}
+.demo-count-btn{
+  padding:6px 14px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  border-radius:6px;
+  font-size:13px;
+  cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.demo-count-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+}
+.demo-count-btn.active{
+  background:var(--accent);
+  color:#fff;
+  border-color:var(--accent);
+}
+.demo-menu-arena{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:24px;
+  min-height:200px;
+}
+.demo-menu{
+  display:grid;
+  gap:8px;
+  max-width:300px;
+  margin:0 auto;
+}
+.demo-menu button{
+  padding:12px 16px;
+  border:2px solid var(--border);
+  background:var(--card);
+  border-radius:8px;
+  font-size:14px;
+  cursor:pointer;
+  font-family:var(--sans);
+  transition:all .15s;
+  text-align:left;
+  font-weight:500;
+}
+.demo-menu button:hover{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  transform:translateX(4px);
+}
+.demo-menu button:active{
+  transform:translateX(2px);
+}
+.demo-menu-3{grid-template-columns:1fr}
+.demo-menu-6{grid-template-columns:1fr 1fr}
+.demo-menu-12{grid-template-columns:1fr 1fr 1fr}
+.demo-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:16px;
+}
+.demo-stat{
+  background:#F6F5F2;
+  border-radius:8px;
+  padding:12px 16px;
+  text-align:center;
+}
+.demo-stat .stat-label{
+  font-size:11px;
+  color:var(--text-soft);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+.demo-stat .stat-value{
+  font-size:22px;
+  font-weight:700;
+  margin-top:2px;
+  font-family:'JetBrains Mono',Menlo,monospace;
+}
+.demo-stat.n .stat-value{color:var(--accent)}
+.demo-stat.t .stat-value{color:var(--blue)}
+.demo-stat.diff .stat-value{color:var(--green)}
+.demo-feedback{
+  margin-top:12px;
+  padding:10px 14px;
+  background:var(--blue-soft);
+  border-radius:8px;
+  font-size:13px;
+  color:var(--blue);
+  min-height:20px;
+  text-align:center;
+  line-height:1.6;
+}
+
+/* Shortcut */
+.shortcut{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:2px 8px;
+  background:#F6F5F2;
+  border-radius:4px;
+  font-size:12px;
+  font-family:'JetBrains Mono',Menlo,monospace;
+  color:var(--text);
+  border:1px solid var(--border);
+  white-space:nowrap;
+}
+.shortcut .shortcut-mac,.shortcut .shortcut-win{white-space:nowrap}
+.shortcut .divider{color:var(--text-soft)}
+body.os-mac .shortcut .shortcut-win,
+body.os-mac .shortcut .divider{display:none}
+body.os-win .shortcut .shortcut-mac,
+body.os-win .shortcut .divider{display:none}
+
+.tip-shortcut{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--text-dim);
+  display:flex;align-items:center;gap:8px;
+}
+.tip-shortcut .label{font-weight:600;color:var(--text-soft)}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .section{padding:40px 20px}
+  .section h2{font-size:24px}
+  .var-grid{grid-template-columns:repeat(2,1fr)}
+  .chunk-compare,.options-row,.compare-row,.disclosure-flow{grid-template-columns:1fr}
+  .formula{font-size:20px}
+  .step-nav{flex-wrap:wrap}
+  .step-nav a{border-right:none;border-bottom:1px solid var(--border)}
+  .demo-stats{grid-template-columns:repeat(3,1fr)}
+  .demo-stat .stat-value{font-size:18px}
+  .hick-demo{padding:20px}
+  .interview-section{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">UI<span>设计</span>基础</div>
+  <div class="nav-links">
+    <a href="#step1">STEP 1</a>
+    <a href="#step2">STEP 2</a>
+    <a href="#step3">STEP 3</a>
+    <a href="#step4">STEP 4</a>
+    <a href="#plus">PLUS</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="icon">🧠</div>
+  <div class="label">HICK'S LAW & MILLER'S LAW — DECISION PSYCHOLOGY</div>
+  <h1>为什么选项越多，<br>你越难做出选择？</h1>
+  <p class="subtitle">
+    菜单越长越难选、号码分段更好记——<br>
+    两个心理学定律，解释了导航、表单、信息架构背后的设计逻辑。
+  </p>
+  <div class="tags">
+    <span class="tag">决策心理学</span>
+    <span class="tag">信息架构</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</section>
+
+<!-- Step Nav -->
+<div class="step-nav">
+  <a href="#step1">STEP 1 双定律基础</a>
+  <a href="#step2">STEP 2 判断题</a>
+  <a href="#step3">STEP 3 选择题</a>
+  <a href="#step4">STEP 4 模拟面试</a>
+  <a href="#plus">PLUS 三口诀</a>
+</div>
+
+<!-- STEP 1: Knowledge -->
+<section class="section" id="step1">
+  <div class="step-label">STEP 1</div>
+  <h2>席克定律与米勒定律基础</h2>
+  <p class="lead">
+    两个人机交互领域的经典定律，一个讲<b>选择数量</b>如何影响决策速度，一个讲<b>记忆容量</b>如何影响信息理解。<br>
+    它们共同决定了：你的菜单应该有多少项、表单应该怎么拆、信息应该怎么呈现。
+  </p>
+
+  <!-- Part 1: Hick's Law -->
+  <div class="know-card">
+    <div class="emoji">⚡</div>
+    <h3>Part 1 · 席克定律（Hick's Law）</h3>
+    <p>1952年，心理学家 <b>William Edmund Hick</b> 提出：人面对的选项越多，做出决策所需的时间就越长。这就是席克定律——选项数量 n 与反应时间 RT 之间存在对数关系。</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        RT = a + b · log₂(<span class="n">n</span> + 1)
+      </div>
+      <div class="var-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="var-item">
+          <div class="name">RT</div>
+          <div class="desc">反应时间</div>
+        </div>
+        <div class="var-item">
+          <div class="name"><span style="color:var(--accent)">n</span> — 选项数</div>
+          <div class="desc">可供选择的数量</div>
+        </div>
+        <div class="var-item">
+          <div class="name">a, b</div>
+          <div class="desc">经验常数</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="conclusion">
+      <b>📌 一句话总结：</b>选项越多 → 决策越慢。<br>
+      控制选项数量，用户就能更快做出选择。
+    </div>
+  </div>
+
+  <!-- Interactive Hick Demo -->
+  <div class="hick-demo">
+    <h3><span class="emoji">🎮</span> 动手试试：选项数量 vs 决策速度</h3>
+    <p class="demo-desc">
+      在下方菜单中找到并点击"设置"按钮。切换不同的选项数量，感受选项多少如何影响你的决策速度。
+    </p>
+    <div class="demo-controls">
+      <span class="label">选项数量：</span>
+      <button class="demo-count-btn active" onclick="setHickDemo(3)">3 个</button>
+      <button class="demo-count-btn" onclick="setHickDemo(6)">6 个</button>
+      <button class="demo-count-btn" onclick="setHickDemo(12)">12 个</button>
+    </div>
+    <div class="demo-menu-arena">
+      <div class="demo-menu demo-menu-3" id="hickMenu">
+        <button onclick="hickTargetClick('首页')">首页</button>
+        <button onclick="hickTargetClick('消息')">消息</button>
+        <button onclick="hickTargetClick('设置')">设置</button>
+      </div>
+    </div>
+    <div class="demo-stats">
+      <div class="demo-stat n">
+        <div class="stat-label">选项数 n</div>
+        <div class="stat-value" id="hickCount">3</div>
+      </div>
+      <div class="demo-stat t">
+        <div class="stat-label">用时</div>
+        <div class="stat-value" id="hickTime">—</div>
+      </div>
+      <div class="demo-stat diff">
+        <div class="stat-label">难度</div>
+        <div class="stat-value" id="hickDiff" style="font-size:16px">简单</div>
+      </div>
+    </div>
+    <div class="demo-feedback" id="hickFeedback">
+      👆 点击"设置"按钮，计时开始
+    </div>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">📱</div>
+    <h3>席克定律的 UI 应用</h3>
+    <p>在界面设计中，席克定律最直接的应用就是<b>控制选项数量</b>。常见的设计策略包括：</p>
+    <table class="std-table">
+      <tr><th>设计场景</th><th>建议数量</th><th>说明</th></tr>
+      <tr><td>底部导航 Tab</td><td><b>3-5 个</b></td><td>移动端主流 App 的标准做法</td></tr>
+      <tr><td>下拉菜单</td><td><b>5-7 个</b></td><td>超过则考虑分组或折叠</td></tr>
+      <tr><td>设置页面</td><td><b>分组呈现</b></td><td>每组不超过 7 个选项</td></tr>
+      <tr><td>筛选条件</td><td><b>常用前置</b></td><td>高频选项露出，其余收起</td></tr>
+    </table>
+    <div class="tip-shortcut">
+      <span class="label">设计原则</span>
+      <span>选项越多 → 决策时间呈对数增长</span>
+    </div>
+  </div>
+
+  <!-- Part 2: Miller's Law -->
+  <div class="know-card">
+    <div class="emoji">🧮</div>
+    <h3>Part 2 · 米勒定律（Miller's Law）</h3>
+    <p>1956年，认知心理学家 <b>George A. Miller</b> 发表了著名论文《神奇数字 7 ± 2》，指出人的<b>工作记忆</b>（working memory）容量大约是 <b>7 ± 2 个信息块</b>。</p>
+
+    <div class="formula-box">
+      <div class="formula">
+        神奇数字 = <span class="magic">7</span> ± 2
+      </div>
+      <div style="margin-top:16px;font-size:14px;color:var(--text-dim)">
+        人的工作记忆一次大约能 hold 住 5~9 个信息"块"（chunk）
+      </div>
+    </div>
+
+    <div class="conclusion">
+      <b>📌 核心策略：信息分块（Chunking）</b><br>
+      把大量信息拆成 7 个以内的"块"，每块再包含 7 个以内的子项——<br>
+      就像大树分层：主干 → 分支 → 树叶，层层深入。
+    </div>
+  </div>
+
+  <!-- Chunking Demo -->
+  <div class="chunk-demo">
+    <h3><span class="emoji">📞</span> 生活中的分块：手机号</h3>
+    <p style="font-size:14px;color:var(--text-dim);margin-bottom:4px">
+      同样是 11 位手机号，哪种写法更好记？
+    </p>
+    <div class="chunk-compare">
+      <div class="chunk-card bad">
+        <div class="label">✗ 不分块</div>
+        <div class="number">13812345678</div>
+        <div class="desc">11 个数字连在一起<br>超过 7 ± 2 的记忆容量<br>→ 很难一口气记住</div>
+      </div>
+      <div class="chunk-card good">
+        <div class="label">✓ 分块记</div>
+        <div class="number">138-1234-5678</div>
+        <div class="desc">拆成 3 个"块"（3位+4位+4位）<br>每块都在 7 ± 2 范围内<br>→ 轻松记住</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text-dim);margin-top:8px">
+      <b>更多例子：</b>银行卡号 4 位一组（6225 8812 3456 7890）、身份证号 6-8-4 分段、验证码 4-6 位一组呈现
+    </p>
+  </div>
+
+  <!-- Part 3: Progressive Disclosure -->
+  <div class="know-card">
+    <div class="emoji">📂</div>
+    <h3>Part 3 · 联合应用：渐进式披露（Progressive Disclosure）</h3>
+    <p>把席克定律（控制选项数量）和米勒定律（信息分块）结合起来，就得到了 UI 设计中最重要的策略之一——<b>渐进式披露</b>。</p>
+    <p>核心思想：<b>先给用户看核心选项，次要内容收起来，需要时再展开。</b>这样每一层的选项数量都控制在合理范围内，既降低决策成本，又不丢失信息。</p>
+
+    <div class="disclosure-flow">
+      <div class="disclosure-step">
+        <div class="level">第一层</div>
+        <div class="count">5 个</div>
+        <div class="desc">核心分类</div>
+      </div>
+      <div class="disclosure-arrow">→</div>
+      <div class="disclosure-step">
+        <div class="level">第二层</div>
+        <div class="count">6 个</div>
+        <div class="desc">每类子项</div>
+      </div>
+      <div class="disclosure-arrow">→</div>
+      <div class="disclosure-step">
+        <div class="level">第三层</div>
+        <div class="count">7 个</div>
+        <div class="desc">详细选项</div>
+      </div>
+    </div>
+
+    <div class="conclusion">
+      <b>💡 设计应用：</b><br>
+      ① <b>信息架构</b>：分类不超过 7 个，每类选项不超过 7 个<br>
+      ② <b>"查看更多"模式</b>：先展示核心选项，"更多"里放次要的<br>
+      ③ <b>长表单分步</b>：拆成多步填写，每步不超过 7 个字段
+    </div>
+  </div>
+
+  <!-- Good vs Bad -->
+  <div class="compare-row">
+    <div class="compare-card bad">
+      <h4>✗ 反面：一屏堆 20 个设置</h4>
+      <p>所有选项平铺展示，用户需要在 20+ 选项中搜索——决策慢、容易看错、找不到想找的。违反席克定律和米勒定律。</p>
+    </div>
+    <div class="compare-card good">
+      <h4>✓ 正面：5 组 × 每组 5 个</h4>
+      <p>按功能分组（账户/隐私/通知/通用/关于），每组 5-7 个选项。先选组再找项，每层都在 7 ± 2 范围内，清晰高效。</p>
+    </div>
+  </div>
+
+  <!-- Related Knowledge -->
+  <div class="related-knowledge">
+    <h4>🔗 相关知识</h4>
+    <div class="rk-list">
+      <div class="rk-item">
+        <span class="rk-type pre">前置知识</span>
+        <div class="rk-content"><a href="../K04_费茨定律/K04_交互课件.html">费茨定律（K04）— 同属交互设计定律</a></div>
+      </div>
+      <div class="rk-item disabled">
+        <span class="rk-type post">后续知识</span>
+        <div class="rk-content">交互设计模式（K15）— 导航/表单等模式设计 <span class="rk-badge">即将上线</span></div>
+      </div>
+      <div class="rk-item disabled">
+        <span class="rk-type practice">相关实践</span>
+        <div class="rk-content">搜索栏与搜索结果页（C17）— 信息检索效率设计 <span class="rk-badge">即将上线</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: True/False Quiz -->
+<section class="section" id="step2">
+  <div class="step-label">STEP 2</div>
+  <h2>「对吗？」判断题</h2>
+  <p class="lead">
+    判断下面的说法是对是错。<br>
+    觉得对就点 <b>✓</b>，觉得错就点 <b>✗</b>，每道题都有详细解析。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q1Progress">Q1 / 4</div>
+      <div class="quiz-score">答对 <b id="q1Score">0</b> / 4</div>
+    </div>
+
+    <div id="q1Container">
+      <div class="quiz-q" id="q1Question">
+        菜单选项越多，用户决策越快，因为选择更丰富。
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-btn" onclick="checkTF(1, true)">✓ 对</button>
+        <button class="quiz-btn" onclick="checkTF(1, false)">✗ 错</button>
+      </div>
+      <div class="quiz-feedback" id="q1Feedback">
+        <b style="color:var(--red)">✗ 答错了</b><br>
+        正好相反。根据<b>席克定律</b>，选项数量 n 越多，反应时间 RT 越长——用户需要花更多时间去比较和选择。所以好的设计会控制选项数量，而不是堆得越多越好。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevTF()" id="q1Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextTF()" id="q1Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q1Result">
+      <div class="score-circle">
+        <div class="score-num" id="q1FinalScore">0</div>
+        <div class="score-total">/ 4 题</div>
+      </div>
+      <h3>🎉 判断题完成！</h3>
+      <p>席克定律讲"选项越少决策越快"，米勒定律讲"7±2 是记忆上限"。<br>记住这两条，导航和表单的设计就有了理论依据。</p>
+      <button onclick="resetTF()">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: Multiple Choice -->
+<section class="section" id="step3">
+  <div class="step-label">STEP 3</div>
+  <h2>选择：最好的设计方案</h2>
+  <p class="lead">
+    从四个选项中，选出最符合席克定律和米勒定律的设计方案。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q2Progress">Q1 / 3</div>
+      <div class="quiz-score">答对 <b id="q2Score">0</b> / 3</div>
+    </div>
+
+    <div id="q2Container">
+      <div class="quiz-q" id="q2Question">
+        根据席克定律，底部导航栏的 Tab 数量建议控制在多少个？
+      </div>
+      <div class="mcq-options" id="q2Options">
+        <button class="mcq-option" onclick="checkMCQ(1, 'A')"><span class="opt-label">A.</span>2 个以内</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'B')"><span class="opt-label">B.</span>3-5 个</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'C')"><span class="opt-label">C.</span>7-10 个</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'D')"><span class="opt-label">D.</span>越多越好</button>
+      </div>
+      <div class="quiz-feedback" id="q2Feedback">
+        <b style="color:var(--green)">✓ 正确答案：B</b><br>
+        底部导航 3-5 个 Tab 是行业共识。太少（2个）浪费了导航栏的承载能力；太多（7个以上）违反席克定律，决策变慢且每个 Tab 的触控宽度被压缩。主流 App 如微信、支付宝、Instagram 都是 4-5 个 Tab。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevMCQ()" id="q2Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextMCQ()" id="q2Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q2Result">
+      <div class="score-circle" style="background:var(--accent-soft);border-color:var(--accent)">
+        <div class="score-num" id="q2FinalScore" style="color:var(--accent)">0</div>
+        <div class="score-total">/ 3 题</div>
+      </div>
+      <h3>🌟 选择题完成！</h3>
+      <p>把双定律用到设计决策里——每次放菜单、做表单时，问问自己：<br>选项数量合理吗？需要分块吗？能渐进式披露吗？</p>
+      <button onclick="resetMCQ()" style="background:var(--accent)">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4: Mock Interview -->
+<section class="section" id="step4">
+  <div class="step-label">STEP 4</div>
+  <h2>模拟面试</h2>
+  <p class="lead">
+    试试用席克定律和米勒定律回答真实的面试题，<br>
+    检验一下你对信息架构设计的理解深度。
+  </p>
+
+  <div class="interview-card">
+    <div class="interview-bubble">
+      <div class="interview-avatar">👨‍💼</div>
+      <div class="interview-question">
+        <b>面试官：</b>我们的 App 设置页有 30 多个选项，用户总是说找不到想要的功能。你会怎么用席克定律和米勒定律来优化？
+      </div>
+    </div>
+    
+    <div class="interview-think">
+      🤔 先想想你的答案
+    </div>
+    
+    <button class="interview-btn" onclick="toggleInterviewAnswer()" id="interviewBtn">
+      💡 查看参考答案
+    </button>
+    
+    <div class="interview-answer" id="interviewAnswer">
+      <div class="answer-intro">
+        ✅ 参考答案：从以下 5 个维度优化设置页
+      </div>
+      <div class="answer-list">
+        <div class="answer-item">
+          <div class="answer-item-num">1</div>
+          <div class="answer-item-content">
+            <b>分类分组（米勒定律）</b>
+            把 30 多个选项按功能分成 5-6 组（账户/隐私/通知/通用/关于等），每组 5-7 个选项。利用"7 ± 2"的工作记忆容量，让用户在每组内快速定位。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">2</div>
+          <div class="answer-item-content">
+            <b>排序优化（席克定律）</b>
+            高频选项放顶部，低频放底部，降低用户的搜索成本。可以通过埋点数据统计各设置项的点击率，按使用频率排序。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">3</div>
+          <div class="answer-item-content">
+            <b>渐进式披露（Progressive Disclosure）</b>
+            高级设置折叠在二级页面，主页面只放最常用的 5-7 个核心选项。"更多设置"入口放在底部，需要的用户自行进入，减少首屏的选项数量。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">4</div>
+          <div class="answer-item-content">
+            <b>搜索兜底</b>
+            加一个全局搜索框，用户可以直接搜设置项名。当选项数量大到一定程度时，搜索比浏览效率更高——这也是对席克定律的补充。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">5</div>
+          <div class="answer-item-content">
+            <b>图标辅助</b>
+            每组加一个图标，利用相似性和视觉记忆加快定位。图标 + 文字的双通道编码，比纯文字列表的识别速度更快。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLUS: Tips -->
+<section class="section" id="plus">
+  <div class="step-label">PLUS</div>
+  <h2>双定律口诀</h2>
+  <p class="lead">
+    席克定律 + 米勒定律，落到设计实践，记住这三条口诀就够了。
+  </p>
+
+  <div class="tips-list">
+    <div class="tip-item">
+      <h4>⚡ ① 选项少一点</h4>
+      <p>席克定律告诉我们：选项越多，决策越慢。底部导航 3-5 个最舒服，菜单控制在 7 个以内，超过就分组或折叠。每次加选项前问问自己：真的有必要吗？</p>
+    </div>
+    <div class="tip-item">
+      <h4>🧩 ② 信息分块记</h4>
+      <p>米勒定律的"7 ± 2"是工作记忆的上限。长数字分段、多选项分组、复杂信息分层——把大信息拆成 7 个以内的"块"，每块再继续拆，层层深入。</p>
+    </div>
+    <div class="tip-item">
+      <h4>📂 ③ 先少后多变</h4>
+      <p>渐进式披露（Progressive Disclosure）是双定律的联合应用：先给核心选项，次要的收起来，用户需要再展开。既保证首屏简洁，又不丢失功能深度。</p>
+    </div>
+  </div>
+
+  <div class="conclusion" style="margin-top:32px">
+    <b>💡 双定律要点口诀：</b><br>
+    ① 选项少一点（席克：3-5 个最舒服）<br>
+    ② 信息分块记（米勒：7 ± 2 是上限）<br>
+    ③ 先少后多变（渐进式披露，层层深入）<br>
+    —— 这三点做到了，导航和表单就"好用"了。
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#step1">STEP 1 知识</a>
+    <a href="#step2">STEP 2 判断</a>
+    <a href="#step3">STEP 3 选择</a>
+    <a href="#step4">STEP 4 面试</a>
+    <a href="#plus">PLUS 口诀</a>
+  </div>
+  <p>席克定律与米勒定律 — 决策心理学与信息分块</p>
+  <p style="margin-top:4px">UI 设计理论知识点 K05 · 交互课件</p>
+</footer>
+
+<script>
+// ========== True/False Quiz ==========
+const tfQuestions = [
+  {
+    q: '菜单选项越多，用户决策越快，因为选择更丰富。',
+    answer: false,
+    explain: '<b style="color:var(--red)">✗ 答错了</b><br>正好相反。根据<b>席克定律</b>，选项数量 n 越多，反应时间 RT 越长——用户需要花更多时间去比较和选择。所以好的设计会控制选项数量，而不是堆得越多越好。'
+  },
+  {
+    q: '电话号码分成 3-4-4 三段来记，是利用了米勒定律的信息分块。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>11 位手机号超过了"7 ± 2"的工作记忆容量，但拆成 3 个块（138 / 1234 / 5678）后，每块都在记忆容量内，记起来就轻松多了。这就是米勒定律的信息分块（Chunking）策略。'
+  },
+  {
+    q: '底部导航栏放 10 个 Tab 比放 5 个 Tab 更好用。',
+    answer: false,
+    explain: '<b style="color:var(--red)">✗ 答错了</b><br>10 个 Tab 严重违反席克定律——选项太多，决策变慢，而且每个 Tab 的触控宽度被压缩，误触率也会上升。行业主流做法是 3-5 个 Tab，这是在功能承载和决策效率之间的最佳平衡。'
+  },
+  {
+    q: '渐进式披露就是先给用户看核心选项，次要的收起来，需要再展开。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>渐进式披露（Progressive Disclosure）是席克定律和米勒定律的联合应用——通过分层展示控制每一层的选项数量，既保证首屏简洁，又不丢失功能深度。"查看更多""高级设置"都是典型的渐进式披露模式。'
+  }
+];
+
+let tfCur = 0;
+let tfScore = 0;
+let tfAnswered = new Array(tfQuestions.length).fill(false);
+let tfUserAnswer = new Array(tfQuestions.length).fill(null);
+
+function renderTF() {
+  const q = tfQuestions[tfCur];
+  document.getElementById('q1Question').textContent = q.q;
+  document.getElementById('q1Progress').textContent = `Q${tfCur+1} / ${tfQuestions.length}`;
+  document.getElementById('q1Score').textContent = tfScore;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  btns.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = false; });
+
+  const fb = document.getElementById('q1Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q1Prev').disabled = tfCur === 0;
+  document.getElementById('q1Next').disabled = !tfAnswered[tfCur];
+
+  if (tfAnswered[tfCur]) {
+    const correct = tfUserAnswer[tfCur] === q.answer;
+    const idx = tfUserAnswer[tfCur] ? 0 : 1;
+    btns[idx].classList.add(correct ? 'correct' : 'wrong');
+    btns.forEach(b => b.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q1Next').disabled = false;
+  }
+}
+
+function checkTF(idx, userAnswer) {
+  if (tfAnswered[tfCur]) return;
+  const correct = userAnswer === tfQuestions[tfCur].answer;
+  tfAnswered[tfCur] = true;
+  tfUserAnswer[tfCur] = userAnswer;
+  if (correct) tfScore++;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  const correctIdx = tfQuestions[tfCur].answer ? 0 : 1;
+  btns[correctIdx].classList.add('correct');
+  if (!correct) {
+    const wrongIdx = userAnswer ? 0 : 1;
+    btns[wrongIdx].classList.add('wrong');
+  }
+  btns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('q1Feedback');
+  fb.innerHTML = tfQuestions[tfCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q1Score').textContent = tfScore;
+  document.getElementById('q1Next').disabled = false;
+}
+
+function nextTF() {
+  if (tfCur < tfQuestions.length - 1) {
+    tfCur++;
+    renderTF();
+  } else {
+    document.getElementById('q1Container').style.display = 'none';
+    document.getElementById('q1Result').classList.add('show');
+    document.getElementById('q1FinalScore').textContent = tfScore;
+  }
+}
+
+function prevTF() {
+  if (tfCur > 0) {
+    tfCur--;
+    renderTF();
+  }
+}
+
+function resetTF() {
+  tfCur = 0;
+  tfScore = 0;
+  tfAnswered = new Array(tfQuestions.length).fill(false);
+  tfUserAnswer = new Array(tfQuestions.length).fill(null);
+  document.getElementById('q1Container').style.display = 'block';
+  document.getElementById('q1Result').classList.remove('show');
+  renderTF();
+}
+
+// ========== Multiple Choice Quiz ==========
+const mcqQuestions = [
+  {
+    q: '根据席克定律，底部导航栏的 Tab 数量建议控制在多少个？',
+    options: [
+      '2 个以内',
+      '3-5 个',
+      '7-10 个',
+      '越多越好'
+    ],
+    answer: 1,
+    explain: '<b style="color:var(--green)">✓ 正确答案：B</b><br>底部导航 3-5 个 Tab 是行业共识。太少（2个）浪费了导航栏的承载能力；太多（7个以上）违反席克定律，决策变慢且每个 Tab 的触控宽度被压缩。主流 App 如微信、支付宝、Instagram 都是 4-5 个 Tab。'
+  },
+  {
+    q: '米勒定律提出的"神奇数字"是多少？',
+    options: [
+      '3 ± 1',
+      '5 ± 2',
+      '7 ± 2',
+      '10 ± 3'
+    ],
+    answer: 2,
+    explain: '<b style="color:var(--green)">✓ 正确答案：C</b><br>1956年，George A. Miller 在论文《神奇数字 7 ± 2》中提出：人的工作记忆容量大约是 7 ± 2 个信息块，也就是 5~9 个。这个数字是信息分块（Chunking）策略的理论依据。'
+  },
+  {
+    q: '"把长表单分成多步填写，每步只问几个问题"运用了什么策略？',
+    options: [
+      '渐进式披露',
+      '费茨定律',
+      '格式塔原理',
+      '边缘效应'
+    ],
+    answer: 0,
+    explain: '<b style="color:var(--green)">✓ 正确答案：A</b><br>长表单分步填写是<b>渐进式披露（Progressive Disclosure）</b>的典型应用——把 30 个字段拆成 5 步，每步 6 个，每步都在"7 ± 2"的舒适区内。用户每完成一步都有成就感，也不会因为表单太长而放弃。'
+  }
+];
+
+let mcqCur = 0;
+let mcqScore = 0;
+let mcqAnswered = new Array(mcqQuestions.length).fill(false);
+let mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+
+function renderMCQ() {
+  const q = mcqQuestions[mcqCur];
+  document.getElementById('q2Question').textContent = q.q;
+  document.getElementById('q2Progress').textContent = `Q${mcqCur+1} / ${mcqQuestions.length}`;
+  document.getElementById('q2Score').textContent = mcqScore;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts.forEach((o, i) => {
+    o.classList.remove('correct','wrong');
+    o.disabled = false;
+    o.innerHTML = `<span class="opt-label">${String.fromCharCode(65+i)}.</span> ${q.options[i]}`;
+  });
+
+  const fb = document.getElementById('q2Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q2Prev').disabled = mcqCur === 0;
+  document.getElementById('q2Next').disabled = !mcqAnswered[mcqCur];
+
+  if (mcqAnswered[mcqCur]) {
+    const correct = mcqUserAnswer[mcqCur] === q.answer;
+    opts[q.answer].classList.add('correct');
+    if (!correct) opts[mcqUserAnswer[mcqCur]].classList.add('wrong');
+    opts.forEach(o => o.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q2Next').disabled = false;
+  }
+}
+
+function checkMCQ(idx, letter) {
+  if (mcqAnswered[mcqCur]) return;
+  const userIdx = letter.charCodeAt(0) - 65;
+  const correct = userIdx === mcqQuestions[mcqCur].answer;
+  mcqAnswered[mcqCur] = true;
+  mcqUserAnswer[mcqCur] = userIdx;
+  if (correct) mcqScore++;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts[mcqQuestions[mcqCur].answer].classList.add('correct');
+  if (!correct) opts[userIdx].classList.add('wrong');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('q2Feedback');
+  fb.innerHTML = mcqQuestions[mcqCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q2Score').textContent = mcqScore;
+  document.getElementById('q2Next').disabled = false;
+}
+
+function nextMCQ() {
+  if (mcqCur < mcqQuestions.length - 1) {
+    mcqCur++;
+    renderMCQ();
+  } else {
+    document.getElementById('q2Container').style.display = 'none';
+    document.getElementById('q2Result').classList.add('show');
+    document.getElementById('q2FinalScore').textContent = mcqScore;
+  }
+}
+
+function prevMCQ() {
+  if (mcqCur > 0) {
+    mcqCur--;
+    renderMCQ();
+  }
+}
+
+function resetMCQ() {
+  mcqCur = 0;
+  mcqScore = 0;
+  mcqAnswered = new Array(mcqQuestions.length).fill(false);
+  mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+  document.getElementById('q2Container').style.display = 'block';
+  document.getElementById('q2Result').classList.remove('show');
+  renderMCQ();
+}
+
+// ========== Copy Value ==========
+function copyValue(el) {
+  let text = el.textContent.replace(/📋/g, '').trim();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showCopyTooltip(el);
+    }).catch(() => {
+      fallbackCopy(text, el);
+    });
+  } else {
+    fallbackCopy(text, el);
+  }
+}
+
+function fallbackCopy(text, el) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    showCopyTooltip(el);
+  } catch (e) {
+    console.error('Copy failed:', e);
+  }
+  document.body.removeChild(textarea);
+}
+
+function showCopyTooltip(el) {
+  const existing = el.querySelector('.copy-tooltip');
+  if (existing) existing.remove();
+  
+  const tooltip = document.createElement('span');
+  tooltip.className = 'copy-tooltip show';
+  tooltip.textContent = '✓ 已复制';
+  el.appendChild(tooltip);
+  
+  setTimeout(() => {
+    tooltip.classList.remove('show');
+    setTimeout(() => {
+      if (tooltip.parentNode) tooltip.parentNode.removeChild(tooltip);
+    }, 200);
+  }, 1200);
+}
+
+// ========== Mock Interview Toggle ==========
+function toggleInterviewAnswer() {
+  const panel = document.getElementById('interviewAnswer');
+  const btn = document.getElementById('interviewBtn');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    btn.textContent = '🙈 收起参考答案';
+  } else {
+    btn.textContent = '💡 查看参考答案';
+  }
+}
+
+// ========== Hick's Law Interactive Demo ==========
+let hickState = 'idle'; // idle, done
+let hickStartTime = 0;
+let hickCurrentCount = 3;
+
+const menuItems = {
+  3: ['首页', '消息', '设置'],
+  6: ['首页', '发现', '消息', '商城', '我的', '设置'],
+  12: ['首页', '推荐', '发现', '直播', '消息', '关注', '商城', '收藏', '历史', '我的', '客服', '设置']
+};
+
+function setHickDemo(count) {
+  hickCurrentCount = count;
+  hickState = 'idle';
+  hickStartTime = performance.now();
+
+  // Update buttons
+  document.querySelectorAll('.demo-count-btn').forEach((btn, i) => {
+    const counts = [3, 6, 12];
+    btn.classList.toggle('active', counts[i] === count);
+  });
+
+  // Update menu
+  const menu = document.getElementById('hickMenu');
+  menu.className = 'demo-menu demo-menu-' + count;
+
+  const items = menuItems[count];
+  menu.innerHTML = items.map(item =>
+    `<button onclick="hickTargetClick('${item}')">${item}</button>`
+  ).join('');
+
+  // Update stats
+  document.getElementById('hickCount').textContent = count;
+  document.getElementById('hickTime').textContent = '—';
+
+  const diffText = count === 3 ? '简单' : (count === 6 ? '中等' : '困难');
+  document.getElementById('hickDiff').textContent = diffText;
+
+  // Reset feedback
+  document.getElementById('hickFeedback').textContent = '👆 找到并点击"设置"按钮';
+  document.getElementById('hickFeedback').style.background = 'var(--blue-soft)';
+  document.getElementById('hickFeedback').style.color = 'var(--blue)';
+}
+
+function hickTargetClick(itemName) {
+  if (hickState === 'done') return;
+
+  if (itemName === '设置') {
+    const endTime = performance.now();
+    const elapsed = Math.round(endTime - hickStartTime);
+
+    document.getElementById('hickTime').textContent = elapsed + 'ms';
+
+    let feedback = '';
+    if (hickCurrentCount === 3) {
+      feedback = elapsed < 500 ? '⚡ 超快！3 个选项一目了然' : '👍 不错，3 个选项轻松选择';
+    } else if (hickCurrentCount === 6) {
+      feedback = elapsed < 800 ? '⚡ 很快！6 个选项也还行' : '⏱️ 正常，6 个选项需要扫一眼';
+    } else {
+      feedback = elapsed < 1200 ? '👍 不错，12 个选项你也找到了' : '😅 有点慢吧？12 个选项找起来确实费劲';
+    }
+
+    document.getElementById('hickFeedback').textContent = feedback + `（用时 ${elapsed}ms）`;
+    document.getElementById('hickFeedback').style.background = 'var(--green-soft)';
+    document.getElementById('hickFeedback').style.color = 'var(--green)';
+
+    hickState = 'done';
+
+    setTimeout(() => {
+      hickState = 'idle';
+      hickStartTime = performance.now();
+      document.getElementById('hickFeedback').textContent = '🔄 再试一次，或切换选项数量对比';
+      document.getElementById('hickFeedback').style.background = 'var(--blue-soft)';
+      document.getElementById('hickFeedback').style.color = 'var(--blue)';
+    }, 2500);
+  } else {
+    document.getElementById('hickFeedback').textContent = '⚠️ 不是这个哦，找"设置"按钮';
+    document.getElementById('hickFeedback').style.background = 'var(--red-soft)';
+    document.getElementById('hickFeedback').style.color = 'var(--red)';
+  }
+}
+
+// ========== OS Shortcut Detection ==========
+function initShortcuts() {
+  const platform = navigator.platform || '';
+  const userAgent = navigator.userAgent || '';
+  const isMac = /Mac|iPod|iPhone|iPad/.test(platform) || /Macintosh|Mac OS X|iOS/.test(userAgent);
+  
+  if (isMac) {
+    document.body.classList.add('os-mac');
+  } else {
+    document.body.classList.add('os-win');
+  }
+}
+
+// Init
+window.addEventListener('load', () => {
+  initShortcuts();
+  setHickDemo(3);
+});
+
+// Init quizzes
+renderTF();
+renderMCQ();
+</script>
+
+</body>
+</html>

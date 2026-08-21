@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C05 玻璃质感开关按钮设计 | 视频脚本</title>
+<style>
+:root {
+  --primary: #06B6D4; --primary-dark: #0891B2; --accent: #f59e0b;
+  --success: #10b981; --danger: #ef4444; --purple: #8b5cf6;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+  --bg: #f0f4f8; --card: #fff; --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; background:var(--bg); color:var(--gray-900); line-height:1.7; font-size:14px; }
+.container { max-width:1100px; margin:0 auto; padding:32px; }
+.header { background:linear-gradient(135deg, #06B6D4, #0891B2); color:#fff; padding:36px 32px; border-radius:var(--radius); margin-bottom:28px; }
+.header .ep { font-size:13px; opacity:0.8; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.header h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+.header .meta { display:flex; gap:12px; flex-wrap:wrap; }
+.header .meta span { background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; }
+.section { background:var(--card); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.section h2 { font-size:18px; font-weight:700; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #06B6D4; }
+.shot-table { width:100%; border-collapse:collapse; font-size:13px; }
+.shot-table th { background:var(--gray-100); padding:10px; text-align:left; font-weight:600; color:var(--gray-700); border-bottom:2px solid var(--gray-200); white-space:nowrap; }
+.shot-table td { padding:12px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+.shot-num { font-weight:700; color:#06B6D4; }
+.time-code { font-family:'SF Mono',Monaco,monospace; font-weight:600; color:var(--accent); white-space:nowrap; }
+.narration { background:#ECFEFF; padding:10px 14px; border-radius:6px; border-left:3px solid #06B6D4; margin-top:4px; }
+.narration::before { content:"旁白："; font-weight:700; color:#06B6D4; font-size:12px; }
+.subtitle { color:var(--gray-500); font-style:italic; font-size:12px; margin-top:4px; }
+.subtitle::before { content:"字幕："; font-weight:600; font-style:normal; }
+.figma-op { background:#f0fdf4; padding:8px 12px; border-radius:6px; border-left:3px solid var(--success); margin-top:4px; font-size:12px; }
+.figma-op::before { content:"Figma操作："; font-weight:700; color:var(--success); }
+.asset-list { list-style:none; }
+.asset-list li { padding:8px 12px; margin-bottom:6px; background:var(--gray-50); border-radius:6px; border-left:3px solid var(--accent); font-size:13px; }
+.asset-list li b { color:var(--gray-700); }
+.note-box { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:16px; margin-top:16px; font-size:13px; }
+.note-box b { color:#92400e; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.tag-sfx { background:#fce7f3; color:#9d174d; }
+.tag-visual { background:#dbeafe; color:#1e40af; }
+.tag-transition { background:#d1fae5; color:#065f46; }
+.tag-rec { background:#fef3c7; color:#92400e; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="ep">EPISODE C05 · 案例教程</div>
+  <h1>玻璃质感开关按钮设计</h1>
+  <div class="meta">
+    <span>时长：5分00秒</span>
+    <span>格式：Figma录屏操作演示</span>
+    <span>教材来源：4.4.5</span>
+    <span>工具：Figma</span>
+    <span>分辨率：1920×1080 / 30fps</span>
+  </div>
+</div>
+
+<!-- Production Overview -->
+<div class="section">
+  <h2>制作概述</h2>
+  <table class="shot-table">
+    <tr><td style="width:140px;"><b>视频类型</b></td><td>操作演示型（Figma录屏 + 旁白讲解 + 关键步骤标注）</td></tr>
+    <tr><td><b>目标受众</b></td><td>UI设计初学者、Figma入门用户、需要制作组件库的设计师</td></tr>
+    <tr><td><b>核心目标</b></td><td>跟随视频在Figma中从零完成一个玻璃质感的开关按钮，掌握玻璃效果三件套、组件变体、Smart Animate动画全流程</td></tr>
+    <tr><td><b>最终交付物</b></td><td>一个玻璃质感开关按钮 Figma Component Set（含 ON/OFF 两种变体，支持 Smart Animate 过渡）</td></tr>
+    <tr><td><b>风格基调</b></td><td>手把手教学——每一步都有画面+操作+旁白，初学者可以暂停跟随操作</td></tr>
+    <tr><td><b>旁白语速</b></td><td>约 3 字/秒（5分钟约 900 字旁白）</td></tr>
+    <tr><td><b>录屏设置</b></td><td>Figma界面全屏录制（1920×1080），鼠标光标开启高亮（青色光圈），快捷键操作时左下角显示按键提示</td></tr>
+    <tr><td><b>BGM</b></td><td>轻柔Ambient电子音乐，音量 -24dB，不干扰旁白</td></tr>
+  </table>
+</div>
+
+<!-- Pre-Production Setup -->
+<div class="section">
+  <h2>录屏前准备</h2>
+  <table class="shot-table">
+    <tr><td style="width:160px;"><b>Figma文件</b></td><td>新建Team Project "UI组件教程"，新建Page "C05-玻璃质感开关按钮"</td></tr>
+    <tr><td><b>画板规格</b></td><td>Frame 52×32px，命名"Toggle / Glass"</td></tr>
+    <tr><td><b>背景设置</b></td><td>在Frame后方放置彩色渐变背景（#06B6D4 → #8B5CF6 → #EC4899），用于展示玻璃效果</td></tr>
+    <tr><td><b>品牌色</b></td><td>开启色 #22C55E（绿色）/ 关闭色 #CBD5E1（浅灰）/ 玻璃白 rgba(255,255,255,0.25)</td></tr>
+    <tr><td><b>字体</b></td><td>旁白字幕：思源黑体 Regular 28px / 操作提示：JetBrains Mono 20px</td></tr>
+    <tr><td><b>快捷键提示插件</b></td><td>安装 Figma 插件 "Keybuster" 或使用 OBS 快捷键显示层，录制时自动显示按键</td></tr>
+    <tr><td><b>光标样式</b></td><td>系统设置调大光标 + 录屏软件添加青色高亮光圈（半径30px，透明度40%）</td></tr>
+  </table>
+</div>
+
+<!-- Shot-by-Shot Storyboard -->
+<div class="section">
+  <h2>分镜脚本（逐镜头）</h2>
+  <table class="shot-table">
+    <thead>
+      <tr>
+        <th style="width:50px;">镜头</th>
+        <th style="width:85px;">时间码</th>
+        <th style="width:200px;">画面描述</th>
+        <th>旁白文案 / Figma操作</th>
+        <th style="width:110px;">音效 / 转场</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- Shot 1 -->
+      <tr>
+        <td class="shot-num">01</td>
+        <td class="time-code">0:00—0:35<br>(35s)</td>
+        <td>
+          <span class="tag tag-visual">需求分析</span><br>
+          <b>画面A（0-10s）</b>：片头——系列Logo + "C05 玻璃质感开关按钮设计"，青色渐变背景，淡入。<br>
+          <b>画面B（10-20s）</b>：展示最终效果——一个精美的玻璃质感开关按钮，在彩色渐变背景上展示ON和OFF两种状态，点击有滑动动画。<br>
+          <b>画面C（20-35s）</b>：切换到Figma界面，创建新Frame。画面左侧出现需求分析要点卡片：<br>
+          - 组件类型：开关按钮（Toggle Switch）<br>
+          - 风格：玻璃拟态（Glassmorphism）<br>
+          - 尺寸：52×32px 轨道 / 28×28px 滑块<br>
+          - 状态：ON / OFF 两种变体
+        </td>
+        <td>
+          <div class="narration">大家好，今天我们来设计一个玻璃质感的开关按钮。玻璃拟态是当下非常流行的UI风格，它的特点是半透明、背景模糊、晶莹剔透。我们会用Figma从零开始，完成一个可以交互的玻璃开关，包含ON和OFF两种状态，还有平滑的切换动画。先看最终效果，然后一步步来。</div>
+          <div class="subtitle">玻璃拟态 = 半透明 / 背景模糊 / 内描边 / 投影<br>目标：52×32px 玻璃质感开关</div>
+          <div class="figma-op">新建 Frame：快捷键 F → 输入 52×32 → 命名 "Toggle / Glass" → 回车</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 品牌音效<br>
+          <span class="tag tag-transition">转场</span> 缩放进入Figma界面
+        </td>
+      </tr>
+
+      <!-- Shot 2 -->
+      <tr>
+        <td class="shot-num">02</td>
+        <td class="time-code">0:35—1:15<br>(40s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（0:35-0:50）</b>：绘制轨道——快捷键R激活Rectangle工具，在Frame中画一个52×32的矩形。圆角设置为16px（完全圆角）。<br>
+          位置：X=0, Y=0, W=52, H=32<br>
+          填充：暂时填充 #CBD5E1（浅灰色）<br>
+          画面标注尺寸数字和圆角参数。<br>
+          <b>画面B（0:50-1:05）</b>：绘制滑块——快捷键O激活Ellipse工具，按住Shift画正圆形。<br>
+          尺寸：28×28px<br>
+          位置：X=2, Y=2（左侧，距离轨道边缘2px）<br>
+          填充：#FFFFFF（白色）<br>
+          <b>画面C（1:05-1:15）</b>：结构检查——选中两个形状，确认轨道和滑块的位置关系。画面用标注线标出：轨道高度32px、滑块直径28px、上下边距各2px。
+        </td>
+        <td>
+          <div class="narration">第一步，搭建基础结构。开关按钮由两部分组成：轨道Track和滑块Thumb。先画轨道——一个52×32的圆角矩形，圆角设为16像素就是完全圆角。然后画滑块——一个28×28的正圆，放在左侧，距离边缘2像素。这样结构就搭好了。</div>
+          <div class="subtitle">轨道Track：Rectangle 52×32 圆角16px<br>滑块Thumb：Ellipse 28×28 左侧对齐<br>边距：上下左右各 2px</div>
+          <div class="figma-op">R → 拖出矩形 → 右侧设 W:52 H:32 Corner Radius:16 Fill:#CBD5E1<br>O + Shift → 画正圆 → 设 W:28 H:28 X:2 Y:2 Fill:#FFFFFF</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 绘制音效<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 3 -->
+      <tr>
+        <td class="shot-num">03</td>
+        <td class="time-code">1:15—2:15<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（1:15-1:35）</b>：添加背景模糊——选中轨道矩形，右侧Effects面板点击 + 号，选择 Background Blur（背景模糊）。数值设为10px。<br>
+          画面标注："Background Blur = 背景模糊，玻璃质感的核心"<br>
+          <b>画面B（1:35-1:55）</b>：设置半透明填充——轨道填充改为白色，不透明度设为25%（rgba(255,255,255,0.25)）。<br>
+          画面展示：模糊 + 半透明 = 玻璃磨砂感出现了<br>
+          <b>画面C（1:55-2:15）</b>：添加内描边和投影——轨道添加1px内描边，颜色为白色，不透明度40%。添加Drop Shadow投影，Y偏移4px，模糊16px，不透明度10%。<br>
+          画面对比：添加前后效果对比，标注"玻璃效果三件套 = 模糊 + 半透明 + 投影"
+        </td>
+        <td>
+          <div class="narration">现在来加玻璃效果。玻璃质感有三个核心要素：背景模糊、半透明填充和投影。首先给轨道加Background Blur，数值设为10像素。然后把填充改成白色、25%透明度——注意是降低填充的不透明度，不是整个图层的。最后加1像素的内描边和柔和的投影。看，玻璃质感就出来了。</div>
+          <div class="subtitle">玻璃效果三件套：<br>① Background Blur 10px<br>② Fill 白色 25% 透明度<br>③ Inner Stroke + Drop Shadow</div>
+          <div class="figma-op">选中轨道 → Effects + → Background Blur → 10px<br>Fill → #FFFFFF → Opacity: 25%<br>Stroke → Inside 1px → #FFFFFF Opacity: 40%<br>Effects + → Drop Shadow → Y:4 Blur:16 Opacity:10%</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 柔和提示音<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 4 -->
+      <tr>
+        <td class="shot-num">04</td>
+        <td class="time-code">2:15—3:00<br>(45s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（2:15-2:35）</b>：滑块玻璃质感——选中滑块圆形，同样添加玻璃效果：<br>
+          - 填充：白色 90% 不透明度<br>
+          - 内描边：1px 白色 80% 不透明度<br>
+          - Drop Shadow：Y偏移2px，模糊8px，不透明度15%<br>
+          - 内阴影：Inside 1px 白色（顶部高光）<br>
+          <b>画面B（2:35-2:50）</b>：添加底部彩色渐变背景——在开关Frame下方放一个大矩形，填充渐变色（#06B6D4 → #8B5CF6 → #EC4899）。<br>
+          画面展示：玻璃效果在彩色背景上更明显<br>
+          <b>画面C（2:50-3:00）</b>：调整细节——微调模糊数值和不透明度，对比不同参数效果。最终确认参数后继续下一步。
+        </td>
+        <td>
+          <div class="narration">滑块也用同样的玻璃效果，但滑块更白一些，填充90%不透明度，再加一点内阴影模拟顶部高光。然后我们在后面放一个彩色渐变背景——玻璃效果在有颜色的背景上才最明显，因为背景模糊能透出底下的颜色。调整一下参数，让质感刚刚好。</div>
+          <div class="subtitle">滑块玻璃效果：<br>Fill 白色 90% + Inner Stroke + Drop Shadow<br>彩色背景 = 玻璃效果的"试金石"</div>
+          <div class="figma-op">选中滑块 → Fill: #FFFFFF Opacity:90%<br>Stroke: Inside 1px #FFFFFF Opacity:80%<br>Effects + → Drop Shadow Y:2 Blur:8 Opacity:15%<br>Effects + → Inner Shadow Y:1 Blur:0 Color:#FFFFFF Opacity:80%<br>底部矩形 → Fill: Linear Gradient #06B6D4→#8B5CF6→#EC4899</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 柔和提示音<br>
+          <span class="tag tag-transition">转场</span> 淡入淡出
+        </td>
+      </tr>
+
+      <!-- Shot 5 -->
+      <tr>
+        <td class="shot-num">05</td>
+        <td class="time-code">3:00—4:00<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（3:00-3:20）</b>：创建ON状态——复制当前的OFF状态Frame。在副本中修改：<br>
+          - 轨道填充改为绿色 #22C55E，不透明度60%<br>
+          - 滑块移动到右侧：X=22（距离右边缘2px）<br>
+          - 滑块添加绿色外发光效果（Drop Shadow，颜色#22C55E，模糊12px，不透明度50%）<br>
+          <b>画面B（3:20-3:45）</b>：创建Component Set——同时选中ON和OFF两个Frame，点击顶部"Create component set"按钮（或快捷键 Ctrl+Alt+K）。右侧属性面板出现 Variants 设置。<br>
+          命名 Property 为 "State"，值分别为 "On" 和 "Off"。<br>
+          <b>画面C（3:45-4:00）</b>：检查变体——点击组件右上角的切换按钮，可以在ON和OFF之间切换。确认两种状态都正确。
+        </td>
+        <td>
+          <div class="narration">现在做开启状态。复制一份当前的开关，把轨道改成绿色，60%透明度，滑块移到右边，再加一点绿色外发光营造"点亮"的感觉。然后把两个状态选中，创建Component Set——这就是Variants功能，把多个状态放在同一个组件集里。属性名设为State，值分别是On和Off。现在点击就能切换状态了。</div>
+          <div class="subtitle">ON状态：绿色轨道 + 滑块右移 + 外发光<br>Variants：Component Set 管理多种状态<br>快捷键：Ctrl + Alt + K</div>
+          <div class="figma-op">复制Frame → 轨道 Fill: #22C55E Opacity:60% → 滑块 X:22<br>滑块 Effects + → Drop Shadow Color:#22C55E Blur:12 Opacity:50%<br>全选两个Frame → Create component set (Ctrl+Alt+K)<br>Property: State → 值: On / Off</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 组件创建音效<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 6 -->
+      <tr>
+        <td class="shot-num">06</td>
+        <td class="time-code">4:00—5:00<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（4:00-4:20）</b>：Smart Animate 原型动画——切换到Prototype面板。从OFF状态的组件拉一条连接线到ON状态。<br>
+          交互设置：<br>
+          - Trigger: On Click<br>
+          - Action: Change to → On<br>
+          - Animation: Smart Animate<br>
+          - Easing: Ease Out<br>
+          - Duration: 250ms<br>
+          <b>画面B（4:20-4:40）</b>：测试动画——点击播放按钮，在原型中点击开关，观察滑块滑动动画。如果动画不流畅，检查元素命名是否一致（图层名相同Smart Animate才能正确识别）。<br>
+          <b>画面C（4:40-5:00）</b>：多种状态展示+片尾——展示开关在不同背景上的效果（浅色/深色/彩色渐变），展示玻璃质感的通用性。最后片尾Logo + "C05完成" + 下集预告"C06 磨砂玻璃质感卡片区"，淡出。
+        </td>
+        <td>
+          <div class="narration">最后一步，添加交互动画。进入Prototype面板，从OFF状态连一条线到ON状态，触发方式是点击，动作用Smart Animate，时长250毫秒，缓动用Ease Out。点击播放测试一下——看，滑块平滑地从左边滑到右边，颜色也渐变过渡，这就是Smart Animate的魔力。它会自动识别两个变体中相同名称的图层，生成过渡动画。一个完整的玻璃质感开关按钮就完成了。</div>
+          <div class="subtitle">Smart Animate：<br>On Click → Change to → Smart Animate<br>Duration: 250ms · Easing: Ease Out<br>图层命名一致 = 动画更精准</div>
+          <div class="figma-op">Prototype 面板 → 从OFF拉线到ON<br>Trigger: On Click → Action: Change to → Animation: Smart Animate<br>Easing: Ease Out → Duration: 250ms<br>播放按钮 → 点击测试 → 调整图层命名确保动画正确</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 完成音效<br>
+          <span class="tag tag-sfx">BGM</span> 结尾渐强后淡出<br>
+          <span class="tag tag-transition">转场</span> 缩放淡出
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- Asset List -->
+<div class="section">
+  <h2>素材清单</h2>
+  <ul class="asset-list">
+    <li><b>素材01 · 片头动画</b>：系列Logo + "C05 玻璃质感开关按钮设计" 标题卡，青色渐变背景（AE或Figma Smart Animate制作，3秒淡入）</li>
+    <li><b>素材02 · 最终效果图</b>：玻璃质感开关在彩色渐变背景上的ON/OFF两种状态展示图，以及在浅色/深色背景上的效果对比</li>
+    <li><b>素材03 · 需求分析卡片</b>：左侧浮动信息卡，列出组件类型/风格/尺寸/状态（Figma或AE制作）</li>
+    <li><b>素材04 · 结构分析标注图</b>：开关分解图——轨道(Track)和滑块(Thumb)分别标注尺寸和位置</li>
+    <li><b>素材05 · 玻璃效果三要素示意图</b>：分步展示 模糊→半透明→投影 三层效果叠加过程的动效</li>
+    <li><b>素材06 · ON/OFF状态对比图</b>：开启和关闭状态并排对比，标注颜色、位置、光影的差异</li>
+    <li><b>素材07 · Variants创建示意图</b>：Component Set 创建过程截图 + 变体属性面板标注</li>
+    <li><b>素材08 · Smart Animate设置图</b>：Prototype面板截图，标注触发方式、动画类型、时长、缓动函数</li>
+    <li><b>素材09 · 多背景展示图</b>：开关在浅色/深色/彩色渐变三种背景上的效果对比</li>
+    <li><b>素材10 · 组件库展示图</b>：玻璃开关组件在Design System组件库中的展示效果</li>
+    <li><b>素材11 · 片尾画面</b>："C05完成" + 下集预告 + 系列Logo</li>
+    <li><b>素材12 · BGM</b>：轻柔Ambient电子背景音乐（5分钟版本，可循环）</li>
+    <li><b>素材13 · 快捷键提示层</b>：OBS或Keybuster插件录制的按键提示画面</li>
+    <li><b>素材14 · 字幕文件</b>：.srt格式字幕文件，与时间码对齐</li>
+  </ul>
+</div>
+
+<!-- Production Notes -->
+<div class="section">
+  <h2>制作注意事项</h2>
+  <div class="note-box">
+    <p><b>1. 玻璃效果展示</b>：玻璃质感需要在有颜色的背景上才能看清楚。录屏时确保背景有渐变色或图案，不要在纯白色背景上演示玻璃效果，否则效果不明显。可以在演示时切换不同背景来展示效果。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>2. 模糊数值控制</b>：Background Blur 的数值不是越大越好。太小了没有模糊效果，太大了会变成纯色块。开关这种小组件建议 8-12px 之间，既能看出模糊效果又不会太"糊"。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>3. Smart Animate 要点</b>：两个变体中需要过渡的图层名称必须完全一致（包括大小写），否则Figma无法识别为同一个元素，动画就会变成淡入淡出而不是平滑移动。录屏时可以展示一次"命名不一致导致动画失败"的对比。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>4. 动画时长和缓动</b>：开关切换动画建议 200-300ms，太短会感觉突兀，太长会感觉迟钝。缓动用 Ease Out（先快后慢）最自然，符合物理直觉——滑块滑动时减速停止。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>5. 可访问性提醒</b>：在讲解时可以顺带提到——纯颜色区分状态对色盲用户不友好，实际产品中建议配合图标或文字标签使用。这体现了设计师的无障碍意识。</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

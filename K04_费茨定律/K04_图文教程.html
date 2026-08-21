@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K04 费茨定律 | 图文教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--purple:#8b5cf6;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-dim:#64748b;--border:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.tutorial{max-width:720px;margin:0 auto;background:var(--card);min-height:100vh}
+.hero{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;padding:48px 40px;text-align:center}
+.hero .ep{font-size:13px;opacity:.8;letter-spacing:2px;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero .subtitle{font-size:16px;opacity:.9}
+.hero .tags{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero .tag{background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px}
+.section{padding:32px 40px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h2::before{content:'';width:4px;height:24px;background:var(--primary);border-radius:2px}
+.formula-card{background:#1e293b;border-radius:16px;padding:32px;text-align:center;margin:16px 0}
+.formula-card .formula{font-family:'JetBrains Mono',monospace;font-size:28px;color:#60a5fa;font-weight:700;margin-bottom:16px}
+.formula-card .formula .d{color:#f87171}
+.formula-card .formula .w{color:#34d399}
+.var-row{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.var-pill{background:#334155;border-radius:8px;padding:8px 16px;flex:1;min-width:140px;text-align:left}
+.var-pill .name{font-size:12px;color:#94a3b8}
+.var-pill .desc{font-size:14px;color:#e2e8f0;font-weight:600;margin-top:2px}
+.conclusion-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:20px;margin:16px 0;font-size:18px;font-weight:700;color:#92400e;text-align:center}
+.conclusion-box .arrow{font-size:24px;margin:0 8px}
+.demo-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.demo-col{background:var(--bg);border-radius:12px;padding:20px;text-align:center;border:2px solid var(--border)}
+.demo-col.fast{border-color:var(--success);background:#d1fae5}
+.demo-col.mid{border-color:var(--accent);background:#fef3c7}
+.demo-col.slow{border-color:var(--danger);background:#fee2e2}
+.demo-col .icon{font-size:28px;margin-bottom:8px}
+.demo-col .title{font-size:14px;font-weight:700;margin-bottom:4px}
+.demo-col .mt{font-size:13px;color:var(--text-dim)}
+.standard-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.standard-table th{background:var(--primary);color:#fff;padding:10px;text-align:left}
+.standard-table td{padding:10px;border-bottom:1px solid var(--border)}
+.standard-table tr:hover td{background:#f1f5f9}
+.thumb-visual{background:var(--bg);border-radius:16px;padding:24px;margin:16px 0}
+.thumb-phone{width:200px;height:360px;margin:0 auto;background:#1e293b;border-radius:24px;overflow:hidden;position:relative;border:4px solid #334155}
+.thumb-zone{position:absolute;left:0;right:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.thumb-zone.green{top:66%;height:34%;background:rgba(16,185,129,.3);color:#6ee7b7}
+.thumb-zone.yellow{top:33%;height:33%;background:rgba(245,158,11,.25);color:#fcd34d}
+.thumb-zone.red{top:0;height:33%;background:rgba(239,68,68,.25);color:#fca5a5}
+.thumb-tab{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(37,99,235,.5);display:flex;align-items:center;justify-content:center;color:#93c5fd;font-size:11px}
+.edge-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.edge-card{background:var(--bg);border-radius:12px;padding:20px;text-align:center}
+.edge-card .label{font-size:14px;font-weight:700;margin-bottom:8px}
+.edge-card .desc{font-size:13px;color:var(--text-dim);margin-top:8px}
+.edge-card .visual{height:80px;background:#e2e8f0;border-radius:8px;position:relative;margin:8px 0}
+.edge-card .target-mid{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:var(--danger);border-radius:4px}
+.edge-card .target-edge{position:absolute;bottom:0;left:20%;right:20%;height:12px;background:var(--success);border-radius:4px}
+.case-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.case-card{border-radius:12px;padding:20px;border:2px solid}
+.case-card.bad{border-color:var(--danger);background:#fef2f2}
+.case-card.good{border-color:var(--success);background:#f0fdf4}
+.case-card h4{font-size:16px;margin-bottom:8px}
+.case-card.bad h4{color:var(--danger)}
+.case-card.good h4{color:var(--success)}
+.case-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+.checklist{background:var(--bg);border-radius:12px;padding:20px;margin:16px 0}
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.checklist-item:last-child{border-bottom:none}
+.checklist-item .check{width:24px;height:24px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
+.checklist-item .text{font-size:14px}
+.checklist-item .text b{color:var(--text)}
+.checklist-item .text .method{display:block;color:var(--text-dim);font-size:13px;margin-top:2px}
+.footer{text-align:center;padding:32px 40px;background:var(--bg);color:var(--text-dim);font-size:13px}
+.footer .next{margin-top:12px;font-size:14px;color:var(--primary);font-weight:600}
+.formula-note{background:#eef2ff;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#3730a3}
+.formula-note b{color:#1e1b4b}
+</style>
+</head>
+<body>
+<div class="tutorial">
+
+<div class="hero">
+  <div class="ep">EPISODE K04 · 理论知识点 · 图文教程</div>
+  <h1>费茨定律</h1>
+  <div class="subtitle">从数学公式到触控热区设计</div>
+  <div class="tags">
+    <span class="tag">人机交互运动定律</span>
+    <span class="tag">理论延伸</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</div>
+
+<!-- Section 1: What is Fitts's Law -->
+<div class="section">
+  <h2>什么是费茨定律</h2>
+  <p>1954年，心理学家 <b>Paul Fitts</b> 提出了一个关于人类指向运动的数学模型。他发现：人将指针从起点移动到目标所需的时间，取决于<b>起点到目标的距离</b>和<b>目标的大小</b>。</p>
+  <p style="margin-top:12px">这个定律被后人称为"费茨定律"（Fitts's Law），是人机交互领域最重要的运动定律之一，也是触控界面设计、按钮尺寸规范、导航布局策略的理论基石。</p>
+</div>
+
+<!-- Section 2: Formula -->
+<div class="section">
+  <h2>费茨定律公式</h2>
+  <div class="formula-card">
+    <div class="formula">MT = a + b · log₂(2<span class="d">D</span> / <span class="w">W</span>)</div>
+    <div class="var-row">
+      <div class="var-pill"><div class="name">MT</div><div class="desc">运动时间</div></div>
+      <div class="var-pill"><div class="name"><span style="color:#f87171">D</span> — Distance</div><div class="desc">起点到目标的距离</div></div>
+      <div class="var-pill"><div class="name"><span style="color:#34d399">W</span> — Width</div><div class="desc">目标宽度</div></div>
+      <div class="var-pill"><div class="name">a, b</div><div class="desc">经验常数</div></div>
+    </div>
+  </div>
+  <div class="formula-note">
+    <b>设计师视角</b>：a和b是与设备相关的经验常数，设计师无法控制。我们能控制的是<b>D（距离）</b>和<b>W（宽度）</b>两个变量。
+  </div>
+  <div class="conclusion-box">
+    <span class="d" style="color:#dc2626">距离越远</span><span class="arrow">→</span>MT越大<br>
+    <span class="w" style="color:#059669">目标越小</span><span class="arrow">→</span>MT越大<br>
+    <span style="font-size:16px;margin-top:8px;display:block">即：距离越远、目标越小，操作越慢</span>
+  </div>
+</div>
+
+<!-- Section 3: Three Cases Demo -->
+<div class="section">
+  <h2>三种情况对比</h2>
+  <div class="demo-3col">
+    <div class="demo-col fast">
+      <div class="icon">🟢</div>
+      <div class="title">近 + 大</div>
+      <div class="mt">MT 最小<br>快速命中</div>
+    </div>
+    <div class="demo-col mid">
+      <div class="icon">🟡</div>
+      <div class="title">远 + 大</div>
+      <div class="mt">MT 较大<br>稍慢</div>
+    </div>
+    <div class="demo-col slow">
+      <div class="icon">🔴</div>
+      <div class="title">远 + 小</div>
+      <div class="mt">MT 最大<br>很慢</div>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">设计师的策略：<b style="color:var(--primary)">缩短D</b>（操作距离）+ <b style="color:var(--primary)">增大W</b>（目标尺寸），让用户操作更快更准。</p>
+</div>
+
+<!-- Section 4: Touch Target Standards -->
+<div class="section">
+  <h2>应用一：触控热区规范</h2>
+  <table class="standard-table">
+    <thead>
+      <tr><th>平台</th><th>最小触控区域</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Apple iOS HIG</td><td><b>44 × 44 pt</b></td><td>Apple 人机交互指南的下限要求</td></tr>
+      <tr><td>Material Design</td><td><b>48 × 48 dp</b></td><td>Google Material 规范的下限要求</td></tr>
+      <tr><td>设计建议</td><td><b>56 dp 以上</b></td><td>主操作按钮推荐尺寸</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">Apple和Google均基于费茨定律计算出"大多数用户在合理时间内能命中的最小目标尺寸"。</p>
+</div>
+
+<!-- Section 5: Thumb Zone -->
+<div class="section">
+  <h2>应用二：拇指热区</h2>
+  <p>单手持握手机时，拇指的自然活动范围呈现三个区域：</p>
+  <div class="thumb-visual">
+    <div class="thumb-phone">
+      <div class="thumb-zone red">困难区（顶部1/3）</div>
+      <div class="thumb-zone yellow">伸展区（中间1/3）</div>
+      <div class="thumb-zone green">自然区（底部1/3）</div>
+      <div class="thumb-tab">底部Tab栏 ← 在自然区</div>
+    </div>
+  </div>
+  <div style="font-size:14px;color:var(--text-dim);margin-top:8px">
+    <p><b style="color:var(--success)">自然区</b>：拇指自然弯曲即可到达 → 放高频操作</p>
+    <p><b style="color:var(--accent)">伸展区</b>：拇指需要伸展 → 放中频操作</p>
+    <p><b style="color:var(--danger)">困难区</b>：需要调整握姿 → 避免放关键操作</p>
+  </div>
+</div>
+
+<!-- Section 6: Edge Effect -->
+<div class="section">
+  <h2>应用三：边缘效应</h2>
+  <p>屏幕边缘的目标等效于<b>"无限大"</b>（W→∞），因为光标/手指无法超出屏幕边界，MT趋近最小值。</p>
+  <div class="edge-compare">
+    <div class="edge-card">
+      <div class="label">屏幕中间目标</div>
+      <div class="visual"><div class="target-mid"></div></div>
+      <div class="desc">需要精准对准<br>W有限 → MT较大</div>
+    </div>
+    <div class="edge-card">
+      <div class="label">屏幕边缘目标</div>
+      <div class="visual"><div class="target-edge"></div></div>
+      <div class="desc">推到底就行<br>W→∞ → MT最小</div>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px"><b>经典应用</b>：macOS Dock栏（底部边缘）、Windows任务栏（底部边缘）、iOS控制中心（顶部下拉）</p>
+</div>
+
+<!-- Section 7: Good vs Bad -->
+<div class="section">
+  <h2>正反面案例</h2>
+  <div class="case-compare">
+    <div class="case-card bad">
+      <h4>✗ 反面案例</h4>
+      <p>弹窗关闭按钮仅 <b>20×20px</b><br>紧邻其他按钮间距 <b>4px</b><br><br>→ 目标小 + 间距近<br>→ 用户误触率高<br>→ W被"侵蚀"，MT增加</p>
+    </div>
+    <div class="case-card good">
+      <h4>✓ 正面案例</h4>
+      <p>关闭按钮 <b>44×44px</b><br>与相邻按钮间距 <b>16px</b><br><br>→ 目标大 + 间距足<br>→ 精准操作<br>→ W充足，MT最小</p>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:8px">相邻按钮间距不足时，有效目标宽度W被"侵蚀"，MT增加且误触概率上升。</p>
+</div>
+
+<!-- Section 8: Design Checklist -->
+<div class="section">
+  <h2>设计自查清单</h2>
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>触控区域 ≥ 44pt（iOS）/ 48dp（Android）</b><span class="method">在Figma中测量元素实际可点击区域</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>高频操作位于屏幕底部1/3（拇指自然区）</b><span class="method">检查主要CTA按钮的Y坐标</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>主操作按钮尺寸 > 次操作按钮</b><span class="method">对比两种按钮的宽高</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>相邻按钮间距 ≥ 8px</b><span class="method">测量按钮间空白距离</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>高频功能靠近屏幕边缘</b><span class="method">检查导航栏/工具栏位置</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 9: Summary -->
+<div class="section">
+  <h2>三条设计原则</h2>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--primary)">
+      <div style="width:36px;height:36px;background:var(--primary);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</div>
+      <div><b>缩短操作距离</b>（D↓）<br><span style="font-size:13px;color:var(--text-dim)">高频操作放在拇指自然区</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--success)">
+      <div style="width:36px;height:36px;background:var(--success);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</div>
+      <div><b>放大触控目标</b>（W↑）<br><span style="font-size:13px;color:var(--text-dim)">触控热区 ≥ 44pt，主按钮 56dp+</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--accent)">
+      <div style="width:36px;height:36px;background:var(--accent);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">3</div>
+      <div><b>利用屏幕边缘</b>（W→∞）<br><span style="font-size:13px;color:var(--text-dim)">导航栏、工具栏靠边放置</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>费茨定律 · 1954 by Paul Fitts</p>
+  <p>UI设计理论知识点 K04 · 图文教程</p>
+  <div class="next">下集预告：K05 席克定律与米勒定律——选择简化与信息分块</div>
+</div>
+
+</div>
+</body>
+</html>

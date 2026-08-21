@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K01 UI 设计四大基本原则 | 图文教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#06B6D4;--primary-dark:#0891B2;--accent:#F2C14E;--success:#10B981;--danger:#EF4444;--purple:#8B5CF6;--bg:#F8FAFC;--card:#FFF;--text:#1E293B;--text-dim:#64748B;--border:#E2E8F0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.tutorial{max-width:720px;margin:0 auto;background:var(--card);min-height:100vh}
+.hero{background:linear-gradient(135deg,#0369A1,#06B6D4);color:#fff;padding:48px 40px;text-align:center}
+.hero .ep{font-size:13px;opacity:.8;letter-spacing:2px;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero .subtitle{font-size:16px;opacity:.9}
+.hero .tags{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero .tag{background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px}
+.section{padding:32px 40px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h2::before{content:'';width:4px;height:24px;background:var(--primary);border-radius:2px}
+.section p{margin-bottom:12px;color:#334155}
+.section p b{color:var(--text)}
+
+/* Four principles grid */
+.principles-4{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.p-card{border-radius:12px;padding:20px;border:2px solid var(--border);background:var(--bg)}
+.p-card .p-icon{font-size:32px;margin-bottom:8px}
+.p-card h3{font-size:16px;margin-bottom:4px;color:var(--text)}
+.p-card .p-en{font-size:11px;color:var(--text-dim);letter-spacing:1px;margin-bottom:8px}
+.p-card p{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:0}
+.p-card.c1{border-color:#FCA5A5;background:#FEF2F2}
+.p-card.c2{border-color:#6EE7B7;background:#ECFDF5}
+.p-card.c3{border-color:#93C5FD;background:#EFF6FF}
+.p-card.c4{border-color:#C4B5FD;background:#F5F3FF}
+.p-card.c1 h3{color:#DC2626}
+.p-card.c2 h3{color:#059669}
+.p-card.c3 h3{color:#2563EB}
+.p-card.c4 h3{color:#7C3AED}
+
+/* Consistency details */
+.consistency-three{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
+.consis-item{flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:16px;text-align:center;border-left:4px solid var(--danger)}
+.consis-item .icon{font-size:24px;margin-bottom:6px}
+.consis-item .title{font-size:14px;font-weight:700;color:var(--danger);margin-bottom:4px}
+.consis-item .desc{font-size:12px;color:var(--text-dim);line-height:1.6}
+
+/* Usability table */
+.usability-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.usability-table th{background:var(--success);color:#fff;padding:10px;text-align:left}
+.usability-table td{padding:10px;border-bottom:1px solid var(--border)}
+.usability-table tr:hover td{background:#F0FDF4}
+
+/* Hierarchy visual */
+.hierarchy-visual{background:var(--bg);border-radius:12px;padding:24px;margin:16px 0}
+.hierarchy-demo{background:#fff;border-radius:8px;padding:20px;border:1px solid var(--border)}
+.hierarchy-demo.bad{opacity:.7}
+.hd-title{font-size:22px;font-weight:800;margin-bottom:8px}
+.hd-subtitle{font-size:16px;font-weight:600;color:var(--text-dim);margin-bottom:12px}
+.hd-body{font-size:14px;color:var(--text-dim);line-height:1.7}
+.hd-caption{font-size:12px;color:var(--text-dim);margin-top:10px;text-align:center;font-weight:600}
+.hierarchy-vs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Standardization */
+.platform-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
+.platform-card{background:var(--bg);border-radius:10px;padding:16px;text-align:center}
+.platform-card .pf-icon{font-size:28px;margin-bottom:6px}
+.platform-card .pf-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.platform-card .pf-guide{font-size:11px;color:var(--primary);font-weight:600;margin-bottom:6px}
+.platform-card .pf-desc{font-size:11px;color:var(--text-dim);line-height:1.5}
+
+/* Pyramid */
+.pyramid{background:var(--bg);border-radius:12px;padding:24px;margin:16px 0}
+.pyramid-layer{
+  margin:0 auto 4px;
+  padding:12px;
+  text-align:center;
+  border-radius:6px;
+  font-weight:700;
+  font-size:14px;
+  color:#fff;
+}
+.pyramid-layer.l1{width:90%;background:#EF4444}
+.pyramid-layer.l2{width:70%;background:#3B82F6}
+.pyramid-layer.l3{width:50%;background:#8B5CF6}
+.pyramid-layer.l4{width:30%;background:#10B981}
+.pyramid-caption{display:flex;justify-content:space-around;margin-top:12px;font-size:12px;color:var(--text-dim);flex-wrap:wrap;gap:8px}
+.pyramid-caption span b{color:var(--text)}
+
+/* Checklist */
+.checklist{background:var(--bg);border-radius:12px;padding:20px;margin:16px 0}
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.checklist-item:last-child{border-bottom:none}
+.checklist-item .check{width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
+.checklist-item .text{font-size:14px}
+.checklist-item .text b{color:var(--text)}
+.checklist-item .text .method{display:block;color:var(--text-dim);font-size:13px;margin-top:2px}
+
+/* Formula note style box */
+.info-note{background:#ECFEFF;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#0E7490;border:1px solid #A5F3FC}
+.info-note b{color:#0C4A6E}
+
+/* Conclusion box */
+.conclusion-box{background:linear-gradient(135deg,#FEF3C7,#FDE68A);border-radius:12px;padding:20px;margin:16px 0;font-size:16px;font-weight:700;color:#92400E;text-align:center;line-height:2}
+
+/* Mnemonic cards */
+.mnemonic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.mnemonic-card{border-radius:12px;padding:18px;text-align:center;color:#fff;font-weight:700;font-size:16px;line-height:1.5}
+.mnemonic-card .m-icon{font-size:28px;margin-bottom:6px}
+.mnemonic-card .m-phrase{font-size:18px}
+.mnemonic-card .m-principle{font-size:12px;opacity:.9;margin-top:4px;font-weight:500}
+.mnemonic-card.m1{background:linear-gradient(135deg,#EF4444,#F87171)}
+.mnemonic-card.m2{background:linear-gradient(135deg,#10B981,#34D399)}
+.mnemonic-card.m3{background:linear-gradient(135deg,#3B82F6,#60A5FA)}
+.mnemonic-card.m4{background:linear-gradient(135deg,#8B5CF6,#A78BFA)}
+
+.footer{text-align:center;padding:32px 40px;background:var(--bg);color:var(--text-dim);font-size:13px}
+.footer .next{margin-top:12px;font-size:14px;color:var(--primary);font-weight:600}
+
+/* Good/Bad compare */
+.case-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.case-card{border-radius:12px;padding:20px;border:2px solid}
+.case-card.bad{border-color:var(--danger);background:#FEF2F2}
+.case-card.good{border-color:var(--success);background:#F0FDF4}
+.case-card h4{font-size:16px;margin-bottom:8px}
+.case-card.bad h4{color:var(--danger)}
+.case-card.good h4{color:var(--success)}
+.case-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+
+@media(max-width:600px){
+  .principles-4,.hierarchy-vs,.mnemonic-grid,.case-compare{grid-template-columns:1fr}
+  .platform-cards{grid-template-columns:1fr}
+  .consistency-three{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="tutorial">
+
+<div class="hero">
+  <div class="ep">EPISODE K01 · 理论知识点 · 图文教程</div>
+  <h1>UI 设计四大基本原则</h1>
+  <div class="subtitle">好设计的底层逻辑</div>
+  <div class="tags">
+    <span class="tag">设计基础理论</span>
+    <span class="tag">入门必修</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</div>
+
+<!-- Section 1: Intro -->
+<div class="section">
+  <h2>为什么需要设计原则</h2>
+  <p>你有没有过这种感觉——有的 App 用起来特别顺，有的却处处碰壁？这不是运气问题，而是设计有章可循。</p>
+  <p style="margin-top:12px"><b>UI 设计四大基本原则</b>是判断一个设计"好不好用"的基本标尺。无论是网页、App 还是软件界面，好的设计几乎都遵循这四条原则。</p>
+</div>
+
+<!-- Section 2: Four Principles Overview -->
+<div class="section">
+  <h2>四大原则概览</h2>
+  <div class="principles-4">
+    <div class="p-card c1">
+      <div class="p-icon">🎯</div>
+      <h3>一致性原则</h3>
+      <div class="p-en">CONSISTENCY</div>
+      <p>视觉、操作、术语三统一，降低用户学习成本</p>
+    </div>
+    <div class="p-card c2">
+      <div class="p-icon">🧠</div>
+      <h3>易用性原则</h3>
+      <div class="p-en">USABILITY</div>
+      <p>操作直觉化，用户"凭感觉"就能用</p>
+    </div>
+    <div class="p-card c3">
+      <div class="p-icon">📐</div>
+      <h3>层级性原则</h3>
+      <div class="p-en">HIERARCHY</div>
+      <p>信息主次分明，引导用户视线流动</p>
+    </div>
+    <div class="p-card c4">
+      <div class="p-icon">📱</div>
+      <h3>规范性原则</h3>
+      <div class="p-en">STANDARDIZATION</div>
+      <p>遵循平台规范，利用已有心智模型</p>
+    </div>
+  </div>
+</div>
+
+<!-- Section 3: Consistency -->
+<div class="section">
+  <h2>原则一：一致性</h2>
+  <p>一致性是四大原则的<b>基础</b>。一个不一致的设计，会让用户每到一个新页面都要"重新学习"，认知负担大大增加。</p>
+  <div class="info-note">
+    <b>核心含义：</b>相同功能的元素，在不同页面看起来、用起来、说起来都应该一样。
+  </div>
+  <h3 style="font-size:16px;margin:16px 0 12px;color:var(--text)">一致性的三个维度</h3>
+  <div class="consistency-three">
+    <div class="consis-item">
+      <div class="icon">🎨</div>
+      <div class="title">视觉统一</div>
+      <div class="desc">颜色、字体、图标风格、圆角大小、间距规范保持一致</div>
+    </div>
+    <div class="consis-item">
+      <div class="icon">👆</div>
+      <div class="title">操作统一</div>
+      <div class="desc">相同功能的交互方式一致，如返回按钮始终在同一位置</div>
+    </div>
+    <div class="consis-item">
+      <div class="icon">📝</div>
+      <div class="title">术语统一</div>
+      <div class="desc">同一概念在不同场景用相同表述，不混用同义词</div>
+    </div>
+  </div>
+  <div class="case-compare">
+    <div class="case-card bad">
+      <h4>✗ 反面案例</h4>
+      <p>首页返回按钮在左边，详情页返回按钮在右边<br>按钮颜色每个页面都不一样<br>"确定"和"确认"混用</p>
+    </div>
+    <div class="case-card good">
+      <h4>✓ 正面案例</h4>
+      <p>所有页面返回按钮都在左上角<br>主按钮颜色全站统一<br>统一用"确定"不用"确认"</p>
+    </div>
+  </div>
+</div>
+
+<!-- Section 4: Usability -->
+<div class="section">
+  <h2>原则二：易用性</h2>
+  <p>易用性是设计的<b>目标</b>。好的设计应该让用户"不用想就会用"——操作符合直觉，出错了也能轻松补救。</p>
+  <table class="usability-table">
+    <thead>
+      <tr><th>维度</th><th>说明</th><th>设计方法</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>可识别性</b></td><td>用户能快速理解元素功能</td><td>使用通用图标 + 文字标签</td></tr>
+      <tr><td><b>可预测性</b></td><td>操作结果符合用户预期</td><td>遵循常见交互模式</td></tr>
+      <tr><td><b>容错性</b></td><td>出错后能轻松挽回</td><td>提供撤销、确认、错误提示</td></tr>
+    </tbody>
+  </table>
+  <div class="info-note">
+    <b>衡量标准：</b>用户第一次使用时，能否在 3 秒内找到主要功能？操作出错时，能否快速撤销？如果答案是肯定的，易用性就过关了。
+  </div>
+</div>
+
+<!-- Section 5: Hierarchy -->
+<div class="section">
+  <h2>原则三：层级性</h2>
+  <p>层级性是信息传达的<b>手段</b>。用户的注意力是有限的——通过视觉权重的差异化，告诉用户"先看什么，后看什么"。</p>
+  <div class="hierarchy-visual">
+    <div class="hierarchy-vs">
+      <div>
+        <div class="hierarchy-demo bad">
+          <div class="hd-title" style="font-size:16px;font-weight:600">产品介绍</div>
+          <div class="hd-subtitle" style="font-size:14px;font-weight:500">这是一个很棒的产品</div>
+          <div class="hd-body">产品功能非常强大，可以满足你的各种需求。快来体验吧！</div>
+        </div>
+        <div class="hd-caption" style="color:var(--danger)">✗ 没有层级 — 信息一片平</div>
+      </div>
+      <div>
+        <div class="hierarchy-demo">
+          <div class="hd-title">产品介绍</div>
+          <div class="hd-subtitle">这是一个很棒的产品</div>
+          <div class="hd-body">产品功能非常强大，可以满足你的各种需求。</div>
+          <div style="margin-top:12px">
+            <span style="background:var(--primary);color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;font-size:14px">立即体验</span>
+          </div>
+        </div>
+        <div class="hd-caption" style="color:var(--success)">✓ 层级清晰 — 视线有引导</div>
+      </div>
+    </div>
+  </div>
+  <h3 style="font-size:16px;margin:16px 0 12px;color:var(--text)">建立层级的四要素</h3>
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="check">1</div>
+      <div class="text"><b>大小差异</b><span class="method">重要信息字号更大，标题 > 正文 > 辅助文字</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">2</div>
+      <div class="text"><b>颜色对比</b><span class="method">关键元素用更突出的颜色（品牌色/强调色）</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">3</div>
+      <div class="text"><b>间距/留白</b><span class="method">重要内容周围留白更多，视觉上更"透气"</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">4</div>
+      <div class="text"><b>位置优势</b><span class="method">黄金位置（顶部/左上/底部中央）放最重要的信息</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 6: Standardization -->
+<div class="section">
+  <h2>原则四：规范性</h2>
+  <p>规范性是设计的<b>保障</b>。每个平台都有自己的设计语言和用户习惯。遵循规范，就是利用用户已经建立的心智模型。</p>
+  <div class="platform-cards">
+    <div class="platform-card">
+      <div class="pf-icon">🍎</div>
+      <div class="pf-name">iOS</div>
+      <div class="pf-guide">HIG</div>
+      <div class="pf-desc">Human Interface Guidelines<br>简洁·优雅·重内容</div>
+    </div>
+    <div class="platform-card">
+      <div class="pf-icon">🤖</div>
+      <div class="pf-name">Android</div>
+      <div class="pf-guide">Material Design</div>
+      <div class="pf-desc">纸片·投影·动效<br>Google 设计语言</div>
+    </div>
+    <div class="platform-card">
+      <div class="pf-icon">🌐</div>
+      <div class="pf-name">Web</div>
+      <div class="pf-guide">WCAG / WAI-ARIA</div>
+      <div class="pf-desc">无障碍访问<br>通用可用性标准</div>
+    </div>
+  </div>
+  <div class="info-note">
+    <b>为什么要遵循规范？</b>因为用户不是第一次用手机/电脑。他们在用你的产品之前，已经用了无数个其他 App。遵循平台规范，就是利用用户已有的经验——你的产品"看起来就会用"。
+  </div>
+</div>
+
+<!-- Section 7: Relationship -->
+<div class="section">
+  <h2>四原则的关系</h2>
+  <p>四大原则不是孤立的，而是相互支撑的整体：</p>
+  <div class="pyramid">
+    <div class="pyramid-layer l4">易用性（目标）</div>
+    <div class="pyramid-layer l3">规范性（保障）</div>
+    <div class="pyramid-layer l2">层级性（手段）</div>
+    <div class="pyramid-layer l1">一致性（基础）</div>
+    <div class="pyramid-caption">
+      <span><b style="color:#EF4444">一致性</b> = 基础</span>
+      <span><b style="color:#3B82F6">层级性</b> = 手段</span>
+      <span><b style="color:#8B5CF6">规范性</b> = 保障</span>
+      <span><b style="color:#10B981">易用性</b> = 目标</span>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--text-dim);margin-top:12px">一致性是最底层的基础——没有一致性，其他原则都无从谈起。层级性是信息传达的手段，规范性是跨平台的保障，最终的目标都是为了易用性。</p>
+</div>
+
+<!-- Section 8: Mnemonic -->
+<div class="section">
+  <h2>四原则口诀</h2>
+  <p>记不住四大原则？试试这个口诀——一句话一个原则，好记又好用。</p>
+  <div class="mnemonic-grid">
+    <div class="mnemonic-card m1">
+      <div class="m-icon">🎯</div>
+      <div class="m-phrase">统一不混乱</div>
+      <div class="m-principle">一致性原则</div>
+    </div>
+    <div class="mnemonic-card m2">
+      <div class="m-icon">🧠</div>
+      <div class="m-phrase">好用不费脑</div>
+      <div class="m-principle">易用性原则</div>
+    </div>
+    <div class="mnemonic-card m3">
+      <div class="m-icon">📐</div>
+      <div class="m-phrase">分明不迷路</div>
+      <div class="m-principle">层级性原则</div>
+    </div>
+    <div class="mnemonic-card m4">
+      <div class="m-icon">📱</div>
+      <div class="m-phrase">规范不犯错</div>
+      <div class="m-principle">规范性原则</div>
+    </div>
+  </div>
+  <div class="conclusion-box">
+    🎯 统一不混乱 · 🧠 好用不费脑<br>
+    📐 分明不迷路 · 📱 规范不犯错<br>
+    <span style="font-size:14px;font-weight:500">—— 四原则口诀，好记又好用</span>
+  </div>
+</div>
+
+<!-- Section 9: Checklist -->
+<div class="section">
+  <h2>设计自查清单</h2>
+  <p>做完设计后，用这四条原则快速自查一遍：</p>
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>一致性检查</b><span class="method">按钮/颜色/字体/术语是否全站统一？</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>易用性检查</b><span class="method">新用户能在3秒内找到主要功能吗？</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>层级性检查</b><span class="method">信息有主次吗？用户知道先看什么吗？</span></div>
+    </div>
+    <div class="checklist-item">
+      <div class="check">✓</div>
+      <div class="text"><b>规范性检查</b><span class="method">是否符合所在平台的设计规范？</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>UI 设计四大基本原则 · 好设计的底层逻辑</p>
+  <p>UI设计理论知识点 K01 · 图文教程</p>
+  <div class="next">下集预告：K03 格式塔原理 — 视觉认知的心理学基础</div>
+</div>
+
+</div>
+</body>
+</html>

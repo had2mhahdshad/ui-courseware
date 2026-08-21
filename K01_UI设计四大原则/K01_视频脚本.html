@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K01 UI 设计四大基本原则 — 好设计的底层逻辑 | 视频脚本</title>
+<style>
+:root {
+  --primary: #06B6D4; --primary-dark: #0891B2; --accent: #F2C14E;
+  --success: #10B981; --danger: #EF4444; --purple: #8B5CF6;
+  --gray-50: #F9FAFB; --gray-100: #F3F4F6; --gray-200: #E5E7EB;
+  --gray-500: #6B7280; --gray-700: #374151; --gray-900: #111827;
+  --bg: #F0F4F8; --card: #FFF; --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; background:var(--bg); color:var(--gray-900); line-height:1.7; font-size:14px; }
+.container { max-width:1100px; margin:0 auto; padding:32px; }
+.header { background:linear-gradient(135deg, var(--primary-dark), var(--primary)); color:#fff; padding:36px 32px; border-radius:var(--radius); margin-bottom:28px; }
+.header .ep { font-size:13px; opacity:0.8; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.header h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+.header .meta { display:flex; gap:12px; flex-wrap:wrap; }
+.header .meta span { background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; }
+.section { background:var(--card); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.section h2 { font-size:18px; font-weight:700; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+.shot-table { width:100%; border-collapse:collapse; font-size:13px; }
+.shot-table th { background:var(--gray-100); padding:10px; text-align:left; font-weight:600; color:var(--gray-700); border-bottom:2px solid var(--gray-200); white-space:nowrap; }
+.shot-table td { padding:12px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+.shot-num { font-weight:700; color:var(--primary); }
+.time-code { font-family:'SF Mono',Monaco,monospace; font-weight:600; color:var(--accent); white-space:nowrap; }
+.narration { background:#EFF6FF; padding:10px 14px; border-radius:6px; border-left:3px solid var(--primary); margin-top:4px; }
+.narration::before { content:"旁白："; font-weight:700; color:var(--primary); font-size:12px; }
+.subtitle { color:var(--gray-500); font-style:italic; font-size:12px; margin-top:4px; }
+.subtitle::before { content:"字幕："; font-weight:600; font-style:normal; }
+.asset-list { list-style:none; }
+.asset-list li { padding:8px 12px; margin-bottom:6px; background:var(--gray-50); border-radius:6px; border-left:3px solid var(--accent); font-size:13px; }
+.asset-list li b { color:var(--gray-700); }
+.note-box { background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:16px; margin-top:16px; font-size:13px; }
+.note-box b { color:#92400E; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.tag-sfx { background:#FCE7F3; color:#9D174D; }
+.tag-visual { background:#DBEAFE; color:#1E40AF; }
+.tag-transition { background:#D1FAE5; color:#065F46; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="ep">EPISODE K01 · 理论知识点</div>
+  <h1>UI 设计四大基本原则 — 好设计的底层逻辑</h1>
+  <div class="meta">
+    <span>时长：2分00秒</span>
+    <span>格式：知识讲解 + 案例图解 + 口诀总结</span>
+    <span>来源：设计基础理论（四大原则）</span>
+    <span>分辨率：1920×1080 / 30fps</span>
+  </div>
+</div>
+
+<!-- Production Overview -->
+<div class="section">
+  <h2>制作概述</h2>
+  <table class="shot-table">
+    <tr><td style="width:140px;"><b>视频类型</b></td><td>知识讲解型（口播 + 图解 + 案例对比 + 口诀总结）</td></tr>
+    <tr><td><b>目标受众</b></td><td>UI设计初学者、交互设计入门者、产品经理、前端开发者</td></tr>
+    <tr><td><b>核心目标</b></td><td>掌握 UI 设计四大基本原则（一致性、易用性、层级性、规范性），理解四者关系，能用于自查设计质量</td></tr>
+    <tr><td><b>风格基调</b></td><td>专业但通俗——从"为什么有的App好用"的日常疑问引入，四大原则逐一拆解，配合正反案例对比，结尾口诀好记</td></tr>
+    <tr><td><b>旁白语速</b></td><td>约 3.5 字/秒（2分钟约 420 字旁白）</td></tr>
+    <tr><td><b>BGM</b></td><td>轻快简约电子风，音量 -20dB，铺底不抢旁白</td></tr>
+    <tr><td><b>字体规范</b></td><td>标题：思源黑体 Bold 48px；正文：思源黑体 Regular 28px；英文术语：JetBrains Mono 24px</td></tr>
+    <tr><td><b>配色方案</b></td><td>主色 #06B6D4（青蓝）；强调色 #F2C14E（琥珀黄）；四色区分四原则：一致性红、易用性绿、层级性蓝、规范性紫</td></tr>
+  </table>
+</div>
+
+<!-- Shot-by-Shot Storyboard -->
+<div class="section">
+  <h2>分镜脚本（逐镜头）</h2>
+  <table class="shot-table">
+    <thead>
+      <tr>
+        <th style="width:50px;">镜头</th>
+        <th style="width:85px;">时间码</th>
+        <th style="width:180px;">画面描述</th>
+        <th>旁白文案 / 字幕</th>
+        <th style="width:120px;">音效 / 转场</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- Shot 1 -->
+      <tr>
+        <td class="shot-num">01</td>
+        <td class="time-code">0:00—0:15<br>(15s)</td>
+        <td>
+          <span class="tag tag-visual">对比演示</span><br>
+          <b>画面A（0-5s）</b>：手机屏幕录屏——打开一个设计混乱的 App：按钮位置飘忽、颜色乱跳、字体大小不一，用户操作频繁出错，表情烦躁。<br>
+          <b>画面B（5-10s）</b>：同一只手，打开一个设计精良的 App：操作流畅、界面清爽、一目了然，用户轻松完成任务。<br>
+          <b>画面C（10-15s）</b>：两个 App 界面左右对比，中间出现大字"为什么差别这么大？"，背景渐变到青蓝色调。
+        </td>
+        <td>
+          <div class="narration">你有没有过这种感觉——有的 App 用起来特别顺，有的却处处碰壁，好像每个按钮都在跟你作对？这不是错觉。好设计和坏设计的差别，藏在四条基本原则里。</div>
+          <div class="subtitle">为什么有的App顺手，有的处处碰壁？</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 错误提示音×2 / 成功提示音<br>
+          <span class="tag tag-transition">转场</span> 分屏对比 + 缩放过渡
+        </td>
+      </tr>
+
+      <!-- Shot 2 -->
+      <tr>
+        <td class="shot-num">02</td>
+        <td class="time-code">0:15—0:45<br>(30s)</td>
+        <td>
+          <span class="tag tag-visual">四原则图解</span><br>
+          <b>画面A（15-22s）</b>：四个图标从中心向四个方向散开，每个图标对应一个原则，配中英文名称：<br>
+          🎯 一致性 Consistency（红色）<br>
+          🧠 易用性 Usability（绿色）<br>
+          📐 层级性 Hierarchy（蓝色）<br>
+          📱 规范性 Standardization（紫色）<br>
+          <b>画面B（22-35s）</b>：逐一放大讲解每个原则，每个配一个小场景动画：<br>
+          ① 一致性——相同的按钮样式出现在不同页面（视觉统一）<br>
+          ② 易用性——用户轻松操作，不用思考（直觉化）<br>
+          ③ 层级性——文字大小有别，视线有引导（主次分明）<br>
+          ④ 规范性——iOS和Android各有规范图标（平台差异）<br>
+          <b>画面C（35-45s）</b>：四原则围成一个圆环，中心标注"好设计=四原则平衡"。
+        </td>
+        <td>
+          <div class="narration">UI 设计有四大基本原则。第一，一致性——视觉、操作、术语三统一。第二，易用性——让用户凭直觉就能操作。第三，层级性——信息有主次，引导用户视线。第四，规范性——遵循平台设计规范，利用用户的心智模型。</div>
+          <div class="subtitle">四大原则：一致性 / 易用性 / 层级性 / 规范性<br>好设计 = 四原则平衡</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 图标弹入声×4<br>
+          <span class="tag tag-sfx">SFX</span> "叮"高亮提示<br>
+          <span class="tag tag-transition">转场</span> 淡入淡出 + 缩放
+        </td>
+      </tr>
+
+      <!-- Shot 3 -->
+      <tr>
+        <td class="shot-num">03</td>
+        <td class="time-code">0:45—1:15<br>(30s)</td>
+        <td>
+          <span class="tag tag-visual">案例详解</span><br>
+          <b>画面A（45-55s）</b>：一致性正反案例对比——<br>
+          左侧（✗）：返回按钮位置混乱，有的在左有的在右，颜色也不一样<br>
+          右侧（✓）：所有页面返回按钮都在左上角，样式统一<br>
+          下方标注"操作一致性 · 降低学习成本"<br>
+          <b>画面B（55-65s）</b>：层级性演示——<br>
+          左侧（✗）：所有文字一样大，密密麻麻一片平<br>
+          右侧（✓）：标题大、正文中、辅助文字小，颜色有深浅，留白有差异，视线流动清晰<br>
+          下方标注"层级性 · 信息优先级"<br>
+          <b>画面C（65-75s）</b>：易用性 + 规范性组合案例——<br>
+          iOS 界面截图和 Android 界面截图并排展示，各有特色但都符合用户预期<br>
+          标注"规范性 · 利用心智模型"
+        </td>
+        <td>
+          <div class="narration">一致性是基础——按钮位置、颜色、术语统一，用户不用每次重新学习。层级性是手段——通过大小、颜色、间距的差异，告诉用户先看什么后看什么，信息越清晰越好找。易用性是目标——好设计就是让用户不用想。规范性是保障——iOS 有人机交互指南，Android 有 Material Design，跟着规范走，用户上手最快。</div>
+          <div class="subtitle">一致性 = 基础（三统一）<br>层级性 = 手段（主次分明）<br>易用性 = 目标（直觉操作）<br>规范性 = 保障（平台规范）</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 错误提示音 / 正确提示音<br>
+          <span class="tag tag-sfx">SFX</span> 标注弹出声×3<br>
+          <span class="tag tag-transition">转场</span> 左滑过渡
+        </td>
+      </tr>
+
+      <!-- Shot 4 -->
+      <tr>
+        <td class="shot-num">04</td>
+        <td class="time-code">1:15—1:40<br>(25s)</td>
+        <td>
+          <span class="tag tag-visual">关系图解</span><br>
+          <b>画面A（75-85s）</b>：四原则关系图——一座四层金字塔：<br>
+          底层（最宽）：一致性（基础）<br>
+          第二层：层级性（手段）<br>
+          第三层：规范性（保障）<br>
+          顶层（尖）：易用性（目标）<br>
+          每层之间有箭头连接，标注"支撑"关系。<br>
+          <b>画面B（85-95s）</b>：设计自查流程图——<br>
+          做完设计 → 检查一致性 → 检查层级性 → 检查规范性 → 达到易用性目标<br>
+          每个检查节点配一个小图标和简单问题（"按钮位置统一吗？""信息有主次吗？""符合平台规范吗？"）<br>
+          <b>画面C（95-100s）</b>：四原则口诀卡片弹出。
+        </td>
+        <td>
+          <div class="narration">这四个原则不是孤立的——一致性是基础，层级性是手段，规范性是保障，易用性是目标。四者相辅相成，共同支撑起一个好的设计。做完设计后，可以用这四条原则自查一遍：一致吗？有层级吗？符合规范吗？用户好用吗？</div>
+          <div class="subtitle">四原则关系：<br>基础=一致性 / 手段=层级性<br>保障=规范性 / 目标=易用性</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 金字塔层叠构建声<br>
+          <span class="tag tag-sfx">SFX</span> 流程节点"滴"声<br>
+          <span class="tag tag-transition">转场</span> 缩放过渡 + 淡入
+        </td>
+      </tr>
+
+      <!-- Shot 5 -->
+      <tr>
+        <td class="shot-num">05</td>
+        <td class="time-code">1:40—2:00<br>(20s)</td>
+        <td>
+          <span class="tag tag-visual">口诀总结</span><br>
+          <b>画面A（100-108s）</b>：口诀四条依次飞入，每条配对应图标和颜色：<br>
+          ① 🎯 统一不混乱（一致性）<br>
+          ② 🧠 好用不费脑（易用性）<br>
+          ③ 📐 分明不迷路（层级性）<br>
+          ④ 📱 规范不犯错（规范性）<br>
+          <b>画面B（108-116s）</b>：四行口诀合并成一张卡片，背景是青蓝色渐变，口诀大字居中，下方小字"UI设计四大基本原则"。<br>
+          <b>画面C（116-120s）</b>：片尾——系列Logo + "UI设计教学" + 下集预告文字"K03 格式塔原理"，淡出。
+        </td>
+        <td>
+          <div class="narration">最后送你一个四句口诀，帮你快速记住四大原则：统一不混乱、好用不费脑、分明不迷路、规范不犯错。记住这四句话，设计就有了基本的判断标准。</div>
+          <div class="subtitle">口诀：<br>① 统一不混乱 ② 好用不费脑<br>③ 分明不迷路 ④ 规范不犯错</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 口诀飞入声×4<br>
+          <span class="tag tag-sfx">BGM</span> 结尾渐强后淡出
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- Asset List -->
+<div class="section">
+  <h2>素材清单</h2>
+  <ul class="asset-list">
+    <li><b>素材01 · 好坏 App 对比录屏</b>：设计混乱的 App vs 设计精良的 App 操作对比（各 5 秒，突出操作顺畅度差异）</li>
+    <li><b>素材02 · 四原则图标动画</b>：四个原则图标（一致性/易用性/层级性/规范性）从中心散开的动效，各配主题色</li>
+    <li><b>素材03 · 原则场景小动画</b>：每个原则配一个场景动画（按钮统一/直觉操作/文字层级/平台规范），共 4 段</li>
+    <li><b>素材04 · 一致性正反案例</b>：返回按钮位置混乱 vs 位置统一的并排对比图（红色标注反面，绿色标注正面）</li>
+    <li><b>素材05 · 层级性正反案例</b>：文字全一样大 vs 有大小层级的并排对比图（标注"信息一片平"vs"视线有引导"）</li>
+    <li><b>素材06 · 平台规范对比图</b>：iOS 界面截图 + HIG 图标 / Android 界面截图 + Material Design 图标，并排展示</li>
+    <li><b>素材07 · 四原则关系金字塔图</b>：四层金字塔（一致性底层→层级性→规范性→易用性顶层），标注"基础/手段/保障/目标"</li>
+    <li><b>素材08 · 设计自查流程图</b>：做完设计 → 检查一致性 → 检查层级性 → 检查规范性 → 达到易用性，流程节点配图标</li>
+    <li><b>素材09 · 口诀卡片</b>：四句口诀大字卡片，配对应图标和主题色，青蓝色渐变背景</li>
+    <li><b>素材10 · 片尾Logo</b>：系列Logo + 下集预告画面（K03 格式塔原理）</li>
+    <li><b>素材11 · BGM</b>：轻快简约电子风背景音乐（2分钟完整版，可循环）</li>
+    <li><b>素材12 · 字幕文件</b>：.srt 格式字幕文件，与时间码对齐</li>
+  </ul>
+</div>
+
+<!-- Production Notes -->
+<div class="section">
+  <h2>制作注意事项</h2>
+  <div class="note-box">
+    <p><b>1. 四原则配色方案</b>：四个原则分别用不同的主题色区分——一致性用红色（#EF4444）、易用性用绿色（#10B981）、层级性用蓝色（#3B82F6）、规范性用紫色（#8B5CF6）。整体画面主色为青蓝色（#06B6D4）。颜色区分要明显但不刺眼，保持整体协调。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>2. 口诀记忆点设计</b>：四句口诀是视频的核心记忆点，需要用大字号、强对比呈现。建议每句口诀占满屏幕 1-2 秒，配合"飞入"动效和清脆的提示音，加深观众印象。口诀文字用 64px 以上大字，居中对齐。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>3. 正反案例对比节奏</b>：镜头 3 的正反案例是视频的"Aha Moment"——先展示反面案例的"糟糕体验"，再展示正面案例的"顺畅体验"，对比越强烈越好。反面案例可以用红色边框 + 错误标识，正面案例用绿色边框 + 正确标识。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>4. 金字塔关系图制作要点</b>：四原则的"基础-手段-保障-目标"关系是本知识点的核心认知框架。金字塔从下往上依次是：一致性（最宽，基础）→ 层级性（手段）→ 规范性（保障）→ 易用性（最尖，目标）。每层之间用箭头标注"支撑"关系。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>5. 录音要求</b>：旁白采用专业配音或 AI 语音（推荐使用标准普通话女声，语速适中偏快，每分钟约 210 字），情绪平稳但有亲和力——开头用疑问语气引发好奇，中间讲解清晰有条理，结尾口诀部分节奏稍慢、咬字清晰。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>6. 字幕规范</b>：字幕位置在画面底部安全区内，距底部边缘 80px；白色文字 + 半透明黑色背景条（圆角 4px，高度 40px）；字号 28px，每行不超过 20 个中文字符。口诀部分的字幕可以适当加大到 36px，居中显示。</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

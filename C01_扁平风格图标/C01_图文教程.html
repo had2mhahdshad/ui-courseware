@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C01 扁平风格图标从0到1设计 | 图文教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#6366f1;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--purple:#8b5cf6;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-dim:#64748b;--border:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.tutorial{max-width:720px;margin:0 auto;background:var(--card);min-height:100vh}
+.hero{background:linear-gradient(135deg,#4f46e5,#818cf8);color:#fff;padding:48px 40px;text-align:center}
+.hero .ep{font-size:13px;opacity:.8;letter-spacing:2px;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero .subtitle{font-size:16px;opacity:.9}
+.hero .tags{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero .tag{background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px}
+.section{padding:32px 40px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h2::before{content:'';width:4px;height:24px;background:var(--primary);border-radius:2px}
+.preview-row{display:flex;gap:24px;justify-content:center;margin:16px 0}
+.preview-item{text-align:center}
+.preview-box{width:100px;height:100px;border-radius:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--border)}
+.preview-box.light{background:#f8fafc}
+.preview-box.dark{background:#1e293b}
+.preview-box.gray{background:#94a3b8}
+.preview-label{font-size:13px;color:var(--text-dim);margin-top:8px}
+.step{background:var(--bg);border-radius:16px;padding:24px;margin:16px 0;position:relative;overflow:hidden}
+.step::before{content:attr(data-step);position:absolute;top:-8px;right:16px;font-size:80px;font-weight:900;color:var(--primary);opacity:.08}
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.step-badge{width:36px;height:36px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.step-title{font-size:18px;font-weight:700;color:var(--text)}
+.param-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.param-table th{background:var(--primary);color:#fff;padding:8px 12px;text-align:left;font-weight:600}
+.param-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.param-table td:first-child{font-weight:600;color:var(--primary)}
+.param-table code{background:#e0e7ff;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:12px;color:#3730a3}
+.kbd{background:#334155;color:#93c5fd;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px;font-weight:600}
+.visual-demo{display:flex;gap:16px;align-items:center;justify-content:center;margin:16px 0}
+.visual-step{text-align:center}
+.visual-box{width:80px;height:80px;background:var(--card);border-radius:8px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
+.visual-box.result{border-color:var(--success);background:#f0fdf4}
+.visual-label{font-size:12px;color:var(--text-dim);margin-top:6px}
+.arrow{font-size:20px;color:var(--primary)}
+.boolean-explain{background:#eef2ff;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#3730a3}
+.boolean-explain b{color:#1e1b4b}
+.check-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:16px 0}
+.check-card{background:var(--bg);border-radius:12px;padding:16px;text-align:center;border-top:3px solid}
+.check-card.ok{border-color:var(--success)}
+.check-card .icon{font-size:24px;margin-bottom:4px}
+.check-card .title{font-size:14px;font-weight:700}
+.check-card .desc{font-size:12px;color:var(--text-dim);margin-top:4px}
+.export-tags{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap}
+.export-tag{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;text-align:center;flex:1;min-width:120px}
+.export-tag .format{font-size:18px;font-weight:700;color:var(--primary)}
+.export-tag .use{font-size:12px;color:var(--text-dim);margin-top:4px}
+.size-grid{display:flex;gap:24px;justify-content:center;margin:16px 0}
+.size-item{text-align:center}
+.size-box{border:2px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.size-box.s24{width:48px;height:48px}
+.size-box.s48{width:64px;height:64px}
+.size-box.s96{width:80px;height:80px}
+.size-label{font-size:13px;color:var(--text-dim);margin-top:6px}
+.summary-grid{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.summary-item{display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--primary)}
+.summary-item .emoji{font-size:28px}
+.summary-item .title{font-size:16px;font-weight:700}
+.summary-item .desc{font-size:13px;color:var(--text-dim);margin-top:2px}
+.footer{text-align:center;padding:32px 40px;background:var(--bg);color:var(--text-dim);font-size:13px}
+.footer .next{margin-top:12px;font-size:14px;color:var(--primary);font-weight:600}
+</style>
+</head>
+<body>
+<div class="tutorial">
+
+<div class="hero">
+  <div class="ep">EPISODE C01 · 案例教程 · 图文教程</div>
+  <h1>扁平风格图标从0到1设计</h1>
+  <div class="subtitle">Figma 实操 · 以"首页"图标为例</div>
+  <div class="tags">
+    <span class="tag">教材内 4.4.1</span>
+    <span class="tag">工具：Figma</span>
+    <span class="tag">约5分钟</span>
+  </div>
+</div>
+
+<!-- Section 1: Final Preview -->
+<div class="section">
+  <h2>最终效果预览</h2>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="preview-box light">
+        <svg width="56" height="56" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#2563EB"/><rect x="21" y="26" width="6" height="10" fill="white"/><circle cx="30" cy="23" r="2" fill="white"/></svg>
+      </div>
+      <div class="preview-label">浅色背景</div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-box dark">
+        <svg width="56" height="56" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#2563EB"/><rect x="21" y="26" width="6" height="10" fill="#1e293b"/><circle cx="30" cy="23" r="2" fill="#1e293b"/></svg>
+      </div>
+      <div class="preview-label">深色背景</div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-box gray">
+        <svg width="56" height="56" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#2563EB"/><rect x="21" y="26" width="6" height="10" fill="#94a3b8"/><circle cx="30" cy="23" r="2" fill="#94a3b8"/></svg>
+      </div>
+      <div class="preview-label">灰色背景</div>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:14px;color:var(--text-dim)">扁平风格 = 纯色块 / 无阴影 / 无渐变 / 简洁几何形状</p>
+</div>
+
+<!-- Step 1: Canvas Setup -->
+<div class="section">
+  <h2>步骤一：画板与网格设置</h2>
+  <div class="step" data-step="1">
+    <div class="step-header">
+      <div class="step-badge">1</div>
+      <div class="step-title">创建画板 + 设置网格系统</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>参数</th><th>值</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>画板</td><td><code>48×48px Frame</code></td><td>标准图标尺寸</td></tr>
+        <tr><td>命名</td><td><code>Icon / Home</code></td><td>规范命名</td></tr>
+        <tr><td>细网格</td><td><code>Grid 4px</code></td><td>精确对齐锚点</td></tr>
+        <tr><td>安全区网格</td><td><code>Grid 24px</code></td><td>图标内容边界</td></tr>
+        <tr><td>对齐</td><td><code>Snap to grid: ON</code></td><td>自动吸附</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:8px;font-size:14px">快捷键 <span class="kbd">F</span> 创建 Frame</p>
+  </div>
+</div>
+
+<!-- Step 2: Basic Shapes -->
+<div class="section">
+  <h2>步骤二：绘制基础形状</h2>
+  <div class="step" data-step="2">
+    <div class="step-header">
+      <div class="step-badge">2</div>
+      <div class="step-title">墙体（矩形）+ 屋顶（三角形）</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>部件</th><th>工具</th><th>参数</th></tr></thead>
+      <tbody>
+        <tr><td>墙体</td><td><span class="kbd">R</span> Rectangle</td><td>X:12 Y:20 W:24 H:16 圆角:2px 填充:#2563EB</td></tr>
+        <tr><td>屋顶-锚点1</td><td><span class="kbd">P</span> Pen Tool</td><td>(12, 20) 左下</td></tr>
+        <tr><td>屋顶-锚点2</td><td><span class="kbd">P</span> Pen Tool</td><td>(24, 8) 顶点</td></tr>
+        <tr><td>屋顶-锚点3</td><td><span class="kbd">P</span> Pen Tool</td><td>(36, 20) 右下</td></tr>
+        <tr><td>对齐</td><td><span class="kbd">Ctrl+Shift+H</span></td><td>水平居中对齐</td></tr>
+      </tbody>
+    </table>
+    <div class="visual-demo">
+      <div class="visual-step">
+        <div class="visual-box">
+          <svg width="48" height="48" viewBox="0 0 48 48"><rect x="12" y="20" width="24" height="16" rx="2" fill="#6366f1"/></svg>
+        </div>
+        <div class="visual-label">墙体矩形</div>
+      </div>
+      <div class="arrow">+</div>
+      <div class="visual-step">
+        <div class="visual-box">
+          <svg width="48" height="48" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 Z" fill="#6366f1"/></svg>
+        </div>
+        <div class="visual-label">屋顶三角形</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 3: Boolean Union -->
+<div class="section">
+  <h2>步骤三：Boolean 合并</h2>
+  <div class="step" data-step="3">
+    <div class="step-header">
+      <div class="step-badge">3</div>
+      <div class="step-title">Union 合并为完整房屋轮廓</div>
+    </div>
+    <div class="boolean-explain">
+      <b>Union（合并）</b>：将两个独立形状合并为单一路径，消除重叠部分的边线。快捷键 <span class="kbd" style="background:#3730a3;color:#c7d2fe">Ctrl+Shift+U</span>
+    </div>
+    <div class="visual-demo">
+      <div class="visual-step">
+        <div class="visual-box">
+          <svg width="48" height="48" viewBox="0 0 48 48">
+            <rect x="12" y="20" width="24" height="16" rx="2" fill="#6366f1" opacity="0.6"/>
+            <path d="M12 20 L24 8 L36 20 Z" fill="#6366f1" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="visual-label">合并前（两个形状）</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="visual-step">
+        <div class="visual-box result">
+          <svg width="48" height="48" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/></svg>
+        </div>
+        <div class="visual-label">合并后（单一路径）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 4: Boolean Subtract -->
+<div class="section">
+  <h2>步骤四：镂空门和窗户</h2>
+  <div class="step" data-step="4">
+    <div class="step-header">
+      <div class="step-badge">4</div>
+      <div class="step-title">Subtract 挖洞</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>部件</th><th>工具</th><th>参数</th><th>操作</th></tr></thead>
+      <tbody>
+        <tr><td>门</td><td><span class="kbd">R</span> Rectangle</td><td>X:21 Y:26 W:6 H:10</td><td>Subtract</td></tr>
+        <tr><td>窗户</td><td><span class="kbd">O</span> Ellipse</td><td>X:28 Y:23 W:4 H:4</td><td>Subtract</td></tr>
+      </tbody>
+    </table>
+    <div class="boolean-explain">
+      <b>Subtract（减去顶层）</b>：用顶层形状在底层"挖洞"，形成镂空效果。快捷键 <span class="kbd" style="background:#3730a3;color:#c7d2fe">Ctrl+Shift+S</span>
+    </div>
+    <div class="visual-demo">
+      <div class="visual-step">
+        <div class="visual-box">
+          <svg width="48" height="48" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/></svg>
+        </div>
+        <div class="visual-label">镂空前</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="visual-step">
+        <div class="visual-box result">
+          <svg width="48" height="48" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/><rect x="21" y="26" width="6" height="10" fill="white"/><circle cx="30" cy="23" r="2" fill="white"/></svg>
+        </div>
+        <div class="visual-label">镂空后</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 5: Visual Check -->
+<div class="section">
+  <h2>步骤五：视觉平衡检查</h2>
+  <div class="step" data-step="5">
+    <div class="step-header">
+      <div class="step-badge">5</div>
+      <div class="step-title">检查三要素 + 深色背景预览</div>
+    </div>
+    <div class="check-grid">
+      <div class="check-card ok">
+        <div class="icon">✓</div>
+        <div class="title">左右对称</div>
+        <div class="desc">门在正中间</div>
+      </div>
+      <div class="check-card ok">
+        <div class="icon">✓</div>
+        <div class="title">上部留白</div>
+        <div class="desc">屋顶占上方1/3</div>
+      </div>
+      <div class="check-card ok">
+        <div class="icon">✓</div>
+        <div class="title">重心居中</div>
+        <div class="desc">在安全区内居中</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--text-dim);margin-top:8px">深色背景预览：在 <code style="background:#e0e7ff;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:12px;color:#3730a3">#1E293B</code> 背景上确认镂空区域正确透出底层颜色。</p>
+  </div>
+</div>
+
+<!-- Step 6: Component & Export -->
+<div class="section">
+  <h2>步骤六：组件化与导出</h2>
+  <div class="step" data-step="6">
+    <div class="step-header">
+      <div class="step-badge">6</div>
+      <div class="step-title">创建 Component + 多格式导出</div>
+    </div>
+    <p style="font-size:15px;margin-bottom:8px">快捷键 <span class="kbd">Ctrl+Alt+K</span> 创建 Component → 命名 <code style="background:#e0e7ff;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:13px;color:#3730a3">Icon / Home / Flat</code></p>
+    <div class="export-tags">
+      <div class="export-tag"><div class="format">SVG</div><div class="use">开发使用 · 矢量格式</div></div>
+      <div class="export-tag"><div class="format">PNG</div><div class="use">演示展示 · 1x/2x/3x</div></div>
+      <div class="export-tag"><div class="format">PDF</div><div class="use">打印存档 · 矢量格式</div></div>
+    </div>
+    <div class="size-grid">
+      <div class="size-item">
+        <div class="size-box s24">
+          <svg width="28" height="28" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/><rect x="21" y="26" width="6" height="10" fill="#f8fafc"/><circle cx="30" cy="23" r="2" fill="#f8fafc"/></svg>
+        </div>
+        <div class="size-label">24px</div>
+      </div>
+      <div class="size-item">
+        <div class="size-box s48">
+          <svg width="36" height="36" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/><rect x="21" y="26" width="6" height="10" fill="#f8fafc"/><circle cx="30" cy="23" r="2" fill="#f8fafc"/></svg>
+        </div>
+        <div class="size-label">48px</div>
+      </div>
+      <div class="size-item">
+        <div class="size-box s96">
+          <svg width="48" height="48" viewBox="0 0 48 48"><path d="M12 20 L24 8 L36 20 L36 36 L12 36 Z" fill="#6366f1"/><rect x="21" y="26" width="6" height="10" fill="#f8fafc"/><circle cx="30" cy="23" r="2" fill="#f8fafc"/></svg>
+        </div>
+        <div class="size-label">96px</div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:14px;color:var(--text-dim)">三种尺寸均清晰可辨 · SVG文件应小于2KB</p>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="section">
+  <h2>知识点总结</h2>
+  <div class="summary-grid">
+    <div class="summary-item" style="border-left-color:var(--primary)">
+      <div class="emoji">🎨</div>
+      <div><div class="title">扁平风格三要素</div><div class="desc">简洁形状 · 纯色填充 · 无阴影渐变</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--success)">
+      <div class="emoji">🔧</div>
+      <div><div class="title">Figma核心工具</div><div class="desc">Rectangle · Pen Tool · Boolean (Union/Subtract)</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--accent)">
+      <div class="emoji">📐</div>
+      <div><div class="title">网格系统</div><div class="desc">4px细网格对齐 + 24px安全区限定</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--purple,#8b5cf6)">
+      <div class="emoji">♻️</div>
+      <div><div class="title">组件化思维</div><div class="desc">一次设计，多处复用，主组件修改实例同步</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Extension Exercise -->
+<div class="section">
+  <h2>延伸练习</h2>
+  <div style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);border-radius:12px;padding:20px">
+    <p style="font-weight:700;font-size:16px;margin-bottom:8px">用本教程的方法设计一套6个图标</p>
+    <p style="font-size:14px;color:var(--text-dim)">首页 / 搜索 / 消息 / 我的 / 设置 / 收藏</p>
+    <ul style="margin-top:8px;font-size:14px;color:var(--text-dim);list-style:none;padding-left:0">
+      <li style="padding:4px 0">统一 48×48px 画板</li>
+      <li style="padding:4px 0">统一 2px 圆角</li>
+      <li style="padding:4px 0">统一品牌色 #2563EB</li>
+      <li style="padding:4px 0">统一视觉风格（扁平）</li>
+      <li style="padding:4px 0">创建为 Figma Component Set，用 Variants 管理</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <p>UI设计案例教程 C01 · 图文教程</p>
+  <p>教材来源：4.4.1 · 工具：Figma</p>
+  <div class="next">下集预告：C02 磨砂玻璃风格图标从0到1设计</div>
+</div>
+
+</div>
+</body>
+</html>

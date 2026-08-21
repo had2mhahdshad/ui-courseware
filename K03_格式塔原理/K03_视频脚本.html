@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K03 格式塔原理——视觉感知的六大组织法则 | 视频脚本</title>
+<style>
+:root {
+  --primary: #059669; --primary-dark: #047857; --accent: #f59e0b;
+  --success: #10b981; --danger: #ef4444; --purple: #8b5cf6;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+  --bg: #f0fdf4; --card: #fff; --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; background:var(--bg); color:var(--gray-900); line-height:1.7; font-size:14px; }
+.container { max-width:1100px; margin:0 auto; padding:32px; }
+.header { background:linear-gradient(135deg, var(--primary-dark), var(--primary)); color:#fff; padding:36px 32px; border-radius:var(--radius); margin-bottom:28px; }
+.header .ep { font-size:13px; opacity:0.8; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.header h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+.header .meta { display:flex; gap:12px; flex-wrap:wrap; }
+.header .meta span { background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; }
+.section { background:var(--card); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.section h2 { font-size:18px; font-weight:700; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+.shot-table { width:100%; border-collapse:collapse; font-size:13px; }
+.shot-table th { background:var(--gray-100); padding:10px; text-align:left; font-weight:600; color:var(--gray-700); border-bottom:2px solid var(--gray-200); white-space:nowrap; }
+.shot-table td { padding:12px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+.shot-num { font-weight:700; color:var(--primary); }
+.time-code { font-family:'SF Mono',Monaco,monospace; font-weight:600; color:var(--accent); white-space:nowrap; }
+.narration { background:#ecfdf5; padding:10px 14px; border-radius:6px; border-left:3px solid var(--primary); margin-top:4px; }
+.narration::before { content:"旁白："; font-weight:700; color:var(--primary); font-size:12px; }
+.subtitle { color:var(--gray-500); font-style:italic; font-size:12px; margin-top:4px; }
+.subtitle::before { content:"字幕："; font-weight:600; font-style:normal; }
+.asset-list { list-style:none; }
+.asset-list li { padding:8px 12px; margin-bottom:6px; background:var(--gray-50); border-radius:6px; border-left:3px solid var(--accent); font-size:13px; }
+.asset-list li b { color:var(--gray-700); }
+.note-box { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:16px; margin-top:16px; font-size:13px; }
+.note-box b { color:#92400e; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.tag-sfx { background:#fce7f3; color:#9d174d; }
+.tag-visual { background:#dbeafe; color:#1e40af; }
+.tag-transition { background:#d1fae5; color:#065f46; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="ep">EPISODE K03 · 理论知识点</div>
+  <h1>格式塔原理——视觉感知的六大组织法则</h1>
+  <div class="meta">
+    <span>时长：2分00秒</span>
+    <span>格式：知识讲解 + 动效演示</span>
+    <span>来源：理论延伸（认知心理学 / 格式塔学派）</span>
+    <span>分辨率：1920×1080 / 30fps</span>
+  </div>
+</div>
+
+<!-- Production Overview -->
+<div class="section">
+  <h2>制作概述</h2>
+  <table class="shot-table">
+    <tr><td style="width:140px;"><b>视频类型</b></td><td>知识讲解型（口播 + 动效图解 + 案例对比）</td></tr>
+    <tr><td><b>目标受众</b></td><td>UI设计初学者、交互设计学习者、产品经理</td></tr>
+    <tr><td><b>核心目标</b></td><td>理解格式塔六大原理，掌握其在UI设计中的应用场景，能自查设计中的分组和层级问题</td></tr>
+    <tr><td><b>风格基调</b></td><td>专业但有趣——用日常视觉错觉引入，每个原理配合可视化动效，案例来自真实App界面</td></tr>
+    <tr><td><b>旁白语速</b></td><td>约 3.5 字/秒（2分钟约 420 字旁白）</td></tr>
+    <tr><td><b>BGM</b></td><td>轻快清新电子风，音量 -20dB，铺底不抢旁白</td></tr>
+    <tr><td><b>字体规范</b></td><td>标题：思源黑体 Bold 48px；正文：思源黑体 Regular 28px；英文术语：Inter Medium 24px</td></tr>
+    <tr><td><b>配色方案</b></td><td>主色 #10B981（翡翠绿）；强调色 #F59E0B（琥珀橙）；背景 #F0FDF4（浅绿）/ #064E3B（深绿）</td></tr>
+  </table>
+</div>
+
+<!-- Shot-by-Shot Storyboard -->
+<div class="section">
+  <h2>分镜脚本（逐镜头）</h2>
+  <table class="shot-table">
+    <thead>
+      <tr>
+        <th style="width:50px;">镜头</th>
+        <th style="width:85px;">时间码</th>
+        <th style="width:180px;">画面描述</th>
+        <th>旁白文案 / 字幕</th>
+        <th style="width:120px;">音效 / 转场</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- Shot 1 -->
+      <tr>
+        <td class="shot-num">01</td>
+        <td class="time-code">0:00—0:20<br>(20s)</td>
+        <td>
+          <span class="tag tag-visual">视觉错觉演示</span><br>
+          <b>画面A（0-8s）</b>：屏幕上出现9个圆点，排列成3×3的矩阵。等距排列时，旁白问"你看到了什么？"——用户看到的是9个孤立的点。<br>
+          <b>画面B（8-15s）</b>：同一组圆点，调整间距——横向间距缩小、纵向间距拉大。瞬间，用户"看到"了三行而不是九列。<br>
+          <b>画面C（15-20s）</b>：画面中央弹出大字"为什么？"，背景渐变为深绿色 #064E3B。
+        </td>
+        <td>
+          <div class="narration">你看到这九个点的时候，是把它们当成九个独立的元素，还是自动分成了三行？其实元素没有变，只是间距变了——但你的大脑已经重新"分组"了。这就是格式塔原理。</div>
+          <div class="subtitle">为什么间距一变，<br>你的"分组"就变了？<br>→ 格式塔原理</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 轻柔"叮"声（圆点出现）<br>
+          <span class="tag tag-transition">转场</span> 平滑推近
+        </td>
+      </tr>
+
+      <!-- Shot 2 -->
+      <tr>
+        <td class="shot-num">02</td>
+        <td class="time-code">0:20—0:55<br>(35s)</td>
+        <td>
+          <span class="tag tag-visual">原理动效（前三个）</span><br>
+          <b>画面A（20-30s）接近性</b>：两组圆点，一组间距小、一组间距大。标注"Proximity 接近性"——间距越小，关联性越强。<br>
+          <b>画面B（30-42s）相似性</b>：混合排列的圆点和方块。同色/同形的元素自动被归为一类。标注"Similarity 相似性"——长得像，就是一类。<br>
+          <b>画面C（42-55s）连续性</b>：一条曲线穿过多个节点。视线沿着曲线平滑流动，而不是在节点间跳跃。标注"Continuity 连续性"——视线沿最平滑路径走。
+        </td>
+        <td>
+          <div class="narration">格式塔是德语"整体"的意思。这个学派认为：整体大于部分之和——我们看到的不是孤立元素，而是它们之间的关系。六大原理中，最常用的有三个。第一，接近性：间距越小，越像一组。第二，相似性：长得越像，越像一类。第三，连续性：视线会沿着最平滑的方向流动。</div>
+          <div class="subtitle">格式塔 = 整体（德语）<br>整体 > 部分之和<br>① 接近性 ② 相似性 ③ 连续性</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 每次原理出现"嗖"声<br>
+          <span class="tag tag-sfx">SFX</span> 三个"叮"提示<br>
+          <span class="tag tag-transition">转场</span> 淡入淡出
+        </td>
+      </tr>
+
+      <!-- Shot 3 -->
+      <tr>
+        <td class="shot-num">03</td>
+        <td class="time-code">0:55—1:30<br>(35s)</td>
+        <td>
+          <span class="tag tag-visual">原理动效（后三个）</span><br>
+          <b>画面A（55-67s）闭合性</b>：一个缺了口的圆形 → 大脑自动"补全"成完整的圆。旁侧出现骨架屏示例——灰色占位条块，但用户能脑补出内容结构。标注"Closure 闭合性"。<br>
+          <b>画面B（67-78s）对称性</b>：对称布局 vs 不对称布局对比。对称的界面给人稳定、舒适的感觉。标注"Symmetry 对称性"。<br>
+          <b>画面C（78-90s）共同命运</b>：两群圆点，一群向左移动、一群向右移动。同向运动的圆点自动被归为一组。标注"Common Fate 共同命运"。
+        </td>
+        <td>
+          <div class="narration">另外三个原理同样重要。第四，闭合性——不完整的图形，大脑会自动补全，骨架屏就是最好的例子。第五，对称性——对称的布局给人稳定、舒适的感觉，所以弹窗、卡片大多是对称的。第六，共同命运——同向运动的元素会被认为是一组，侧边栏的展开收起就是这个原理。</div>
+          <div class="subtitle">④ 闭合性：残缺 → 脑补完整<br>⑤ 对称性：对称 → 稳定舒适<br>⑥ 共同命运：同动 → 一组</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> "嗖"声×3<br>
+          <span class="tag tag-sfx">SFX</span> 骨架屏加载"刷刷"声<br>
+          <span class="tag tag-transition">转场</span> 滑动切换
+        </td>
+      </tr>
+
+      <!-- Shot 4 -->
+      <tr>
+        <td class="shot-num">04</td>
+        <td class="time-code">1:30—1:45<br>(15s)</td>
+        <td>
+          <span class="tag tag-visual">UI案例应用</span><br>
+          <b>画面A（90-98s）</b>：App界面并排对比——<br>
+          <b>左侧（好设计 ✓）</b>：组内间距8px、组间间距24px，用户一眼看出分组。标注"接近性 + 相似性 = 清晰层级"。<br>
+          <b>右侧（差设计 ✗）</b>：所有元素间距一样，按钮颜色形状各异，用户分不清哪些是一组。标注"无视格式塔 = 信息混乱"。<br>
+          <b>画面B（98-105s）</b>：六大原理图标快速闪过，每个图标对应一个口诀词。
+        </td>
+        <td>
+          <div class="narration">在UI设计中，格式塔原理无处不在：用接近性做信息分组，用相似性统一组件样式，用闭合性做骨架屏，用对称性布局页面，用共同命运做动效。好的设计顺应这些规律，差的设计则让用户感到"别扭"。</div>
+          <div class="subtitle">接近性 → 分组<br>相似性 → 统一<br>闭合性 → 骨架屏<br>好设计顺应格式塔</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 正确"叮"/错误"嘟"<br>
+          <span class="tag tag-sfx">SFX</span> 快速闪切声<br>
+          <span class="tag tag-transition">转场</span> 左右分屏对比
+        </td>
+      </tr>
+
+      <!-- Shot 5 -->
+      <tr>
+        <td class="shot-num">05</td>
+        <td class="time-code">1:45—2:00<br>(15s)</td>
+        <td>
+          <span class="tag tag-visual">总结记忆</span><br>
+          <b>画面A（105-112s）</b>：六句口诀卡片依次飞入，每句对应一个原理：<br>
+          ① 近了就一伙（接近性）<br>
+          ② 像了就一类（相似性）<br>
+          ③ 顺着看下去（连续性）<br>
+          ④ 缺了能脑补（闭合性）<br>
+          ⑤ 对称才舒服（对称性）<br>
+          ⑥ 同动是一组（共同命运）<br>
+          <b>画面B（112-120s）</b>：片尾——系列Logo + "UI设计教学" + 下集预告文字"K04 费茨定律"，淡出。
+        </td>
+        <td>
+          <div class="narration">记住六句口诀：近了就一伙，像了就一类，顺着看下去，缺了能脑补，对称才舒服，同动是一组。下次设计界面时，用这六条过一遍，80%的布局问题都能发现。</div>
+          <div class="subtitle">六口诀：<br>近/像/顺/补/对/动<br>→ 格式塔六大原理</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 卡片飞入声×6<br>
+          <span class="tag tag-sfx">BGM</span> 结尾渐强后淡出
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- Asset List -->
+<div class="section">
+  <h2>素材清单</h2>
+  <ul class="asset-list">
+    <li><b>素材01 · 九点错觉演示</b>：3×3圆点矩阵，等距→变间距的动效（Figma Smart Animate 或 AE制作）</li>
+    <li><b>素材02 · 接近性原理动效</b>：两组圆点间距对比动画，标注"间距小=一组"</li>
+    <li><b>素材03 · 相似性原理动效</b>：混合排列的圆点/方块，同色/同形元素高亮闪烁归组</li>
+    <li><b>素材04 · 连续性原理动效</b>：曲线穿过节点的动画，视线沿曲线流动的引导效果</li>
+    <li><b>素材05 · 闭合性原理动效</b>：缺角圆形→自动补全的动画 + 骨架屏加载示例</li>
+    <li><b>素材06 · 对称性原理动效</b>：对称布局 vs 不对称布局对比，标注"稳定 vs 不稳定"</li>
+    <li><b>素材07 · 共同命运原理动效</b>：两群圆点反向运动的动画，自动归组效果</li>
+    <li><b>素材08 · UI案例对比图</b>：好设计 vs 差设计并排对比（接近性+相似性的应用）</li>
+    <li><b>素材09 · 六口诀卡片</b>：六句记忆口诀卡片设计，依次飞入动画</li>
+    <li><b>素材10 · 片尾Logo</b>：系列Logo + 下集预告画面</li>
+    <li><b>素材11 · BGM</b>：轻快清新电子风背景音乐（2分钟完整版，可循环）</li>
+    <li><b>素材12 · 字幕文件</b>：.srt格式字幕文件，与时间码对齐</li>
+  </ul>
+</div>
+
+<!-- Production Notes -->
+<div class="section">
+  <h2>制作注意事项</h2>
+  <div class="note-box">
+    <p><b>1. 视觉演示重点</b>：每个原理的动效演示是视频的核心，必须让观众在3秒内"get到"原理的含义。避免纯文字讲解，多用动态视觉对比——"改变一个变量，感知完全不同"的瞬间就是Aha Moment。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>2. 九点开场的设计</b>：第一个镜头的九点矩阵是全片的钩子。先用等距排列让观众觉得"就是9个点"，然后调整间距，让观众瞬间感知到"三行"的变化。这个视觉冲击要足够明显——横向间距从20px缩到8px，纵向从20px拉到40px，变化幅度要大。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>3. 六大原理的节奏控制</b>：2分钟讲6个原理，每个约15-20秒。前3个和后3个分成两组（镜头2和镜头3），每组35秒。每组内部节奏：先出原理名称→再出动效→最后一句口诀总结。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>4. 口诀记忆点设计</b>：结尾的六句口诀是记忆锚点，画面停留时间要足够（每句约1秒）。建议用大字号+对应emoji图标，形成强视觉记忆点。口诀要押韵好记，不求精确但求朗朗上口。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>5. 录音要求</b>：旁白采用专业配音或AI语音（推荐使用标准普通话女声，语速适中偏快，每分钟约210字），情绪轻松有趣——开头带悬念感，中间讲解清晰，结尾总结干脆有力。</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

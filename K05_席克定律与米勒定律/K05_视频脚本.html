@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K05 席克定律与米勒定律——决策心理学与信息分块 | 视频脚本</title>
+<style>
+:root {
+  --primary: #d97706; --primary-dark: #92400e; --accent: #F59E0B;
+  --success: #10b981; --danger: #ef4444; --purple: #8b5cf6;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+  --bg: #f0f4f8; --card: #fff; --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; background:var(--bg); color:var(--gray-900); line-height:1.7; font-size:14px; }
+.container { max-width:1100px; margin:0 auto; padding:32px; }
+.header { background:linear-gradient(135deg, var(--primary-dark), var(--primary)); color:#fff; padding:36px 32px; border-radius:var(--radius); margin-bottom:28px; }
+.header .ep { font-size:13px; opacity:0.8; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.header h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+.header .meta { display:flex; gap:12px; flex-wrap:wrap; }
+.header .meta span { background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; }
+.section { background:var(--card); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.section h2 { font-size:18px; font-weight:700; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+.shot-table { width:100%; border-collapse:collapse; font-size:13px; }
+.shot-table th { background:var(--gray-100); padding:10px; text-align:left; font-weight:600; color:var(--gray-700); border-bottom:2px solid var(--gray-200); white-space:nowrap; }
+.shot-table td { padding:12px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+.shot-num { font-weight:700; color:var(--primary); }
+.time-code { font-family:'SF Mono',Monaco,monospace; font-weight:600; color:var(--accent); white-space:nowrap; }
+.narration { background:#fffbeb; padding:10px 14px; border-radius:6px; border-left:3px solid var(--primary); margin-top:4px; }
+.narration::before { content:"旁白："; font-weight:700; color:var(--primary); font-size:12px; }
+.subtitle { color:var(--gray-500); font-style:italic; font-size:12px; margin-top:4px; }
+.subtitle::before { content:"字幕："; font-weight:600; font-style:normal; }
+.asset-list { list-style:none; }
+.asset-list li { padding:8px 12px; margin-bottom:6px; background:var(--gray-50); border-radius:6px; border-left:3px solid var(--accent); font-size:13px; }
+.asset-list li b { color:var(--gray-700); }
+.note-box { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:16px; margin-top:16px; font-size:13px; }
+.note-box b { color:#92400e; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.tag-sfx { background:#fce7f3; color:#9d174d; }
+.tag-visual { background:#dbeafe; color:#1e40af; }
+.tag-transition { background:#d1fae5; color:#065f46; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="ep">EPISODE K05 · 理论知识点</div>
+  <h1>席克定律与米勒定律——决策心理学与信息分块</h1>
+  <div class="meta">
+    <span>时长：2分00秒</span>
+    <span>格式：知识讲解 + 动效演示 + 案例对比</span>
+    <span>来源：理论延伸（认知心理学定律）</span>
+    <span>分辨率：1920×1080 / 30fps</span>
+  </div>
+</div>
+
+<!-- Production Overview -->
+<div class="section">
+  <h2>制作概述</h2>
+  <table class="shot-table">
+    <tr><td style="width:140px;"><b>视频类型</b></td><td>知识讲解型（口播 + 动效图解 + 案例对比）</td></tr>
+    <tr><td><b>目标受众</b></td><td>UI设计初学者、交互设计学习者、产品经理</td></tr>
+    <tr><td><b>核心目标</b></td><td>理解席克定律和米勒定律的核心概念，掌握信息分块和渐进式披露策略，能优化菜单/导航/表单的信息架构</td></tr>
+    <tr><td><b>风格基调</b></td><td>专业但不枯燥——用日常选择困境引入，双定律交叉讲解，案例对比直观有力</td></tr>
+    <tr><td><b>旁白语速</b></td><td>约 3.5 字/秒（2分钟约 420 字旁白）</td></tr>
+    <tr><td><b>BGM</b></td><td>轻快智慧风，钢琴+电子音色，音量 -20dB，铺底不抢旁白</td></tr>
+    <tr><td><b>字体规范</b></td><td>标题：思源黑体 Bold 48px；正文：思源黑体 Regular 28px；公式：JetBrains Mono 32px</td></tr>
+    <tr><td><b>配色方案</b></td><td>主色 #F59E0B（琥珀橙）；辅助色 #10B981（翠绿）；背景 #0F172A（深色模式）/ #FFFBEB（浅色模式）</td></tr>
+  </table>
+</div>
+
+<!-- Shot-by-Shot Storyboard -->
+<div class="section">
+  <h2>分镜脚本（逐镜头）</h2>
+  <table class="shot-table">
+    <thead>
+      <tr>
+        <th style="width:50px;">镜头</th>
+        <th style="width:85px;">时间码</th>
+        <th style="width:180px;">画面描述</th>
+        <th>旁白文案 / 字幕</th>
+        <th style="width:120px;">音效 / 转场</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- Shot 1 -->
+      <tr>
+        <td class="shot-num">01</td>
+        <td class="time-code">0:00—0:18<br>(18s)</td>
+        <td>
+          <span class="tag tag-visual">动效演示</span><br>
+          <b>画面A（0-6s）</b>：餐厅菜单场景——一本厚厚的菜单，密密麻麻几十道菜，人物挠头纠结，头上冒出问号。<br>
+          <b>画面B（6-12s）</b>：切换到 App 界面——设置页有 30+ 个选项，用户上下滑动找不到想要的功能，眉头紧锁。<br>
+          <b>画面C（12-18s）</b>：两个场景左右对比，中间出现大字"为什么选择越多越难选？"，背景渐变为琥珀色调。
+        </td>
+        <td>
+          <div class="narration">你有没有过这种体验：菜单越长越难点菜，设置越多越找不到功能。这不是你优柔寡断，而是两个心理学定律在起作用——席克定律和米勒定律。</div>
+          <div class="subtitle">为什么选择越多越难选？<br>席克定律 & 米勒定律</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 翻页声、叹气声<br>
+          <span class="tag tag-transition">转场</span> 缩放过渡
+        </td>
+      </tr>
+
+      <!-- Shot 2 -->
+      <tr>
+        <td class="shot-num">02</td>
+        <td class="time-code">0:18—0:45<br>(27s)</td>
+        <td>
+          <span class="tag tag-visual">公式动效</span><br>
+          <b>画面A（18-25s）</b>：深色背景上，公式逐字打字出现：<br>
+          <code style="background:#1e293b; padding:8px 16px; border-radius:6px; font-size:16px; color:#FCD34D;">RT = a + b · log₂(n + 1)</code><br>
+          公式下方标注变量：RT→反应时间、n→选项数量、a/b→经验常数。n 用橙色高亮放大。<br>
+          <b>画面B（25-37s）</b>：动效演示——三列菜单对比：<br>
+          左侧：3个选项 → 快速选中（绿色✓，0.5s）<br>
+          中间：6个选项 → 稍慢选中（黄色⏱，1.2s）<br>
+          右侧：12个选项 → 很慢选中（红色✗，2.5s）<br>
+          下方 RT 数值同步变化。<br>
+          <b>画面C（37-45s）</b>：结论弹出："席克定律：选项越多 → 决策越慢"，配合底部导航 3-5 个 Tab 的案例截图。
+        </td>
+        <td>
+          <div class="narration">第一个定律叫席克定律，由心理学家 Hick 于 1952 年提出。公式 RT = a + b·log₂(n+1) 告诉我们：选项数量 n 越多，反应时间 RT 就越长，而且是对数增长。底部导航控制在 3-5 个 Tab，就是这个道理——选项少，决策才快。</div>
+          <div class="subtitle">席克定律 Hick's Law<br>RT = a + b·log₂(n+1)<br>选项越多 → 决策越慢</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 打字机声<br>
+          <span class="tag tag-sfx">SFX</span> 三次"叮"提示<br>
+          <span class="tag tag-transition">转场</span> 淡入淡出
+        </td>
+      </tr>
+
+      <!-- Shot 3 -->
+      <tr>
+        <td class="shot-num">03</td>
+        <td class="time-code">0:45—1:12<br>(27s)</td>
+        <td>
+          <span class="tag tag-visual">案例图解</span><br>
+          <b>画面A（45-52s）</b>：米勒定律标题出现 + "神奇数字 7 ± 2"大字呈现，数字 7 用绿色高亮，±2 用灰色标注范围 5~9。<br>
+          <b>画面B（52-62s）</b>：手机号对比动效——<br>
+          左侧："13812345678" 一串数字出现，人脑图标显示"溢出"红色警告（11个 > 7个）<br>
+          右侧："138-1234-5678" 分三段出现，人脑图标显示三个"块"，绿色✓通过（3个 < 7个）<br>
+          <b>画面C（62-72s）</b>：更多分块案例快速闪过——银行卡号 4 位一组、身份证号 6-8-4 分段、验证码 4-6 位。<br>
+          文字总结："信息分块 Chunking = 把大信息拆成 7±2 个块"。
+        </td>
+        <td>
+          <div class="narration">第二个定律是米勒定律。1956年，心理学家 George Miller 提出了著名的"神奇数字 7 ± 2"——人的工作记忆一次大约只能 hold 住 5 到 9 个信息块。所以手机号要分成三段来记，银行卡号是 4 位一组。这种策略叫做"信息分块"，把超过记忆容量的大信息，拆成 7 个以内的小块。</div>
+          <div class="subtitle">米勒定律 Miller's Law<br>神奇数字 7 ± 2<br>信息分块 Chunking</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 弹出声×3<br>
+          <span class="tag tag-sfx">SFX</span> "叮"提示音<br>
+          <span class="tag tag-transition">转场</span> 左滑过渡
+        </td>
+      </tr>
+
+      <!-- Shot 4 -->
+      <tr>
+        <td class="shot-num">04</td>
+        <td class="time-code">1:12—1:40<br>(28s)</td>
+        <td>
+          <span class="tag tag-visual">交互演示</span><br>
+          <b>画面A（72-82s）</b>：渐进式披露图解——三级漏斗结构：<br>
+          第一层：5个核心分类（账户/隐私/通知/通用/关于）→ 标"第一层 5个"<br>
+          第二层箭头展开 → 每类 6 个子选项 → 标"第二层 6个"<br>
+          第三层继续展开 → 每类 7 个详细设置 → 标"第三层 7个"<br>
+          每层都高亮显示"在 7±2 范围内"。<br>
+          <b>画面B（82-92s）</b>：设置页优化前后对比——<br>
+          左侧（✗）：一屏平铺 30 个选项，密密麻麻，红色标注"30 > 7，信息过载"<br>
+          右侧（✓）：分成 5 组，每组 5-6 个选项，绿色标注"5组 × 6个 = 清晰高效"<br>
+          <b>画面C（92-100s）</b>：长表单分步案例——把 20 个字段的注册表单拆成 4 步，每步 5 个字段，进度条显示步骤。
+        </td>
+        <td>
+          <div class="narration">把两个定律结合起来，就得到了 UI 设计中最重要的策略之一——渐进式披露。先给核心选项，次要的收起来，需要时再展开。信息架构分层设计，每一层都控制在 7 个以内。设置页分组、长表单分步、"查看更多"模式，都是这个策略的应用。</div>
+          <div class="subtitle">渐进式披露 Progressive Disclosure<br>先核心，后次要<br>每层 ≤ 7 个选项</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 展开声×3<br>
+          <span class="tag tag-sfx">SFX</span> 对比切换声<br>
+          <span class="tag tag-transition">转场</span> 缩放过渡
+        </td>
+      </tr>
+
+      <!-- Shot 5 -->
+      <tr>
+        <td class="shot-num">05</td>
+        <td class="time-code">1:40—2:00<br>(20s)</td>
+        <td>
+          <span class="tag tag-visual">案例对比</span><br>
+          <b>画面A（100-108s）</b>：反面案例合集——<br>
+          底部导航 10 个 Tab（拥挤）、下拉菜单 15 个选项（难选）、设置页 30+ 平铺（找不到）<br>
+          每个案例配红色✗和简短说明。<br>
+          <b>画面B（108-114s）</b>：总结卡片弹出，琥珀色背景上白色大字三条口诀：<br>
+          ① 选项少一点（席克：3-5个最舒服）<br>
+          ② 信息分块记（米勒：7±2是上限）<br>
+          ③ 先少后多变（渐进式披露，层层深入）<br>
+          三条口诀依次飞入，每条配对应小图标。<br>
+          <b>画面C（114-120s）</b>：片尾——系列Logo + "UI设计教学" + 下集预告文字"K06 格式塔原理"，淡出。
+        </td>
+        <td>
+          <div class="narration">记住三条口诀：选项少一点、信息分块记、先少后多变。下次设计菜单和表单的时候，问问自己——选项数量合理吗？需要分块吗？能渐进式披露吗？这就是席克定律和米勒定律给 UI 设计的启示。</div>
+          <div class="subtitle">三口诀：少一点 / 分块记 / 先少后多变<br>席克定律 + 米勒定律 = 高效信息架构</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 错误提示音×3<br>
+          <span class="tag tag-sfx">SFX</span> 成功提示音×3<br>
+          <span class="tag tag-sfx">BGM</span> 结尾渐强后淡出
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- Asset List -->
+<div class="section">
+  <h2>素材清单</h2>
+  <ul class="asset-list">
+    <li><b>素材01 · 选择困境场景</b>：餐厅菜单+App设置页两个场景的对比画面（手绘风格或实拍均可，各6秒）</li>
+    <li><b>素材02 · 席克定律公式动效</b>：AE制作的公式打字动画 + 变量标注连线动效，n 用橙色高亮</li>
+    <li><b>素材03 · 选项数量对比动效</b>：3列菜单对比动画（3个/6个/12个选项），RT数值同步变化（AE制作）</li>
+    <li><b>素材04 · 底部导航案例</b>：主流App底部导航截图（微信/支付宝/Instagram等），标注"3-5个Tab"</li>
+    <li><b>素材05 · 米勒定律神奇数字</b>："7 ± 2"大字设计 + 人脑工作记忆示意图（5~9个信息块可视化）</li>
+    <li><b>素材06 · 手机号分块对比</b>：左侧"13812345678"（溢出效果）vs 右侧"138-1234-5678"（3块通过效果）</li>
+    <li><b>素材07 · 分块案例合集</b>：银行卡号/身份证号/验证码三个分块案例的快速闪切画面</li>
+    <li><b>素材08 · 渐进式披露图解</b>：三级漏斗结构动效（5个分类 → 6个子项 → 7个详细选项）</li>
+    <li><b>素材09 · 设置页优化对比</b>：反面（30个平铺）vs 正面（5组×6个）并排对比图</li>
+    <li><b>素材10 · 长表单分步案例</b>：多步表单单页展示（4步，每步5个字段，带进度条）</li>
+    <li><b>素材11 · 反面案例合集</b>：10个Tab导航 / 15个下拉菜单 / 30个平铺设置（3张图，各配红色✗）</li>
+    <li><b>素材12 · 三口诀总结卡片</b>：琥珀色背景三条口诀卡片设计（选项少/分块记/先少后多）</li>
+    <li><b>素材13 · 片尾Logo</b>：系列Logo + 下集预告画面（K06 格式塔原理）</li>
+    <li><b>素材14 · BGM</b>：轻快智慧风背景音乐（2分钟完整版，钢琴+电子音色）</li>
+    <li><b>素材15 · 字幕文件</b>：.srt格式字幕文件，与时间码对齐</li>
+  </ul>
+</div>
+
+<!-- Production Notes -->
+<div class="section">
+  <h2>制作注意事项</h2>
+  <div class="note-box">
+    <p><b>1. 双定律节奏把控</b>：两个定律各占约 27 秒（镜头2+3），联合应用约 28 秒（镜头4），总结约 20 秒（镜头5）。席克定律侧重"决策速度"，米勒定律侧重"记忆容量"，讲解时要区分清楚但又体现关联。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>2. 公式可视化重点</b>：席克定律公式 RT = a + b·log₂(n+1) 中，重点突出 n（选项数量）和 RT（反应时间）的关系。a和b是经验常数，不需要展开解释。米勒定律的"7 ± 2"是视觉重点，用绿色大数字呈现。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>3. 渐进式披露是"Aha Moment"</b>：两个定律单独讲是基础，联合应用的"渐进式披露"才是设计价值所在。镜头4要做足层次感——从单层到多层，从混乱到有序，让观众感受到"原来如此"的顿悟。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>4. 配色方案</b>：主色用琥珀橙 #F59E0B（决策/选择的心理暗示），辅助色用翠绿 #10B981（米勒定律/信息分块的清新感），错误色用红色 #EF4444。深浅模式均可，推荐深色模式（科技感强）+ 琥珀色点缀。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>5. 录音要求</b>：旁白采用专业配音或AI语音（推荐使用标准普通话女声，语速适中偏快，每分钟约210字），情绪：开头引入略带共鸣感（"你有没有过..."），中间讲解清晰专业，结尾总结有力收束。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>6. 字幕规范</b>：字幕位置在画面底部安全区内，距底部边缘 80px；白色文字 + 半透明黑色背景条（圆角4px，高度40px）；字号 28px，每行不超过 20 个中文字符。公式和数字单独一行显示。</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

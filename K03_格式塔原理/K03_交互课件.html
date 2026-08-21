@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>格式塔原理 — 视觉感知的六大组织法则</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF7;
+  --text:#2C2C2C;
+  --text-dim:#8A8A8A;
+  --text-soft:#B5B5B5;
+  --accent:#10B981;
+  --accent-soft:#D1FAE5;
+  --blue:#3B6BD5;
+  --blue-soft:#E3ECFA;
+  --green:#10B981;
+  --green-soft:#D1FAE5;
+  --yellow:#F2C14E;
+  --yellow-soft:#FFF6DB;
+  --red:#E85D4A;
+  --red-soft:#FCE8E5;
+  --border:#E8E5E0;
+  --card:#FFFFFF;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.9;
+  font-size:16px;
+  text-align:left;
+}
+
+/* Nav */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:700;font-size:14px;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;font-size:13px}
+.nav-links a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+
+/* Hero */
+.hero{
+  padding:80px 32px 60px;
+  text-align:center;
+  max-width:780px;
+  margin:0 auto;
+}
+.hero .icon{font-size:48px;margin-bottom:16px}
+.hero .label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:42px;font-weight:700;
+  line-height:1.4;margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:17px;color:var(--text-dim);
+  line-height:1.8;max-width:600px;margin:0 auto;
+}
+.hero .tags{
+  display:flex;gap:8px;justify-content:center;margin-top:28px;
+}
+.hero .tag{
+  border:1px solid var(--border);
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;color:var(--text-dim);
+}
+
+/* Step Nav */
+.step-nav{
+  display:flex;gap:0;justify-content:center;
+  padding:24px 32px;flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+}
+.step-nav a{
+  padding:10px 20px;font-size:14px;
+  color:var(--text-dim);text-decoration:none;
+  border-right:1px solid var(--border);
+  transition:all .2s;
+}
+.step-nav a:first-child{border-left:1px solid var(--border)}
+.step-nav a:hover,.step-nav a.active{color:var(--accent)}
+
+/* Sections */
+.section{
+  max-width:780px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.step-label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.section h2{
+  font-family:var(--serif);
+  font-size:30px;font-weight:700;
+  margin-bottom:28px;line-height:1.5;
+}
+.section h3{
+  font-family:var(--serif);
+  font-size:20px;font-weight:700;
+  margin-bottom:12px;line-height:1.5;
+  display:flex;align-items:center;gap:10px;
+}
+.section h3 .emoji{font-size:24px}
+.section p{margin-bottom:16px;color:#444}
+.section p b{color:var(--text);font-weight:600}
+.section .lead{
+  font-size:17px;line-height:2;
+  color:var(--text);margin-bottom:28px;
+}
+
+/* Gestalt Principle Cards */
+.principle-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin:24px 0;
+}
+.principle-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+  transition:all .3s ease;
+  cursor:pointer;
+}
+.principle-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  border-color:var(--accent);
+}
+.principle-card .emoji{font-size:32px;margin-bottom:12px}
+.principle-card h4{
+  font-family:var(--serif);
+  font-size:18px;font-weight:700;
+  margin-bottom:4px;
+}
+.principle-card .en{
+  font-size:12px;color:var(--text-soft);
+  text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:10px;
+}
+.principle-card p{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:0}
+.principle-visual{
+  height:60px;
+  background:#F6F5F2;
+  border-radius:8px;
+  margin-bottom:14px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+
+/* Proximity visual */
+.pv-proximity{gap:20px;}
+.pv-proximity .group-left{display:flex;gap:8px;}
+.pv-proximity .group-right{display:flex;gap:8px;}
+.pv-proximity .dot{width:12px;height:12px;border-radius:50%;background:var(--accent);}
+
+/* Similarity visual */
+.pv-similarity{gap:6px;flex-wrap:wrap;justify-content:center;}
+.pv-similarity .shape{width:14px;height:14px;border-radius:3px;}
+.pv-similarity .shape.circle{border-radius:50%;}
+.pv-similarity .shape.teal{background:var(--accent);}
+.pv-similarity .shape.orange{background:#F59E0B;}
+
+/* Continuity visual */
+.pv-continuity{overflow:hidden;}
+.pv-continuity .curve{
+  width:100%;height:40px;
+  border:none;
+  border-top:3px solid var(--accent);
+  border-radius:50%/40px 40px 0 0;
+  position:relative;top:10px;
+}
+.pv-continuity .line{
+  position:absolute;
+  height:3px;background:var(--accent);
+  top:50%;
+}
+.pv-continuity .line.l1{left:10%;width:30%;transform:rotate(-15deg);transform-origin:left center;}
+.pv-continuity .line.l2{right:10%;width:30%;transform:rotate(-15deg);transform-origin:right center;}
+
+/* Closure visual */
+.pv-closure{position:relative;}
+.pv-closure .pacman{
+  width:40px;height:40px;
+  border-radius:50%;
+  background:conic-gradient(var(--accent) 0 75%, transparent 75% 100%);
+  position:relative;
+}
+.pv-closure .ghost-dots{
+  display:flex;gap:4px;margin-left:8px;
+}
+.pv-closure .gd{width:6px;height:6px;border-radius:50%;background:var(--text-soft);}
+
+/* Symmetry visual */
+.pv-symmetry{gap:0;}
+.pv-symmetry .sym-shape{
+  width:30px;height:40px;
+  background:var(--accent);
+  border-radius:50% 50% 0 0;
+  opacity:.7;
+}
+.pv-symmetry .sym-shape.left{transform:scaleX(-1);}
+.pv-symmetry .sym-center{
+  width:2px;height:44px;
+  background:var(--text-soft);
+  margin:0 4px;
+}
+
+/* Common Fate visual */
+.pv-common-fate{gap:4px;}
+.pv-common-fate .cf-group{
+  display:flex;gap:4px;
+  animation:cfMove 2s ease-in-out infinite;
+}
+.pv-common-fate .cf-group.g2{animation-delay:.5s;}
+.pv-common-fate .cf-dot{
+  width:8px;height:8px;border-radius:50%;
+}
+.pv-common-fate .cf-group.g1 .cf-dot{background:var(--accent);}
+.pv-common-fate .cf-group.g2 .cf-dot{background:#F59E0B;}
+@keyframes cfMove{
+  0%,100%{transform:translateX(0);}
+  50%{transform:translateX(10px);}
+}
+
+/* Conclusion */
+.conclusion{
+  background:var(--yellow-soft);
+  border-radius:12px;
+  padding:24px 28px;
+  margin:24px 0;
+  font-size:16px;line-height:2;
+}
+.conclusion b{color:#92400e}
+
+/* Standard Table */
+.std-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;font-size:14px;
+  background:var(--card);
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.std-table th{
+  background:#F6F5F2;padding:14px 16px;
+  text-align:left;font-weight:600;
+  border-bottom:2px solid var(--border);
+}
+.std-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.std-table tr:last-child td{border-bottom:none}
+
+/* Quiz Section */
+.quiz-section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.quiz-progress{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score b{color:var(--green);font-size:16px}
+.quiz-q{
+  font-size:18px;font-weight:600;
+  line-height:1.7;margin-bottom:20px;
+}
+.quiz-options{
+  display:flex;gap:12px;margin-bottom:20px;
+}
+.quiz-btn{
+  flex:1;padding:16px 20px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+}
+.quiz-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.quiz-btn.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.quiz-btn.wrong{
+  border-color:var(--red);
+  background:var(--red-soft);
+  color:var(--red);
+}
+.quiz-feedback{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:16px 20px;
+  font-size:14px;line-height:1.8;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:all .4s;
+}
+.quiz-feedback.show{
+  opacity:1;max-height:300px;
+  margin-bottom:16px;
+}
+.quiz-feedback b{color:var(--text)}
+.quiz-nav{
+  display:flex;justify-content:flex-end;
+  gap:12px;margin-top:20px;
+  padding-top:20px;border-top:1px solid var(--border);
+}
+.quiz-nav button{
+  padding:10px 20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.quiz-nav button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+}
+.quiz-nav button.primary{
+  background:var(--text);color:#fff;
+  border-color:var(--text);
+}
+.quiz-nav button.primary:hover{
+  background:#000;
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.quiz-nav button:disabled{
+  opacity:.4;cursor:not-allowed;
+}
+
+/* MCQ Options */
+.mcq-options{
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:20px;
+}
+.mcq-option{
+  padding:14px 18px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+  text-align:left;
+}
+.mcq-option:hover{
+  transform:translateY(-1px);
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.mcq-option.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.mcq-option.wrong{
+  border-color:var(--red);
+  background:var(--red-soft);
+  color:var(--red);
+}
+.mcq-option .opt-label{
+  font-weight:700;margin-right:8px;
+}
+
+/* Result Screen */
+.quiz-result{
+  text-align:center;padding:40px 20px;
+  display:none;
+}
+.quiz-result.show{display:block}
+.quiz-result .score-circle{
+  width:140px;height:140px;
+  border-radius:50%;
+  margin:0 auto 24px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--green-soft);
+  border:4px solid var(--green);
+}
+.quiz-result .score-num{
+  font-size:42px;font-weight:800;
+  color:var(--green);
+}
+.quiz-result .score-total{
+  font-size:14px;color:var(--text-dim);
+}
+.quiz-result h3{
+  font-family:var(--serif);
+  font-size:24px;margin-bottom:12px;
+  justify-content:center;
+}
+.quiz-result p{
+  color:var(--text-dim);font-size:15px;
+  max-width:400px;margin:0 auto 24px;
+}
+.quiz-result button{
+  padding:12px 28px;
+  background:var(--text);color:#fff;
+  border:none;border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+}
+
+/* Mock Interview */
+.interview-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.interview-bubble{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.interview-avatar{
+  width:52px;height:52px;
+  background:#EEF2FF;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+}
+.interview-question{
+  flex:1;
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:18px 22px;
+  font-size:15px;line-height:1.9;
+  position:relative;
+}
+.interview-question::before{
+  content:'';
+  position:absolute;
+  left:-8px;top:20px;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:8px solid #F6F5F2;
+}
+.interview-question b{color:#6366f1}
+.interview-think{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:14px;
+  margin:28px 0 16px;
+  font-style:italic;
+}
+.interview-btn{
+  display:block;
+  width:100%;
+  padding:14px 20px;
+  background:#EEF2FF;
+  border:2px dashed #6366f1;
+  color:#6366f1;
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+}
+.interview-btn:hover{
+  background:#E0E7FF;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(99,102,241,.15);
+}
+.interview-btn:active{
+  transform:translateY(0);
+}
+.interview-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .5s ease, margin-top .4s ease;
+}
+.interview-answer.show{
+  max-height:1200px;
+  margin-top:20px;
+}
+.answer-intro{
+  background:var(--green-soft);
+  color:var(--green);
+  padding:14px 20px;
+  border-radius:10px 10px 0 0;
+  font-size:14px;font-weight:600;
+}
+.answer-list{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 10px 10px;
+  padding:20px 24px;
+}
+.answer-item{
+  display:flex;gap:14px;
+  margin-bottom:16px;
+  align-items:flex-start;
+}
+.answer-item:last-child{margin-bottom:0}
+.answer-item-num{
+  width:28px;height:28px;
+  background:#6366f1;
+  color:#fff;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.answer-item-content b{
+  color:var(--text);font-size:14px;
+  display:block;margin-bottom:4px;
+}
+.answer-item-content{
+  font-size:13px;color:var(--text-dim);line-height:1.8;
+}
+
+/* Tips Section */
+.tips-list{margin:20px 0}
+.tip-item{
+  background:var(--card);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:18px 24px;
+  margin-bottom:12px;
+}
+.tip-item h4{
+  font-family:var(--serif);
+  font-size:17px;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.tip-item p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+.footer-links{
+  display:flex;gap:16px;justify-content:center;
+  margin-bottom:16px;
+}
+.footer-links a{color:var(--text-dim);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--text)}
+
+/* Copy Value */
+.copy-value{
+  position:relative;
+  cursor:pointer;
+  padding:2px 8px;
+  border-radius:5px;
+  background:rgba(16,185,129,.1);
+  transition:all .2s;
+  font-weight:600;
+  display:inline-block;
+  font-family:'JetBrains Mono',Menlo,monospace;
+}
+.copy-value:hover{
+  background:rgba(16,185,129,.2);
+}
+.copy-tooltip{
+  position:absolute;
+  top:-32px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--text);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:12px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s;
+  z-index:10;
+  font-family:var(--sans);
+  font-weight:500;
+}
+.copy-tooltip.show{
+  opacity:1;
+}
+
+/* Related Knowledge */
+.related-knowledge{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px 28px;
+  margin-top:32px;
+}
+.related-knowledge h4{
+  font-family:var(--serif);
+  font-size:16px;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.rk-list{display:flex;flex-direction:column;gap:10px}
+.rk-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;
+  background:#F6F5F2;
+  border-radius:8px;
+  font-size:14px;
+}
+.rk-item .rk-type{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:12px;
+  font-weight:600;
+  flex-shrink:0;
+  letter-spacing:.5px;
+}
+.rk-item .rk-type.pre{background:var(--blue-soft);color:var(--blue)}
+.rk-item .rk-type.post{background:var(--green-soft);color:var(--green)}
+.rk-item .rk-type.practice{background:var(--yellow-soft);color:#B8860B}
+.rk-item .rk-content{flex:1}
+.rk-item .rk-content a{color:var(--text);text-decoration:none;font-weight:500;transition:color .2s}
+.rk-item .rk-content a:hover{color:var(--accent)}
+.rk-item.disabled .rk-content{color:var(--text-soft);cursor:not-allowed}
+.rk-badge{
+  font-size:10px;
+  padding:2px 6px;
+  background:var(--text-soft);
+  color:#fff;
+  border-radius:4px;
+  margin-left:8px;
+  font-weight:500;
+}
+
+/* Shortcut */
+.shortcut{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:2px 8px;
+  background:#F6F5F2;
+  border-radius:4px;
+  font-size:12px;
+  font-family:'JetBrains Mono',Menlo,monospace;
+  color:var(--text);
+  border:1px solid var(--border);
+  white-space:nowrap;
+}
+.shortcut .shortcut-mac,.shortcut .shortcut-win{white-space:nowrap}
+.shortcut .divider{color:var(--text-soft)}
+body.os-mac .shortcut .shortcut-win,
+body.os-mac .shortcut .divider{display:none}
+body.os-win .shortcut .shortcut-mac,
+body.os-win .shortcut .divider{display:none}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .section{padding:40px 20px}
+  .section h2{font-size:24px}
+  .principle-grid{grid-template-columns:1fr}
+  .step-nav{flex-wrap:wrap}
+  .step-nav a{border-right:none;border-bottom:1px solid var(--border)}
+  .interview-section{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">UI<span>设计</span>基础</div>
+  <div class="nav-links">
+    <a href="#step1">STEP 1</a>
+    <a href="#step2">STEP 2</a>
+    <a href="#step3">STEP 3</a>
+    <a href="#step4">STEP 4</a>
+    <a href="#plus">PLUS</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="icon">🧩</div>
+  <div class="label">GESTALT PRINCIPLES — VISUAL PERCEPTION PSYCHOLOGY</div>
+  <h1>大脑是如何"自动分组"<br>你看到的元素的？</h1>
+  <p class="subtitle">
+    为什么有些界面一看就懂，有些却让人眼花缭乱？<br>
+    答案藏在100年前格式塔心理学派发现的六条组织法则里。
+  </p>
+  <div class="tags">
+    <span class="tag">视觉感知</span>
+    <span class="tag">认知心理学</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</section>
+
+<!-- Step Nav -->
+<div class="step-nav">
+  <a href="#step1">STEP 1 六大原理</a>
+  <a href="#step2">STEP 2 判断题</a>
+  <a href="#step3">STEP 3 选择题</a>
+  <a href="#step4">STEP 4 模拟面试</a>
+  <a href="#plus">PLUS 记忆口诀</a>
+</div>
+
+<!-- STEP 1: Knowledge -->
+<section class="section" id="step1">
+  <div class="step-label">STEP 1</div>
+  <h2>格式塔原理（Gestalt Principles）六大应用</h2>
+  <p class="lead">
+    20世纪初，德国格式塔心理学派发现：人类的视觉系统会<b>自动对看到的元素进行组织和分组</b>，让复杂的世界变得有秩序。<br>
+    这些"自动分组"的规则，被总结为六大原理——它们是所有UI排版、图标、布局设计的底层逻辑。
+  </p>
+
+  <div class="conclusion">
+    <b>📌 核心理念：</b>整体大于部分之和。<br>
+    用户感知到的不是一个个孤立的元素，而是它们之间的关系——<b>大脑在自动"找规律"和"分组"</b>。
+  </div>
+
+  <!-- Principle Cards Grid -->
+  <div class="principle-grid">
+
+    <!-- 1. Proximity -->
+    <div class="principle-card">
+      <div class="principle-visual pv-proximity">
+        <div class="group-left">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="group-right">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="emoji">📐</div>
+      <h4>接近性</h4>
+      <div class="en">Proximity</div>
+      <p>间距小的元素，大脑会自动归为一组。距离越近，关联性越强。</p>
+    </div>
+
+    <!-- 2. Similarity -->
+    <div class="principle-card">
+      <div class="principle-visual pv-similarity">
+        <div class="shape teal"></div>
+        <div class="shape orange circle"></div>
+        <div class="shape teal"></div>
+        <div class="shape orange circle"></div>
+        <div class="shape teal"></div>
+        <div class="shape orange circle"></div>
+      </div>
+      <div class="emoji">🎨</div>
+      <h4>相似性</h4>
+      <div class="en">Similarity</div>
+      <p>颜色、形状、大小相似的元素，会被认为是同类或具有相同功能。</p>
+    </div>
+
+    <!-- 3. Continuity -->
+    <div class="principle-card">
+      <div class="principle-visual pv-continuity">
+        <div class="line l1"></div>
+        <div class="curve"></div>
+        <div class="line l2"></div>
+      </div>
+      <div class="emoji">📈</div>
+      <h4>连续性</h4>
+      <div class="en">Continuity</div>
+      <p>视线会沿着最平滑的方向流动，倾向于看到连续的图形而非断裂的。</p>
+    </div>
+
+    <!-- 4. Closure -->
+    <div class="principle-card">
+      <div class="principle-visual pv-closure">
+        <div class="pacman"></div>
+        <div class="ghost-dots">
+          <div class="gd"></div><div class="gd"></div><div class="gd"></div>
+        </div>
+      </div>
+      <div class="emoji">⭕</div>
+      <h4>闭合性</h4>
+      <div class="en">Closure</div>
+      <p>大脑会自动补全不完整的图形，把残缺的轮廓"脑补"成完整形状。</p>
+    </div>
+
+    <!-- 5. Symmetry -->
+    <div class="principle-card">
+      <div class="principle-visual pv-symmetry">
+        <div class="sym-shape left"></div>
+        <div class="sym-center"></div>
+        <div class="sym-shape right"></div>
+      </div>
+      <div class="emoji">⚖️</div>
+      <h4>对称性</h4>
+      <div class="en">Symmetry</div>
+      <p>对称的图形给人稳定、舒适、有序的感觉，大脑更喜欢对称的布局。</p>
+    </div>
+
+    <!-- 6. Common Fate -->
+    <div class="principle-card">
+      <div class="principle-visual pv-common-fate">
+        <div class="cf-group g1">
+          <div class="cf-dot"></div><div class="cf-dot"></div><div class="cf-dot"></div>
+        </div>
+        <div class="cf-group g2">
+          <div class="cf-dot"></div><div class="cf-dot"></div><div class="cf-dot"></div>
+        </div>
+      </div>
+      <div class="emoji">🚀</div>
+      <h4>共同命运</h4>
+      <div class="en">Common Fate</div>
+      <p>同向运动的元素会被认为是同一组，运动状态比静态特征更有分组力。</p>
+    </div>
+
+  </div>
+
+  <div class="know-card" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px 32px;margin:24px 0;">
+    <div style="font-size:28px;margin-bottom:12px">💡</div>
+    <h3>设计中的实际意义</h3>
+    <p>格式塔原理告诉我们：<b>用户感知到的界面结构，不一定等于你画出来的结构</b>。大脑会自动"加戏"——根据间距、颜色、形状等线索，把元素重新分组。</p>
+    <p>好的设计师会利用这些原理，<b>引导用户的眼睛按照你期望的方式去理解信息层级</b>；差的设计则会因为忽视这些原理，让用户产生误读和困惑。</p>
+  </div>
+
+  <!-- Related Knowledge -->
+  <div class="related-knowledge">
+    <h4>🔗 相关知识</h4>
+    <div class="rk-list">
+      <div class="rk-item disabled">
+        <span class="rk-type pre">前置知识</span>
+        <div class="rk-content">心智模型（K02）— 认知心理学基础 <span class="rk-badge">即将上线</span></div>
+      </div>
+      <div class="rk-item disabled">
+        <span class="rk-type post">后续知识</span>
+        <div class="rk-content">排版层级与视觉信息架构（K10）— 格式塔在排版中的应用 <span class="rk-badge">即将上线</span></div>
+      </div>
+      <div class="rk-item disabled">
+        <span class="rk-type practice">相关实践</span>
+        <div class="rk-content">扁平图标基础（C01）— 相似性在图标系统中的应用 <span class="rk-badge">即将上线</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: True/False Quiz -->
+<section class="section" id="step2">
+  <div class="step-label">STEP 2</div>
+  <h2>「对吗？」判断题</h2>
+  <p class="lead">
+    判断下面的设计说法是对是错。<br>
+    觉得对就点 <b>✓</b>，觉得错就点 <b>✗</b>，每道题都有详细解析。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q1Progress">Q1 / 4</div>
+      <div class="quiz-score">答对 <b id="q1Score">0</b> / 4</div>
+    </div>
+
+    <div id="q1Container">
+      <div class="quiz-q" id="q1Question">
+        卡片之间的间距比卡片内部元素的间距大，用户就会自然认为它们是不同组。
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-btn" onclick="checkTF(1, true)">✓ 对</button>
+        <button class="quiz-btn" onclick="checkTF(1, false)">✗ 错</button>
+      </div>
+      <div class="quiz-feedback" id="q1Feedback">
+        <b style="color:var(--green)">✓ 答对了！</b><br>
+        这正是接近性（Proximity）原理的应用——元素间距越小，大脑越倾向于把它们归为一组。通过控制"组内间距小、组间间距大"，用户就能自动感知到信息的分组结构，不需要额外的分隔线。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevTF()" id="q1Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextTF()" id="q1Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q1Result">
+      <div class="score-circle">
+        <div class="score-num" id="q1FinalScore">0</div>
+        <div class="score-total">/ 4 题</div>
+      </div>
+      <h3>🎉 判断题完成！</h3>
+      <p>格式塔原理的核心是"大脑自动分组"。<br>记住：间距、颜色、形状、运动……都是分组的线索。</p>
+      <button onclick="resetTF()">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: Multiple Choice -->
+<section class="section" id="step3">
+  <div class="step-label">STEP 3</div>
+  <h2>选择：正确的原理</h2>
+  <p class="lead">
+    从四个选项中，选出最符合描述的格式塔原理。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q2Progress">Q1 / 3</div>
+      <div class="quiz-score">答对 <b id="q2Score">0</b> / 3</div>
+    </div>
+
+    <div id="q2Container">
+      <div class="quiz-q" id="q2Question">
+        导航栏中被选中的 Tab 用不同颜色高亮，是利用了哪个格式塔原理？
+      </div>
+      <div class="mcq-options" id="q2Options">
+        <button class="mcq-option" onclick="checkMCQ(1, 'A')"><span class="opt-label">A.</span>接近性</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'B')"><span class="opt-label">B.</span>相似性</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'C')"><span class="opt-label">C.</span>闭合性</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'D')"><span class="opt-label">D.</span>连续性</button>
+      </div>
+      <div class="quiz-feedback" id="q2Feedback">
+        <b style="color:var(--green)">✓ 正确答案：B</b><br>
+        这是相似性（Similarity）原理的反向应用。所有未选中的 Tab 使用相同的灰色样式（相似→被归为"未选中"一类），选中态用不同的颜色突出（不相似→被单独识别为"当前选中"）。通过相似与不相似的对比，用户一眼就能看出当前位置。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevMCQ()" id="q2Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextMCQ()" id="q2Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q2Result">
+      <div class="score-circle" style="background:var(--blue-soft);border-color:var(--blue)">
+        <div class="score-num" id="q2FinalScore" style="color:var(--blue)">0</div>
+        <div class="score-total">/ 3 题</div>
+      </div>
+      <h3>🌟 选择题完成！</h3>
+      <p>把格式塔原理用到设计决策里——每次排版时，问问自己：<br>分组清楚吗？同类元素统一吗？层次明确吗？</p>
+      <button onclick="resetMCQ()" style="background:var(--blue)">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4: Mock Interview -->
+<section class="section" id="step4">
+  <div class="step-label">STEP 4</div>
+  <h2>模拟面试</h2>
+  <p class="lead">
+    试试用格式塔原理回答真实的面试题，<br>
+    检验一下你对视觉感知的理解深度。
+  </p>
+
+  <div class="interview-card">
+    <div class="interview-bubble">
+      <div class="interview-avatar">👨‍💼</div>
+      <div class="interview-question">
+        <b>面试官：</b>请你用格式塔原理分析一下，为什么用户总是把我们 App 里两个不相关的按钮当成是一组的？该怎么改？
+      </div>
+    </div>
+    
+    <div class="interview-think">
+      🤔 先想想你的答案
+    </div>
+    
+    <button class="interview-btn" onclick="toggleInterviewAnswer()" id="interviewBtn">
+      💡 查看参考答案
+    </button>
+    
+    <div class="interview-answer" id="interviewAnswer">
+      <div class="answer-intro">
+        ✅ 参考答案：从接近性和相似性两个维度诊断和解决
+      </div>
+      <div class="answer-list">
+        <div class="answer-item">
+          <div class="answer-item-num">1</div>
+          <div class="answer-item-content">
+            <b>诊断：大概率是接近性问题</b>
+            两个按钮间距太近，用户视觉上自动归为一组。根据接近性原理，间距越小关联性越强——如果两个按钮挨在一起，用户会默认它们功能相关或属于同一操作组。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">2</div>
+          <div class="answer-item-content">
+            <b>解决方法1：增大间距（接近性）</b>
+            增大无关按钮之间的间距，或用分隔线、留白、背景色块来区分不同的操作区域。记住"组内间距小、组间间距大"的原则——组间间距至少是组内间距的 1.5-2 倍。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">3</div>
+          <div class="answer-item-content">
+            <b>解决方法2：区分样式（相似性）</b>
+            如果两个按钮功能确实不同，就用不同的视觉样式来区分。比如一个是主按钮（填充色），另一个是次按钮（描边或文字按钮），通过相似性原理反向操作——"长得不一样，就不是一组"。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">4</div>
+          <div class="answer-item-content">
+            <b>设计验证：用六大原理自查</b>
+            每次设计完界面，用格式塔六大原理过一遍——间距够清晰吗？同类元素风格统一吗？视觉流连续吗？图标轮廓闭合吗？布局对称吗？动效方向一致吗？这能帮你发现80%的布局问题。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLUS: Tips -->
+<section class="section" id="plus">
+  <div class="step-label">PLUS</div>
+  <h2>格式塔原理记忆口诀</h2>
+  <p class="lead">
+    六大原理记不住？记住这六句口诀就够了。
+  </p>
+
+  <div class="tips-list">
+    <div class="tip-item">
+      <h4>📐 ① 近了就一伙（接近性 Proximity）</h4>
+      <p>间距小的元素，大脑自动归为一组。设计时用"组内小间距 + 组间大间距"来表达信息层级。</p>
+    </div>
+    <div class="tip-item">
+      <h4>🎨 ② 像了就一类（相似性 Similarity）</h4>
+      <p>颜色、形状、大小相似 = 同类。同类功能用相同样式，异类功能用不同样式，用户一眼就能分辨。</p>
+    </div>
+    <div class="tip-item">
+      <h4>📈 ③ 顺着看下去（连续性 Continuity）</h4>
+      <p>视线沿最平滑的路径流动。用对齐、引导线、连续的布局来引导用户的阅读顺序和视觉流。</p>
+    </div>
+    <div class="tip-item">
+      <h4>⭕ ④ 缺了能脑补（闭合性 Closure）</h4>
+      <p>不完整的图形大脑会自动补全。骨架屏、简约图标、进度环都是利用了闭合性原理。</p>
+    </div>
+    <div class="tip-item">
+      <h4>⚖️ ⑤ 对称才舒服（对称性 Symmetry）</h4>
+      <p>对称的布局给人稳定、有序、舒适的感觉。卡片、表单、弹窗等容器类设计常用对称布局。</p>
+    </div>
+    <div class="tip-item">
+      <h4>🚀 ⑥ 同动是一组（共同命运 Common Fate）</h4>
+      <p>同向、同速运动的元素被认为是一组。侧边栏展开收起、轮播图、滚动视差都是典型应用。</p>
+    </div>
+  </div>
+
+  <div class="conclusion" style="margin-top:32px">
+    <b>💡 一句话总结：</b><br>
+    格式塔原理 = 大脑的"自动分组规则"<br>
+    好的设计顺应规则，差的设计违背规则——用户觉得"别扭"，往往就是格式塔在作祟。
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#step1">STEP 1 知识</a>
+    <a href="#step2">STEP 2 判断</a>
+    <a href="#step3">STEP 3 选择</a>
+    <a href="#step4">STEP 4 面试</a>
+    <a href="#plus">PLUS 口诀</a>
+  </div>
+  <p>格式塔原理 — 视觉感知的六大组织法则</p>
+  <p style="margin-top:4px">UI 设计理论知识点 K03 · 交互课件</p>
+</footer>
+
+<script>
+// ========== True/False Quiz ==========
+const tfQuestions = [
+  {
+    q: '卡片之间的间距比卡片内部元素的间距大，用户就会自然认为它们是不同组。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>这正是接近性（Proximity）原理的应用——元素间距越小，大脑越倾向于把它们归为一组。通过控制"组内间距小、组间间距大"，用户就能自动感知到信息的分组结构，不需要额外的分隔线。'
+  },
+  {
+    q: '页面上所有按钮用不同的颜色和形状，这样更有设计感。',
+    answer: false,
+    explain: '<b style="color:var(--red)">✗ 答错了</b><br>这违反了相似性（Similarity）原理。功能相同的按钮应该有相似的视觉样式，用户才能快速识别"这些都是可点击的按钮"。如果每个按钮都不一样，用户需要逐个判断，增加了认知负担。好的设计是"同类统一，异类区分"。'
+  },
+  {
+    q: '骨架屏（Skeleton Screen）利用了闭合性原理——用户看到不完整的轮廓也能理解内容结构。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>骨架屏正是闭合性（Closure）原理的经典应用。虽然只有灰色的占位条块，但用户的大脑会自动"补全"这些轮廓，脑补出完整的内容结构，从而产生"内容马上就来"的感知，降低等待的焦虑感。'
+  },
+  {
+    q: '两个图标一上一下，只要它们颜色相同，用户就会觉得它们是一组的。这是接近性原理。',
+    answer: false,
+    explain: '<b style="color:var(--red)">✗ 答错了</b><br>颜色相同导致被归为一组，这是<b>相似性（Similarity）</b>原理，不是接近性。接近性是"间距近→一组"，相似性是"长得像→一组"。两个原理都会影响分组判断，设计中需要同时考虑——既要用间距分组，也要用样式统一来强化分组。'
+  }
+];
+
+let tfCur = 0;
+let tfScore = 0;
+let tfAnswered = new Array(tfQuestions.length).fill(false);
+let tfUserAnswer = new Array(tfQuestions.length).fill(null);
+
+function renderTF() {
+  const q = tfQuestions[tfCur];
+  document.getElementById('q1Question').textContent = q.q;
+  document.getElementById('q1Progress').textContent = `Q${tfCur+1} / ${tfQuestions.length}`;
+  document.getElementById('q1Score').textContent = tfScore;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  btns.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = false; });
+
+  const fb = document.getElementById('q1Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q1Prev').disabled = tfCur === 0;
+  document.getElementById('q1Next').disabled = !tfAnswered[tfCur];
+
+  if (tfAnswered[tfCur]) {
+    const correct = tfUserAnswer[tfCur] === q.answer;
+    const idx = tfUserAnswer[tfCur] ? 0 : 1;
+    btns[idx].classList.add(correct ? 'correct' : 'wrong');
+    btns.forEach(b => b.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q1Next').disabled = false;
+  }
+}
+
+function checkTF(idx, userAnswer) {
+  if (tfAnswered[tfCur]) return;
+  const correct = userAnswer === tfQuestions[tfCur].answer;
+  tfAnswered[tfCur] = true;
+  tfUserAnswer[tfCur] = userAnswer;
+  if (correct) tfScore++;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  const correctIdx = tfQuestions[tfCur].answer ? 0 : 1;
+  btns[correctIdx].classList.add('correct');
+  if (!correct) {
+    const wrongIdx = userAnswer ? 0 : 1;
+    btns[wrongIdx].classList.add('wrong');
+  }
+  btns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('q1Feedback');
+  fb.innerHTML = tfQuestions[tfCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q1Score').textContent = tfScore;
+  document.getElementById('q1Next').disabled = false;
+}
+
+function nextTF() {
+  if (tfCur < tfQuestions.length - 1) {
+    tfCur++;
+    renderTF();
+  } else {
+    document.getElementById('q1Container').style.display = 'none';
+    document.getElementById('q1Result').classList.add('show');
+    document.getElementById('q1FinalScore').textContent = tfScore;
+  }
+}
+
+function prevTF() {
+  if (tfCur > 0) {
+    tfCur--;
+    renderTF();
+  }
+}
+
+function resetTF() {
+  tfCur = 0;
+  tfScore = 0;
+  tfAnswered = new Array(tfQuestions.length).fill(false);
+  tfUserAnswer = new Array(tfQuestions.length).fill(null);
+  document.getElementById('q1Container').style.display = 'block';
+  document.getElementById('q1Result').classList.remove('show');
+  renderTF();
+}
+
+// ========== Multiple Choice Quiz ==========
+const mcqQuestions = [
+  {
+    q: '导航栏中被选中的 Tab 用不同颜色高亮，是利用了哪个格式塔原理？',
+    options: [
+      '接近性',
+      '相似性',
+      '闭合性',
+      '连续性'
+    ],
+    answer: 1,
+    explain: '<b style="color:var(--green)">✓ 正确答案：B（相似性）</b><br>这是相似性（Similarity）原理的反向应用。所有未选中的 Tab 使用相同的灰色样式（相似→被归为"未选中"一类），选中态用不同的颜色突出（不相似→被单独识别为"当前选中"）。通过相似与不相似的对比，用户一眼就能看出当前位置。'
+  },
+  {
+    q: '以下哪种设计主要利用了闭合性原理？',
+    options: [
+      '卡片列表的间距设计',
+      '加载骨架屏',
+      '按钮的统一风格',
+      '轮播图自动播放'
+    ],
+    answer: 1,
+    explain: '<b style="color:var(--green)">✓ 正确答案：B（加载骨架屏）</b><br>骨架屏（Skeleton Screen）是闭合性（Closure）原理的典型应用。虽然只有灰色的占位条块（不完整的轮廓），但大脑会自动补全这些形状，脑补出完整的内容结构，让用户感觉"内容马上就来"。A 是接近性，C 是相似性，D 是共同命运。'
+  },
+  {
+    q: '侧边栏里同一分类的菜单项挨得更近，不同分类之间间距更大，这运用了哪个原理？',
+    options: [
+      '对称性',
+      '共同命运',
+      '接近性',
+      '连续性'
+    ],
+    answer: 2,
+    explain: '<b style="color:var(--green)">✓ 正确答案：C（接近性）</b><br>这是接近性（Proximity）原理的经典应用——"组内间距小、组间间距大"。同一分类的菜单项间距小，用户会自动把它们归为一组；不同分类之间间距大，形成视觉上的分隔。这是信息架构设计中最常用的分组手段。'
+  }
+];
+
+let mcqCur = 0;
+let mcqScore = 0;
+let mcqAnswered = new Array(mcqQuestions.length).fill(false);
+let mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+
+function renderMCQ() {
+  const q = mcqQuestions[mcqCur];
+  document.getElementById('q2Question').textContent = q.q;
+  document.getElementById('q2Progress').textContent = `Q${mcqCur+1} / ${mcqQuestions.length}`;
+  document.getElementById('q2Score').textContent = mcqScore;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts.forEach((o, i) => {
+    o.classList.remove('correct','wrong');
+    o.disabled = false;
+    o.innerHTML = `<span class="opt-label">${String.fromCharCode(65+i)}.</span> ${q.options[i]}`;
+  });
+
+  const fb = document.getElementById('q2Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q2Prev').disabled = mcqCur === 0;
+  document.getElementById('q2Next').disabled = !mcqAnswered[mcqCur];
+
+  if (mcqAnswered[mcqCur]) {
+    const correct = mcqUserAnswer[mcqCur] === q.answer;
+    opts[q.answer].classList.add('correct');
+    if (!correct) opts[mcqUserAnswer[mcqCur]].classList.add('wrong');
+    opts.forEach(o => o.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q2Next').disabled = false;
+  }
+}
+
+function checkMCQ(idx, letter) {
+  if (mcqAnswered[mcqCur]) return;
+  const userIdx = letter.charCodeAt(0) - 65;
+  const correct = userIdx === mcqQuestions[mcqCur].answer;
+  mcqAnswered[mcqCur] = true;
+  mcqUserAnswer[mcqCur] = userIdx;
+  if (correct) mcqScore++;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts[mcqQuestions[mcqCur].answer].classList.add('correct');
+  if (!correct) opts[userIdx].classList.add('wrong');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('q2Feedback');
+  fb.innerHTML = mcqQuestions[mcqCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q2Score').textContent = mcqScore;
+  document.getElementById('q2Next').disabled = false;
+}
+
+function nextMCQ() {
+  if (mcqCur < mcqQuestions.length - 1) {
+    mcqCur++;
+    renderMCQ();
+  } else {
+    document.getElementById('q2Container').style.display = 'none';
+    document.getElementById('q2Result').classList.add('show');
+    document.getElementById('q2FinalScore').textContent = mcqScore;
+  }
+}
+
+function prevMCQ() {
+  if (mcqCur > 0) {
+    mcqCur--;
+    renderMCQ();
+  }
+}
+
+function resetMCQ() {
+  mcqCur = 0;
+  mcqScore = 0;
+  mcqAnswered = new Array(mcqQuestions.length).fill(false);
+  mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+  document.getElementById('q2Container').style.display = 'block';
+  document.getElementById('q2Result').classList.remove('show');
+  renderMCQ();
+}
+
+// ========== Mock Interview Toggle ==========
+function toggleInterviewAnswer() {
+  const panel = document.getElementById('interviewAnswer');
+  const btn = document.getElementById('interviewBtn');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    btn.textContent = '🙈 收起参考答案';
+  } else {
+    btn.textContent = '💡 查看参考答案';
+  }
+}
+
+// ========== OS Shortcut Detection ==========
+function initShortcuts() {
+  const platform = navigator.platform || '';
+  const userAgent = navigator.userAgent || '';
+  const isMac = /Mac|iPod|iPhone|iPad/.test(platform) || /Macintosh|Mac OS X|iOS/.test(userAgent);
+  
+  if (isMac) {
+    document.body.classList.add('os-mac');
+  } else {
+    document.body.classList.add('os-win');
+  }
+}
+
+// Init
+window.addEventListener('load', () => {
+  initShortcuts();
+});
+
+renderTF();
+renderMCQ();
+</script>
+
+</body>
+</html>

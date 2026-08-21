@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C05 玻璃质感开关按钮设计 | 图文教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#06B6D4;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--purple:#8b5cf6;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-dim:#64748b;--border:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.tutorial{max-width:720px;margin:0 auto;background:var(--card);min-height:100vh}
+.hero{background:linear-gradient(135deg,#06B6D4,#0891B2);color:#fff;padding:48px 40px;text-align:center}
+.hero .ep{font-size:13px;opacity:.8;letter-spacing:2px;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero .subtitle{font-size:16px;opacity:.9}
+.hero .tags{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero .tag{background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px}
+.section{padding:32px 40px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h2::before{content:'';width:4px;height:24px;background:var(--primary);border-radius:2px}
+.preview-row{display:flex;gap:24px;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.preview-item{text-align:center}
+.preview-box{width:120px;height:80px;border-radius:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);position:relative;overflow:hidden}
+.preview-box.light{background:#f8fafc}
+.preview-box.dark{background:#1e293b}
+.preview-box.color{background:linear-gradient(135deg,#06B6D4,#8B5CF6,#EC4899)}
+.preview-label{font-size:13px;color:var(--text-dim);margin-top:8px}
+.step{background:var(--bg);border-radius:16px;padding:24px;margin:16px 0;position:relative;overflow:hidden}
+.step::before{content:attr(data-step);position:absolute;top:-8px;right:16px;font-size:80px;font-weight:900;color:var(--primary);opacity:.08}
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.step-badge{width:36px;height:36px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.step-title{font-size:18px;font-weight:700;color:var(--text)}
+.param-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.param-table th{background:var(--primary);color:#fff;padding:8px 12px;text-align:left;font-weight:600}
+.param-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.param-table td:first-child{font-weight:600;color:var(--primary)}
+.param-table code{background:#CFFAFE;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:12px;color:#0E7490}
+.kbd{background:#083344;color:#67E8F9;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px;font-weight:600}
+.visual-demo{display:flex;gap:16px;align-items:center;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.visual-step{text-align:center}
+.visual-box{width:100px;height:70px;background:var(--card);border-radius:12px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative}
+.visual-box.result{border-color:var(--success);background:#f0fdf4}
+.visual-label{font-size:12px;color:var(--text-dim);margin-top:6px}
+.arrow{font-size:20px;color:var(--primary)}
+.glass-explain{background:#ECFEFF;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#0E7490}
+.glass-explain b{color:#083344}
+.state-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.state-card{background:var(--bg);border-radius:12px;padding:20px;text-align:center;border-top:3px solid}
+.state-card.on{border-color:var(--success)}
+.state-card.off{border-color:var(--text-dim)}
+.state-card .toggle{width:52px;height:32px;border-radius:16px;margin:0 auto 12px;position:relative}
+.state-card.on .toggle{background:#22C55E}
+.state-card.on .toggle::after{content:'';position:absolute;top:2px;right:2px;width:28px;height:28px;background:#fff;border-radius:50%;box-shadow:0 2px 8px rgba(34,197,94,0.4)}
+.state-card.off .toggle{background:#CBD5E1}
+.state-card.off .toggle::after{content:'';position:absolute;top:2px;left:2px;width:28px;height:28px;background:#fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+.state-card .title{font-size:16px;font-weight:700}
+.state-card .desc{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.6}
+.variant-flow{display:flex;gap:12px;align-items:center;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.variant-box{background:var(--bg);border-radius:12px;padding:16px 20px;text-align:center;border:2px solid var(--border)}
+.variant-box.set{border-color:var(--primary);background:#ECFEFF}
+.variant-box .vtitle{font-size:14px;font-weight:700;margin-bottom:8px}
+.variant-box .vdesc{font-size:12px;color:var(--text-dim)}
+.summary-grid{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.summary-item{display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--primary)}
+.summary-item .emoji{font-size:28px}
+.summary-item .title{font-size:16px;font-weight:700}
+.summary-item .desc{font-size:13px;color:var(--text-dim);margin-top:2px}
+.footer{text-align:center;padding:32px 40px;background:var(--bg);color:var(--text-dim);font-size:13px}
+.footer .next{margin-top:12px;font-size:14px;color:var(--primary);font-weight:600}
+</style>
+</head>
+<body>
+<div class="tutorial">
+
+<div class="hero">
+  <div class="ep">EPISODE C05 · 案例教程 · 图文教程</div>
+  <h1>玻璃质感开关按钮设计</h1>
+  <div class="subtitle">Figma 实操 · Glassmorphism Toggle Switch</div>
+  <div class="tags">
+    <span class="tag">教材内 4.4.5</span>
+    <span class="tag">工具：Figma</span>
+    <span class="tag">约5分钟</span>
+  </div>
+</div>
+
+<!-- Section 1: Final Preview -->
+<div class="section">
+  <h2>最终效果预览</h2>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="preview-box light">
+        <div style="width:52px;height:32px;background:#CBD5E1;border-radius:16px;position:relative;box-shadow:inset 0 2px 4px rgba(0,0,0,0.1)">
+          <div style="position:absolute;top:2px;left:2px;width:28px;height:28px;background:#fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.15)"></div>
+        </div>
+      </div>
+      <div class="preview-label">浅色背景</div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-box dark">
+        <div style="width:52px;height:32px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border-radius:16px;position:relative;border:1px solid rgba(255,255,255,0.3)">
+          <div style="position:absolute;top:2px;left:2px;width:28px;height:28px;background:rgba(255,255,255,0.9);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.2)"></div>
+        </div>
+      </div>
+      <div class="preview-label">深色玻璃</div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-box color">
+        <div style="width:52px;height:32px;background:rgba(255,255,255,0.25);backdrop-filter:blur(10px);border-radius:16px;position:relative;border:1px solid rgba(255,255,255,0.5);box-shadow:0 4px 16px rgba(0,0,0,0.1)">
+          <div style="position:absolute;top:2px;right:2px;width:28px;height:28px;background:rgba(255,255,255,0.95);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.8)"></div>
+        </div>
+      </div>
+      <div class="preview-label">彩色玻璃</div>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:14px;color:var(--text-dim)">玻璃拟态 = 背景模糊 / 半透明填充 / 内描边 / 投影</p>
+</div>
+
+<!-- Step 1: Structure -->
+<div class="section">
+  <h2>步骤一：结构分析与搭建</h2>
+  <div class="step" data-step="1">
+    <div class="step-header">
+      <div class="step-badge">1</div>
+      <div class="step-title">轨道（Track）+ 滑块（Thumb）</div>
+    </div>
+    <p style="font-size:14px;margin-bottom:8px">开关按钮由两个核心部分组成：轨道是背景底座，滑块是滑动的圆形按钮。</p>
+    <table class="param-table">
+      <thead><tr><th>部件</th><th>工具</th><th>参数</th></tr></thead>
+      <tbody>
+        <tr><td>Frame</td><td><span class="kbd">F</span> Frame</td><td>W:52 H:32 命名: Toggle / Glass</td></tr>
+        <tr><td>轨道 Track</td><td><span class="kbd">R</span> Rectangle</td><td>W:52 H:32 圆角:16px 填充:#CBD5E1</td></tr>
+        <tr><td>滑块 Thumb</td><td><span class="kbd">O</span> Ellipse</td><td>W:28 H:28 X:2 Y:2 填充:#FFFFFF</td></tr>
+        <tr><td>边距</td><td>—</td><td>滑块距轨道边缘 2px，上下居中</td></tr>
+      </tbody>
+    </table>
+    <div class="visual-demo">
+      <div class="visual-step">
+        <div class="visual-box">
+          <div style="width:52px;height:32px;background:#CBD5E1;border-radius:16px"></div>
+        </div>
+        <div class="visual-label">轨道 Track</div>
+      </div>
+      <div class="arrow">+</div>
+      <div class="visual-step">
+        <div class="visual-box">
+          <div style="width:28px;height:28px;background:#fff;border-radius:50%;border:1px solid #e2e8f0"></div>
+        </div>
+        <div class="visual-label">滑块 Thumb</div>
+      </div>
+      <div class="arrow">=</div>
+      <div class="visual-step">
+        <div class="visual-box result">
+          <div style="width:52px;height:32px;background:#CBD5E1;border-radius:16px;position:relative">
+            <div style="position:absolute;top:2px;left:2px;width:28px;height:28px;background:#fff;border-radius:50%"></div>
+          </div>
+        </div>
+        <div class="visual-label">完成结构</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 2: Glass Effect Track -->
+<div class="section">
+  <h2>步骤二：轨道玻璃效果</h2>
+  <div class="step" data-step="2">
+    <div class="step-header">
+      <div class="step-badge">2</div>
+      <div class="step-title">背景模糊 + 半透明 + 投影</div>
+    </div>
+    <div class="glass-explain">
+      <b>玻璃效果三件套：</b>Background Blur（背景模糊）+ 半透明 Fill（填充）+ Drop Shadow（投影），再加 Inner Stroke（内描边）增强边缘感。
+    </div>
+    <table class="param-table">
+      <thead><tr><th>效果</th><th>参数</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>Fill 填充</td><td><code>#FFFFFF</code> Opacity: 25%</td><td>半透明白色，形成玻璃基调</td></tr>
+        <tr><td>Background Blur</td><td><code>10 px</code></td><td>背景模糊，玻璃质感的核心</td></tr>
+        <tr><td>Inner Stroke</td><td><code>1 px</code> <code>#FFFFFF</code> Opacity: 40%</td><td>内描边，增强玻璃边缘</td></tr>
+        <tr><td>Drop Shadow</td><td>Y:4 Blur:16 Opacity:10%</td><td>投影，增加立体感</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--text-dim);margin-top:8px">💡 提示：在有颜色的背景上玻璃效果才明显，可以在底部放一个渐变矩形做背景。</p>
+  </div>
+</div>
+
+<!-- Step 3: Glass Effect Thumb -->
+<div class="section">
+  <h2>步骤三：滑块玻璃效果</h2>
+  <div class="step" data-step="3">
+    <div class="step-header">
+      <div class="step-badge">3</div>
+      <div class="step-title">滑块质感优化</div>
+    </div>
+    <p style="font-size:14px;margin-bottom:8px">滑块比轨道更白、更实一些，形成层次对比。顶部加内阴影模拟高光。</p>
+    <table class="param-table">
+      <thead><tr><th>效果</th><th>参数</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>Fill 填充</td><td><code>#FFFFFF</code> Opacity: 90%</td><td>接近纯白，少量透明</td></tr>
+        <tr><td>Inner Stroke</td><td><code>1 px</code> <code>#FFFFFF</code> Opacity: 80%</td><td>内描边，边缘高光</td></tr>
+        <tr><td>Drop Shadow</td><td>Y:2 Blur:8 Opacity:15%</td><td>柔和投影，浮起感</td></tr>
+        <tr><td>Inner Shadow</td><td>Y:1 Blur:0 <code>#FFFFFF</code> Opacity:80%</td><td>顶部内阴影，模拟高光</td></tr>
+      </tbody>
+    </table>
+    <div class="visual-demo">
+      <div class="visual-step">
+        <div class="visual-box" style="background:linear-gradient(135deg,#06B6D4,#8B5CF6)">
+          <div style="width:52px;height:32px;background:rgba(255,255,255,0.25);backdrop-filter:blur(10px);border-radius:16px;position:relative;border:1px solid rgba(255,255,255,0.5);box-shadow:0 4px 16px rgba(0,0,0,0.1)">
+            <div style="position:absolute;top:2px;left:2px;width:28px;height:28px;background:rgba(255,255,255,0.9);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.8)"></div>
+          </div>
+        </div>
+        <div class="visual-label">玻璃效果完成</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 4: ON State -->
+<div class="section">
+  <h2>步骤四：开启状态（ON）</h2>
+  <div class="step" data-step="4">
+    <div class="step-header">
+      <div class="step-badge">4</div>
+      <div class="step-title">绿色轨道 + 滑块右移 + 微光</div>
+    </div>
+    <p style="font-size:14px;margin-bottom:8px">复制 OFF 状态的 Frame，修改为 ON 状态——绿色表示"开启"。</p>
+    <div class="state-grid">
+      <div class="state-card off">
+        <div class="toggle"></div>
+        <div class="title">OFF 关闭</div>
+        <div class="desc">灰色轨道<br>滑块在左侧<br>内阴影凹陷感</div>
+      </div>
+      <div class="state-card on">
+        <div class="toggle"></div>
+        <div class="title">ON 开启</div>
+        <div class="desc">绿色轨道 #22C55E<br>滑块在右侧<br>绿色外发光</div>
+      </div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>修改项</th><th>OFF → ON</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>轨道颜色</td><td><code>#CBD5E1</code> → <code>#22C55E</code> Opacity:60%</td><td>绿色表示开启</td></tr>
+        <tr><td>滑块位置</td><td>X:2 → X:22</td><td>从左侧移到右侧</td></tr>
+        <tr><td>外发光</td><td>Drop Shadow 绿色 模糊12px</td><td>营造"点亮"的微光效果</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Step 5: Variants -->
+<div class="section">
+  <h2>步骤五：组件变体（Variants）</h2>
+  <div class="step" data-step="5">
+    <div class="step-header">
+      <div class="step-badge">5</div>
+      <div class="step-title">创建 Component Set</div>
+    </div>
+    <p style="font-size:14px;margin-bottom:8px">把 ON 和 OFF 两个状态放进同一个组件集，方便管理和切换。</p>
+    <div class="variant-flow">
+      <div class="variant-box">
+        <div class="vtitle">OFF Frame</div>
+        <div class="vdesc">关闭状态</div>
+      </div>
+      <div class="arrow">+</div>
+      <div class="variant-box">
+        <div class="vtitle">ON Frame</div>
+        <div class="vdesc">开启状态</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="variant-box set">
+        <div class="vtitle">Component Set</div>
+        <div class="vdesc">Variants 管理</div>
+      </div>
+    </div>
+    <p style="font-size:14px">快捷键 <span class="kbd">Ctrl + Alt + K</span> 创建 Component Set → 属性命名 <code style="background:#CFFAFE;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:12px;color:#0E7490">State</code> → 值分别为 <code style="background:#CFFAFE;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:12px;color:#0E7490">On</code> / <code style="background:#CFFAFE;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:12px;color:#0E7490">Off</code></p>
+  </div>
+</div>
+
+<!-- Step 6: Smart Animate -->
+<div class="section">
+  <h2>步骤六：Smart Animate 动画</h2>
+  <div class="step" data-step="6">
+    <div class="step-header">
+      <div class="step-badge">6</div>
+      <div class="step-title">原型交互 + 平滑过渡</div>
+    </div>
+    <p style="font-size:14px;margin-bottom:8px">在 Prototype 面板中设置交互，让开关点击时有平滑的滑动动画。</p>
+    <table class="param-table">
+      <thead><tr><th>设置项</th><th>值</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>Trigger 触发</td><td>On Click</td><td>点击时触发</td></tr>
+        <tr><td>Action 动作</td><td>Change to → On/Off</td><td>切换到另一个变体</td></tr>
+        <tr><td>Animation 动画</td><td>Smart Animate</td><td>智能识别元素变化</td></tr>
+        <tr><td>Duration 时长</td><td><code>250 ms</code></td><td>200-300ms 最佳</td></tr>
+        <tr><td>Easing 缓动</td><td>Ease Out</td><td>先快后慢，自然</td></tr>
+      </tbody>
+    </table>
+    <div class="glass-explain" style="background:#FEF3C7;color:#92400e">
+      <b>💡 Smart Animate 要点：</b>两个变体中需要过渡的图层名称必须完全一致（包括大小写），否则 Figma 无法识别为同一个元素，动画就会变成淡入淡出而不是平滑移动。
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="section">
+  <h2>知识点总结</h2>
+  <div class="summary-grid">
+    <div class="summary-item" style="border-left-color:var(--primary)">
+      <div class="emoji">💎</div>
+      <div><div class="title">玻璃效果三要素</div><div class="desc">背景模糊 · 半透明填充 · 投影 + 内描边</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--success)">
+      <div class="emoji">🧩</div>
+      <div><div class="title">开关结构</div><div class="desc">Track（轨道）+ Thumb（滑块）= Toggle Switch</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--accent)">
+      <div class="emoji">🔄</div>
+      <div><div class="title">Variants 组件变体</div><div class="desc">Component Set 管理多种状态，一键切换</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--purple,#8b5cf6)">
+      <div class="emoji">✨</div>
+      <div><div class="title">Smart Animate</div><div class="desc">自动识别元素变化，生成平滑过渡动画</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Extension Exercise -->
+<div class="section">
+  <h2>延伸练习</h2>
+  <div style="background:linear-gradient(135deg,#ECFEFF,#F0F9FF);border-radius:12px;padding:20px">
+    <p style="font-weight:700;font-size:16px;margin-bottom:8px">为玻璃开关添加更多状态和变体</p>
+    <p style="font-size:14px;color:var(--text-dim)">完整的开关组件需要考虑以下扩展：</p>
+    <ul style="margin-top:8px;font-size:14px;color:var(--text-dim);list-style:none;padding-left:0">
+      <li style="padding:4px 0">禁用态（Disabled）：降低不透明度至 40%</li>
+      <li style="padding:4px 0">加载态（Loading）：滑块中显示旋转加载动画</li>
+      <li style="padding:4px 0">尺寸变体：大/中/小三种尺寸</li>
+      <li style="padding:4px 0">颜色变体：默认色/品牌色/危险色</li>
+      <li style="padding:4px 0">带标签版本：左侧/右侧添加文字说明</li>
+      <li style="padding:4px 0">无障碍支持：键盘操作 + aria-label</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <p>UI设计案例教程 C05 · 图文教程</p>
+  <p>教材来源：4.4.5 · 工具：Figma</p>
+  <div class="next">下集预告：C06 磨砂玻璃质感卡片区设计</div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K04 费茨定律——从数学公式到触控热区设计 | 视频脚本</title>
+<style>
+:root {
+  --primary: #2563eb; --primary-dark: #1e40af; --accent: #f59e0b;
+  --success: #10b981; --danger: #ef4444; --purple: #8b5cf6;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+  --bg: #f0f4f8; --card: #fff; --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; background:var(--bg); color:var(--gray-900); line-height:1.7; font-size:14px; }
+.container { max-width:1100px; margin:0 auto; padding:32px; }
+.header { background:linear-gradient(135deg, var(--primary-dark), var(--primary)); color:#fff; padding:36px 32px; border-radius:var(--radius); margin-bottom:28px; }
+.header .ep { font-size:13px; opacity:0.8; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.header h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+.header .meta { display:flex; gap:12px; flex-wrap:wrap; }
+.header .meta span { background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; }
+.section { background:var(--card); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.section h2 { font-size:18px; font-weight:700; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--primary); }
+.shot-table { width:100%; border-collapse:collapse; font-size:13px; }
+.shot-table th { background:var(--gray-100); padding:10px; text-align:left; font-weight:600; color:var(--gray-700); border-bottom:2px solid var(--gray-200); white-space:nowrap; }
+.shot-table td { padding:12px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+.shot-num { font-weight:700; color:var(--primary); }
+.time-code { font-family:'SF Mono',Monaco,monospace; font-weight:600; color:var(--accent); white-space:nowrap; }
+.narration { background:#eff6ff; padding:10px 14px; border-radius:6px; border-left:3px solid var(--primary); margin-top:4px; }
+.narration::before { content:"旁白："; font-weight:700; color:var(--primary); font-size:12px; }
+.subtitle { color:var(--gray-500); font-style:italic; font-size:12px; margin-top:4px; }
+.subtitle::before { content:"字幕："; font-weight:600; font-style:normal; }
+.asset-list { list-style:none; }
+.asset-list li { padding:8px 12px; margin-bottom:6px; background:var(--gray-50); border-radius:6px; border-left:3px solid var(--accent); font-size:13px; }
+.asset-list li b { color:var(--gray-700); }
+.note-box { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:16px; margin-top:16px; font-size:13px; }
+.note-box b { color:#92400e; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.tag-sfx { background:#fce7f3; color:#9d174d; }
+.tag-visual { background:#dbeafe; color:#1e40af; }
+.tag-transition { background:#d1fae5; color:#065f46; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="ep">EPISODE K04 · 理论知识点</div>
+  <h1>费茨定律——从数学公式到触控热区设计</h1>
+  <div class="meta">
+    <span>时长：2分00秒</span>
+    <span>格式：知识讲解 + 动效演示</span>
+    <span>来源：理论延伸（人机交互运动定律）</span>
+    <span>分辨率：1920×1080 / 30fps</span>
+  </div>
+</div>
+
+<!-- Production Overview -->
+<div class="section">
+  <h2>制作概述</h2>
+  <table class="shot-table">
+    <tr><td style="width:140px;"><b>视频类型</b></td><td>知识讲解型（口播 + 动效图解 + 案例对比）</td></tr>
+    <tr><td><b>目标受众</b></td><td>UI设计初学者、交互设计学习者、前端开发者</td></tr>
+    <tr><td><b>核心目标</b></td><td>理解费茨定律公式，掌握其在UI设计中的5个应用场景，能自查设计中的触控热区问题</td></tr>
+    <tr><td><b>风格基调</b></td><td>专业但不枯燥——用日常App操作场景引入，公式讲解配合动效可视化，案例对比直观</td></tr>
+    <tr><td><b>旁白语速</b></td><td>约 3.5 字/秒（2分钟约 420 字旁白）</td></tr>
+    <tr><td><b>BGM</b></td><td>轻快电子科技风，音量 -20dB，铺底不抢旁白</td></tr>
+    <tr><td><b>字体规范</b></td><td>标题：思源黑体 Bold 48px；正文：思源黑体 Regular 28px；公式：JetBrains Mono 32px</td></tr>
+    <tr><td><b>配色方案</b></td><td>主色 #2563EB（科技蓝）；强调色 #F59E0B（警示橙）；背景 #0F172A（深色模式）/ #F8FAFC（浅色模式）</td></tr>
+  </table>
+</div>
+
+<!-- Shot-by-Shot Storyboard -->
+<div class="section">
+  <h2>分镜脚本（逐镜头）</h2>
+  <table class="shot-table">
+    <thead>
+      <tr>
+        <th style="width:50px;">镜头</th>
+        <th style="width:85px;">时间码</th>
+        <th style="width:180px;">画面描述</th>
+        <th>旁白文案 / 字幕</th>
+        <th style="width:120px;">音效 / 转场</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- Shot 1 -->
+      <tr>
+        <td class="shot-num">01</td>
+        <td class="time-code">0:00—0:15<br>(15s)</td>
+        <td>
+          <span class="tag tag-visual">动效演示</span><br>
+          <b>画面A（0-5s）</b>：手机屏幕录屏，拇指从屏幕底部向上伸，点击顶部导航栏的一个小图标，手指颤抖着够不到，点偏了。<br>
+          <b>画面B（5-10s）</b>：同一只手，拇指轻松点到底部Tab栏的图标，一次成功。<br>
+          <b>画面C（10-15s）</b>：两段操作画面左右对比，中间出现大字"为什么？"，背景渐变到深蓝色 #0F172A。
+        </td>
+        <td>
+          <div class="narration">你有没有想过，为什么手机底部的标签栏，总比顶部的按钮更好点？这不是错觉，而是一个50年前的数学公式早已给出的答案。</div>
+          <div class="subtitle">为什么底部Tab更好点？</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 点击音效×2<br>
+          <span class="tag tag-transition">转场</span> 缩放过渡
+        </td>
+      </tr>
+
+      <!-- Shot 2 -->
+      <tr>
+        <td class="shot-num">02</td>
+        <td class="time-code">0:15—0:45<br>(30s)</td>
+        <td>
+          <span class="tag tag-visual">公式动效</span><br>
+          <b>画面A（15-22s）</b>：深色背景上，公式逐字打字出现：<br>
+          <code style="background:#1e293b; padding:8px 16px; border-radius:6px; font-size:16px; color:#60a5fa;">MT = a + b · log₂(2D / W)</code><br>
+          公式下方标注变量名称，用箭头连线：<br>
+          MT → "运动时间"<br>
+          D → "起点到目标的距离"<br>
+          W → "目标宽度"<br>
+          <b>画面B（22-35s）</b>：动效演示——一个绿色圆点从左侧出发，向右侧的目标矩形移动。分别演示三种情况：<br>
+          ① 距离近+目标大 → 快速到达（绿色✓）<br>
+          ② 距离远+目标大 → 稍慢到达（黄色⏱）<br>
+          ③ 距离远+目标小 → 很慢到达（红色✗）<br>
+          每种情况右侧实时显示MT数值变化。<br>
+          <b>画面C（35-45s）</b>：公式结论文字弹出："距离越远、目标越小 → 耗时越长"，三组关键词依次高亮。
+        </td>
+        <td>
+          <div class="narration">这就是费茨定律，由心理学家 Paul Fitts 于 1954 年提出。公式告诉我们：移动到目标的时间，取决于两个变量——距离D和目标宽度W。距离越远、目标越小，手指到达的时间就越长。反过来说，缩短距离、放大目标，用户操作就越快。</div>
+          <div class="subtitle">MT = a + b·log₂(2D/W)<br>D=距离 W=目标宽度<br>距离越远/目标越小 → 耗时越长</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 打字机声<br>
+          <span class="tag tag-sfx">SFX</span> 三次"叮"提示<br>
+          <span class="tag tag-transition">转场</span> 淡入淡出
+        </td>
+      </tr>
+
+      <!-- Shot 3 -->
+      <tr>
+        <td class="shot-num">03</td>
+        <td class="time-code">0:45—1:15<br>(30s)</td>
+        <td>
+          <span class="tag tag-visual">案例图解</span><br>
+          <b>画面A（45-55s）</b>：手机屏幕线框图，标注三处触控热区规范：<br>
+          - iOS HIG：最小 44×44pt（用绿色框标注）<br>
+          - Material Design：最小 48×48dp（用蓝色框标注）<br>
+          - 实际推荐：48×48dp 以上（用橙色虚线框标注"推荐"）<br>
+          三组规范并排对比，数字放大动效。<br>
+          <b>画面B（55-70s）</b>：手机拇指热区图——手掌持握手机的侧面剪影叠加在手机屏幕上，用三色渐变标注：<br>
+          - 绿色区域（屏幕底部1/3）："自然区"——拇指轻松可达<br>
+          - 黄色区域（中间1/3）："伸展区"——拇指需要伸展<br>
+          - 红色区域（顶部1/3）："困难区"——需调整握姿<br>
+          底部Tab栏高亮在绿色区域内，标注"高频操作放这里"。<br>
+          <b>画面C（70-75s）</b>：主操作按钮放大案例——电商App结算页，底部"立即购买"按钮宽度通栏、高度56pt，与顶部小图标的44pt形成对比。
+        </td>
+        <td>
+          <div class="narration">在UI设计中，这个公式直接催生了三条设计规范。第一，触控热区不小于44点——这是iOS和Android共同的下限。第二，拇指自然区在屏幕底部三分之一，高频操作如Tab栏、主按钮应该放在这里。第三，主操作按钮要比次级操作更大，让用户"闭着眼也能点对"。</div>
+          <div class="subtitle">触控热区 ≥ 44×44pt（iOS）/ 48×48dp（Android）<br>拇指自然区 = 屏幕底部1/3<br>主操作按钮 > 次级按钮</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 标注弹出声×3<br>
+          <span class="tag tag-transition">转场</span> 左滑过渡
+        </td>
+      </tr>
+
+      <!-- Shot 4 -->
+      <tr>
+        <td class="shot-num">04</td>
+        <td class="time-code">1:15—1:40<br>(25s)</td>
+        <td>
+          <span class="tag tag-visual">交互演示</span><br>
+          <b>画面A（75-85s）</b>：macOS 屏幕底部 Dock 栏特写，鼠标光标快速移向屏幕底部，光标到达底部边缘后"停住"——因为边缘外没有区域，相当于目标"无限大"。<br>
+          画面叠加标注："屏幕边缘 = 目标宽度W → ∞ → MT → 最小"<br>
+          <b>画面B（85-95s）</b>：动效图解——将屏幕边缘可视化为一条"墙"，鼠标碰到墙就自动停止，不需要精准定位。对比：屏幕中间的目标需要精准对准，边缘目标只需"推过去就行"。<br>
+          <b>画面C（95-100s）</b>：列举3个边缘效应设计案例：<br>
+          - macOS Dock（底部边缘）<br>
+          - Windows 任务栏（底部边缘）<br>
+          - iOS 控制中心（顶部边缘下拉）<br>
+          三张截图横向排列，各自标注"边缘=无限大"。
+        </td>
+        <td>
+          <div class="narration">费茨定律还揭示了一个有趣的效应：屏幕边缘的目标，等效于"无限大"。因为光标无法超出屏幕，你只要把鼠标推到边缘方向就一定能命中。macOS 的 Dock 栏和 Windows 的任务栏都放在屏幕底边，正是利用了这一效应。</div>
+          <div class="subtitle">边缘效应：W → ∞ → MT → 最小<br>macOS Dock / Windows任务栏 / iOS控制中心</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 鼠标移动声<br>
+          <span class="tag tag-sfx">SFX</span> "砰"碰墙声<br>
+          <span class="tag tag-transition">转场</span> 缩放过渡
+        </td>
+      </tr>
+
+      <!-- Shot 5 -->
+      <tr>
+        <td class="shot-num">05</td>
+        <td class="time-code">1:40—2:00<br>(20s)</td>
+        <td>
+          <span class="tag tag-visual">案例对比</span><br>
+          <b>画面A（100-110s）</b>：左右分屏对比——<br>
+          <b>左侧（红色边框 ✗）</b>：某弹窗的关闭按钮仅 20×20px，且紧邻其他按钮，标注"目标小 + 间距近 = 误触"<br>
+          <b>右侧（绿色边框 ✓）</b>：改进后的关闭按钮 44×44px，与周围按钮间距 16px，标注"目标大 + 间距足 = 精准"<br>
+          <b>画面B（110-116s）</b>：总结卡片弹出，深色背景上白色大字三条要点：<br>
+          ① 缩短操作距离<br>
+          ② 放大触控目标<br>
+          ③ 利用屏幕边缘<br>
+          三条要点依次飞入，每条配一个对应小图标。<br>
+          <b>画面C（116-120s）</b>：片尾——系列Logo + "UI设计教学" + 下集预告文字"K05 席克定律与米勒定律"，淡出。
+        </td>
+        <td>
+          <div class="narration">反面教材也很常见：过小的关闭按钮、间距太近的相邻按钮，都会让用户误触。记住三条原则：缩短操作距离、放大触控目标、利用屏幕边缘。这就是费茨定律给UI设计的启示。</div>
+          <div class="subtitle">✗ 目标小+间距近 = 误触<br>✓ 目标大+间距足 = 精准<br>三原则：缩短距离 / 放大目标 / 利用边缘</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 错误提示音×1<br>
+          <span class="tag tag-sfx">SFX</span> 成功提示音×1<br>
+          <span class="tag tag-sfx">BGM</span> 结尾渐强后淡出
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- Asset List -->
+<div class="section">
+  <h2>素材清单</h2>
+  <ul class="asset-list">
+    <li><b>素材01 · 拇指操作录屏</b>：手机实拍或Figma模拟，拇指点击顶部导航 vs 底部Tab的对比画面（2段，各5秒）</li>
+    <li><b>素材02 · 费茨定律公式动效</b>：AE制作的公式打字动画 + 变量标注连线动效（After Effects或Figma Smart Animate）</li>
+    <li><b>素材03 · 距离/宽度演示动效</b>：绿色圆点移动到不同大小/距离目标的动画（3组对比，AE制作）</li>
+    <li><b>素材04 · 触控热区规范图</b>：手机线框图 + iOS 44pt / Android 48dp 触控区域标注</li>
+    <li><b>素材05 · 拇指热区分布图</b>：手机屏幕叠加三色渐变热区图（绿/黄/红），标注自然区/伸展区/困难区</li>
+    <li><b>素材06 · 主操作按钮案例</b>：电商App结算页截图，底部"立即购买"通栏按钮特写</li>
+    <li><b>素材07 · macOS Dock栏截图</b>：macOS底部Dock栏特写 + 鼠标移动至边缘的录屏</li>
+    <li><b>素材08 · 边缘效应图解</b>：AE动画——光标移向屏幕边缘，"墙壁"反弹效果可视化</li>
+    <li><b>素材09 · 三大边缘设计案例截图</b>：macOS Dock / Windows任务栏 / iOS控制中心（各1张）</li>
+    <li><b>素材10 · 正反面案例对比图</b>：弹窗关闭按钮——反面(20px小按钮) vs 正面(44px标准按钮)并排对比</li>
+    <li><b>素材11 · 总结卡片</b>：三条原则卡片设计（缩短距离/放大目标/利用边缘），深色背景白色大字</li>
+    <li><b>素材12 · 片尾Logo</b>：系列Logo + 下集预告画面</li>
+    <li><b>素材13 · BGM</b>：轻快电子科技风背景音乐（2分钟完整版，可循环）</li>
+    <li><b>素材14 · 字幕文件</b>：.srt格式字幕文件，与时间码对齐</li>
+  </ul>
+</div>
+
+<!-- Production Notes -->
+<div class="section">
+  <h2>制作注意事项</h2>
+  <div class="note-box">
+    <p><b>1. 公式可视化重点</b>：公式 MT = a + b·log₂(2D/W) 不需要解释a和b（经验常数），只讲D和W两个设计师可控制的变量。画面中用红色高亮D和W，灰色弱化a和b。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>2. 拇指热区图制作方法</b>：在Figma中创建390×844（iPhone 14 Pro）Frame，用三段渐变色块叠加（底部1/3绿色#10b981透明度30%、中间1/3黄色#f59e0b透明度30%、顶部1/3红色#ef4444透明度30%），再叠加手机拇指持握侧面剪影。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>3. 边缘效应动画</b>：关键视觉隐喻——把屏幕边缘画成一堵"墙"。光标向中间目标移动时需要减速对准（标注"精准定位"）；光标向边缘目标移动时直接推到底（标注"无需定位"）。这个对比是本知识点的"Aha Moment"。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>4. 录音要求</b>：旁白采用专业配音或AI语音（推荐使用标准普通话女声，语速适中偏快，每分钟约210字），情绪平稳略带悬念感（开头问句上扬，结尾总结下落收束）。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>5. 字幕规范</b>：字幕位置在画面底部安全区内，距底部边缘 80px；白色文字 + 半透明黑色背景条（圆角4px，高度40px）；字号 28px，每行不超过 20 个中文字符。</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

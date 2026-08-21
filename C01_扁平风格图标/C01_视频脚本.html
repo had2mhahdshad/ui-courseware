@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C01 扁平风格图标从0到1设计 | 视频脚本</title>
+<style>
+:root {
+  --primary: #2563eb; --primary-dark: #1e40af; --accent: #f59e0b;
+  --success: #10b981; --danger: #ef4444; --purple: #8b5cf6;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+  --bg: #f0f4f8; --card: #fff; --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; background:var(--bg); color:var(--gray-900); line-height:1.7; font-size:14px; }
+.container { max-width:1100px; margin:0 auto; padding:32px; }
+.header { background:linear-gradient(135deg, #6366f1, #818cf8); color:#fff; padding:36px 32px; border-radius:var(--radius); margin-bottom:28px; }
+.header .ep { font-size:13px; opacity:0.8; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.header h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+.header .meta { display:flex; gap:12px; flex-wrap:wrap; }
+.header .meta span { background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; }
+.section { background:var(--card); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.section h2 { font-size:18px; font-weight:700; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #6366f1; }
+.shot-table { width:100%; border-collapse:collapse; font-size:13px; }
+.shot-table th { background:var(--gray-100); padding:10px; text-align:left; font-weight:600; color:var(--gray-700); border-bottom:2px solid var(--gray-200); white-space:nowrap; }
+.shot-table td { padding:12px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+.shot-num { font-weight:700; color:#6366f1; }
+.time-code { font-family:'SF Mono',Monaco,monospace; font-weight:600; color:var(--accent); white-space:nowrap; }
+.narration { background:#eef2ff; padding:10px 14px; border-radius:6px; border-left:3px solid #6366f1; margin-top:4px; }
+.narration::before { content:"旁白："; font-weight:700; color:#6366f1; font-size:12px; }
+.subtitle { color:var(--gray-500); font-style:italic; font-size:12px; margin-top:4px; }
+.subtitle::before { content:"字幕："; font-weight:600; font-style:normal; }
+.figma-op { background:#f0fdf4; padding:8px 12px; border-radius:6px; border-left:3px solid var(--success); margin-top:4px; font-size:12px; }
+.figma-op::before { content:"Figma操作："; font-weight:700; color:var(--success); }
+.asset-list { list-style:none; }
+.asset-list li { padding:8px 12px; margin-bottom:6px; background:var(--gray-50); border-radius:6px; border-left:3px solid var(--accent); font-size:13px; }
+.asset-list li b { color:var(--gray-700); }
+.note-box { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:16px; margin-top:16px; font-size:13px; }
+.note-box b { color:#92400e; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.tag-sfx { background:#fce7f3; color:#9d174d; }
+.tag-visual { background:#dbeafe; color:#1e40af; }
+.tag-transition { background:#d1fae5; color:#065f46; }
+.tag-rec { background:#fef3c7; color:#92400e; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="ep">EPISODE C01 · 案例教程</div>
+  <h1>扁平风格图标从0到1设计</h1>
+  <div class="meta">
+    <span>时长：5分00秒</span>
+    <span>格式：Figma录屏操作演示</span>
+    <span>教材来源：4.4.1</span>
+    <span>工具：Figma</span>
+    <span>分辨率：1920×1080 / 30fps</span>
+  </div>
+</div>
+
+<!-- Production Overview -->
+<div class="section">
+  <h2>制作概述</h2>
+  <table class="shot-table">
+    <tr><td style="width:140px;"><b>视频类型</b></td><td>操作演示型（Figma录屏 + 旁白讲解 + 关键步骤标注）</td></tr>
+    <tr><td><b>目标受众</b></td><td>UI设计初学者、Figma入门用户、需要制作图标集的设计师</td></tr>
+    <tr><td><b>核心目标</b></td><td>跟随视频在Figma中从零完成一个"首页"扁平风格图标，掌握基础形状组合、Boolean运算、组件化全流程</td></tr>
+    <tr><td><b>最终交付物</b></td><td>一个"首页"（Home）扁平风格图标 Figma Component，含 24×24 / 48×48 / 96×96 三种尺寸导出</td></tr>
+    <tr><td><b>风格基调</b></td><td>手把手教学——每一步都有画面+操作+旁白，初学者可以暂停跟随操作</td></tr>
+    <tr><td><b>旁白语速</b></td><td>约 3 字/秒（5分钟约 900 字旁白）</td></tr>
+    <tr><td><b>录屏设置</b></td><td>Figma界面全屏录制（1920×1080），鼠标光标开启高亮（黄色光圈），快捷键操作时左下角显示按键提示</td></tr>
+    <tr><td><b>BGM</b></td><td>轻柔Lo-fi节拍，音量 -24dB，不干扰旁白</td></tr>
+  </table>
+</div>
+
+<!-- Pre-Production Setup -->
+<div class="section">
+  <h2>录屏前准备</h2>
+  <table class="shot-table">
+    <tr><td style="width:160px;"><b>Figma文件</b></td><td>新建Team Project "UI图标教程"，新建Page "C01-扁平风格图标"</td></tr>
+    <tr><td><b>画板规格</b></td><td>Frame 48×48px，名称"Icon / Home"</td></tr>
+    <tr><td><b>网格设置</b></td><td>Settings → Layout Grid → Grid 4px（细网格）+ Grid 24px（安全区粗网格，显示为24×24区域居中）</td></tr>
+    <tr><td><b>品牌色</b></td><td>Primary Blue #2563EB（主色）/ Accent Orange #F59E0B（辅助色）/ White #FFFFFF</td></tr>
+    <tr><td><b>字体</b></td><td>旁白字幕：思源黑体 Regular 28px / 操作提示：JetBrains Mono 20px</td></tr>
+    <tr><td><b>快捷键提示插件</b></td><td>安装 Figma 插件 "Keybuster" 或使用 OBS 快捷键显示层，录制时自动显示按键</td></tr>
+    <tr><td><b>光标样式</b></td><td>系统设置调大光标 + 录屏软件添加黄色高亮光圈（半径30px，透明度40%）</td></tr>
+  </table>
+</div>
+
+<!-- Shot-by-Shot Storyboard -->
+<div class="section">
+  <h2>分镜脚本（逐镜头）</h2>
+  <table class="shot-table">
+    <thead>
+      <tr>
+        <th style="width:50px;">镜头</th>
+        <th style="width:85px;">时间码</th>
+        <th style="width:200px;">画面描述</th>
+        <th>旁白文案 / Figma操作</th>
+        <th style="width:110px;">音效 / 转场</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- Shot 1 -->
+      <tr>
+        <td class="shot-num">01</td>
+        <td class="time-code">0:00—0:30<br>(30s)</td>
+        <td>
+          <span class="tag tag-visual">需求分析</span><br>
+          <b>画面A（0-10s）</b>：片头——系列Logo + "C01 扁平风格图标从0到1设计"，紫色渐变背景，淡入。<br>
+          <b>画面B（10-20s）</b>：展示最终效果——一个精美的"首页"扁平风格图标（48×48px），在浅色/深色/灰色三种背景上展示，再展示24/48/96三种尺寸。<br>
+          <b>画面C（20-30s）</b>：切换到Figma界面，创建新Frame。画面左侧出现需求分析要点卡片：<br>
+          - 图标含义：首页/Home<br>
+          - 风格：扁平风格（纯色块、无阴影、无渐变）<br>
+          - 尺寸：48×48px画板，24×24安全区<br>
+          - 参考物：房屋轮廓（墙体+屋顶）
+        </td>
+        <td>
+          <div class="narration">大家好，今天我们从零开始设计一个扁平风格的"首页"图标。扁平风格的核心是——纯色块、无阴影、无渐变，用最简洁的几何形状传递信息。我们要做一个房屋轮廓，代表"首页"的含义。先看最终效果，然后一步步来。</div>
+          <div class="subtitle">扁平风格 = 纯色块 / 无阴影 / 无渐变<br>目标：48×48px "首页"图标</div>
+          <div class="figma-op">新建 Frame：快捷键 F → 输入 48×48 → 命名 "Icon / Home" → 回车</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 品牌音效<br>
+          <span class="tag tag-transition">转场</span> 缩放进入Figma界面
+        </td>
+      </tr>
+
+      <!-- Shot 2 -->
+      <tr>
+        <td class="shot-num">02</td>
+        <td class="time-code">0:30—1:00<br>(30s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（30-40s）</b>：Figma界面中选中Frame，打开右侧属性面板。点击 Layout Grid 设置图标。<br>
+          <b>画面B（40-50s）</b>：添加两层网格：<br>
+          - 第一层：Grid，Size 4px，Color #E2E8F0，透明度50%（细网格）<br>
+          - 第二层：Grid，Size 24px，Color #3B82F6，透明度30%（安全区粗网格）<br>
+          画面标注："4px细网格 = 精确对齐 / 24px安全区 = 图标内容不超出"<br>
+          <b>画面C（50-60s）</b>：开启对齐设置。Settings → Snap to grid ON / Snap to pixel ON / Constraint ON。画面标注快捷键提示。
+        </td>
+        <td>
+          <div class="narration">画板建好后，第一步是设置网格系统。我们用两层网格：4像素的细网格用于精确对齐锚点，24像素的安全区网格确保图标内容不会超出范围。同时开启对齐功能，让绘制时自动吸附到网格线。</div>
+          <div class="subtitle">Layout Grid：<br>4px细网格（对齐）+ 24px安全区（内容边界）</div>
+          <div class="figma-op">选中Frame → 右侧 Layout Grid + → Grid Size 4px → 再添加 Grid Size 24px<br>Settings → Snap to grid: ON</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 点击音效<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 3 -->
+      <tr>
+        <td class="shot-num">03</td>
+        <td class="time-code">1:00—2:00<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（1:00-1:20）</b>：绘制墙体——快捷键R激活Rectangle工具，在画板中拖出一个矩形。<br>
+          位置：X=12, Y=20, W=24, H=16（在安全区内居中）<br>
+          填充：#2563EB（品牌蓝）<br>
+          圆角：2px（右侧Corner Radius调整为2）<br>
+          画面标注尺寸数字。<br>
+          <b>画面B（1:20-1:40）</b>：绘制屋顶——快捷键P激活Pen Tool，在矩形上方画一个三角形：<br>
+          - 锚点1：(12, 20) 左下<br>
+          - 锚点2：(24, 8) 顶部尖<br>
+          - 锚点3：(36, 20) 右下<br>
+          闭合路径形成三角形，填充 #2563EB。<br>
+          画面用动效箭头标注三个锚点位置。<br>
+          <b>画面C（1:40-2:00）</b>：将墙体矩形和屋顶三角形对齐——选中两者，对齐面板中"水平居中对齐"（快捷键 Ctrl+Shift+H）。确认两者在X轴上居中对齐。
+        </td>
+        <td>
+          <div class="narration">现在开始用基础形状搭建房屋。先用矩形工具画墙体——在安全区内画一个24×16的矩形，填充品牌蓝色，圆角设为2像素。然后用钢笔工具画屋顶——在墙体上方打三个锚点，左下、顶部、右下，闭合后形成三角形。最后选中两个形状，水平居中对齐，确保屋顶端正地盖在墙体上方。</div>
+          <div class="subtitle">墙体：Rectangle 24×16 圆角2px<br>屋顶：Pen Tool 三角形<br>对齐：水平居中</div>
+          <div class="figma-op">R → 拖出矩形 → 右侧设 W:24 H:16 X:12 Y:20 Fill:#2563EB Radius:2<br>P → 点击(12,20) → 点击(24,8) → 点击(36,20) → 闭合<br>全选 → Align Horizontal Centers (Ctrl+Shift+H)</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 绘制音效<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 4 -->
+      <tr>
+        <td class="shot-num">04</td>
+        <td class="time-code">2:00—3:00<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（2:00-2:20）</b>：Boolean合并——选中墙体矩形和屋顶三角形，点击顶部工具栏 Boolean Union（合并）按钮，或快捷键 Ctrl+Shift+U。两个形状合并为一个路径，填充仍为 #2563EB。画面标注："Union = 两个形状合为一个，消除重叠边线"。<br>
+          <b>画面B（2:20-2:40）</b>：绘制门——快捷键R画一个小矩形：W:6 H:10, 位置 X:21 Y:26（墙体底部居中偏下）。填充 #FFFFFF（白色），让门"镂空"在墙体上。<br>
+          <b>画面C（2:40-3:00）</b>：绘制门需要镂空效果——选中合并后的房屋轮廓 + 门小矩形，使用 Boolean Subtract（减去顶层），快捷键 Ctrl+Shift+S。门变为透明镂空，透出底层背景。画面标注："Subtract = 用顶层形状挖洞"。
+        </td>
+        <td>
+          <div class="narration">接下来用Boolean运算把形状合并。选中墙体和屋顶，执行Union合并为一个完整轮廓。然后画一个小矩形作为门，用Subtract运算把门"挖空"。Union负责合、Subtract负责挖，这是图标设计中最常用的两个Boolean操作。</div>
+          <div class="subtitle">Boolean Union (Ctrl+Shift+U)：合并形状<br>Boolean Subtract (Ctrl+Shift+S)：挖洞镂空</div>
+          <div class="figma-op">选中矩形+三角形 → Boolean Union (Ctrl+Shift+U)<br>R → 画门矩形 W:6 H:10 X:21 Y:26 Fill:#FFFFFF<br>选中房屋+门 → Boolean Subtract (Ctrl+Shift+S)</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 合并音效<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 5 -->
+      <tr>
+        <td class="shot-num">05</td>
+        <td class="time-code">3:00—4:00<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（3:00-3:20）</b>：绘制窗户——快捷键O激活Ellipse工具，在墙体右上方画一个小圆形窗户：W:4 H:4, X:28 Y:23。填充 #FFFFFF，然后与房屋轮廓做 Subtract 镂空。<br>
+          <b>画面B（3:20-3:40）</b>：检查视觉平衡——画面暂停，放慢节奏。在图标旁叠加标注线检查：<br>
+          - 左右对称（门在正中间）<br>
+          - 上部留白（屋顶占上方1/3）<br>
+          - 视觉重心（整体居中在24×24安全区内）<br>
+          如有偏差微调坐标。<br>
+          <b>画面C（3:40-4:00）</b>：深色背景预览——在图标Frame下方放一个48×48的深色矩形(#1E293B)，复制图标到深色矩形上。检查图标在深色背景下的可读性。确认蓝色 #2563EB 在深色背景上清晰可见，镂空区域正确透出深色背景。
+        </td>
+        <td>
+          <div class="narration">再加一个圆形窗户增加细节。画一个4×4的小圆，同样用Subtract镂空。然后检查视觉平衡——门在正中、屋顶占上方三分之一、整体在安全区内居中。最后在深色背景上预览，确认图标在不同背景下都清晰可辨。</div>
+          <div class="subtitle">窗户：Ellipse 4×4 Subtract镂空<br>检查：对称 / 留白 / 重心居中<br>深色背景预览可读性</div>
+          <div class="figma-op">O → 画圆 W:4 H:4 X:28 Y:23 Fill:#FFFFFF<br>选中房屋+圆 → Boolean Subtract<br>复制图标 → 置于 #1E293B 背景上预览</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 柔和提示音<br>
+          <span class="tag tag-transition">转场</span> 淡入淡出
+        </td>
+      </tr>
+
+      <!-- Shot 6 -->
+      <tr>
+        <td class="shot-num">06</td>
+        <td class="time-code">4:00—5:00<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（4:00-4:20）</b>：创建Component——选中完整的图标Frame，点击顶部工具栏"Create Component"图标，或快捷键 Ctrl+Alt+K。右侧属性面板出现Component标识。命名为"Icon / Home / Flat"。<br>
+          <b>画面B（4:20-4:40）</b>：导出——选中Component，右侧面板找到Export区域。添加三种导出格式：<br>
+          - SVG（矢量格式，1x）→ 用于开发<br>
+          - PNG（位图格式，1x/2x/3x）→ 用于演示<br>
+          - PDF（矢量格式）→ 用于打印<br>
+          点击Export All导出。画面展示导出的文件列表。<br>
+          <b>画面C（4:40-5:00）</b>：多尺寸展示+片尾——将导出的图标在三种尺寸（24/48/96）下并排展示，确认所有尺寸都清晰可辨。最后片尾Logo + "C01完成" + 下集预告"C02 磨砂玻璃风格图标"，淡出。
+        </td>
+        <td>
+          <div class="narration">最后一步是组件化和导出。选中图标，创建为Figma Component，这样以后可以在任何页面复用。导出时选择SVG矢量格式给开发使用，PNG位图格式做演示，PDF格式打印备用。一个完整的扁平风格图标就完成了。你可以用同样的方法做一整套图标集。</div>
+          <div class="subtitle">Component: Ctrl+Alt+K<br>导出: SVG(开发) + PNG(演示) + PDF(打印)<br>多尺寸验证: 24/48/96px</div>
+          <div class="figma-op">选中Frame → Create Component (Ctrl+Alt+K) → 命名 "Icon / Home / Flat"<br>Export → + SVG 1x → + PNG 1x/2x/3x → + PDF<br>Export All → 展示三种尺寸效果</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 完成音效<br>
+          <span class="tag tag-sfx">BGM</span> 结尾渐强后淡出<br>
+          <span class="tag tag-transition">转场</span> 缩放淡出
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- Asset List -->
+<div class="section">
+  <h2>素材清单</h2>
+  <ul class="asset-list">
+    <li><b>素材01 · 片头动画</b>：系列Logo + "C01 扁平风格图标从0到1设计" 标题卡，紫色渐变背景（AE或Figma Smart Animate制作，3秒淡入）</li>
+    <li><b>素材02 · 最终效果图</b>："首页"图标在浅色(#F8FAFC)/深色(#1E293B)/灰色(#94A3B8)三种背景上的展示图，以及24/48/96三种尺寸对比图</li>
+    <li><b>素材03 · 需求分析卡片</b>：左侧浮动信息卡，列出图标含义/风格/尺寸/参考物（Figma或AE制作）</li>
+    <li><b>素材04 · 网格设置标注图</b>：Figma网格设置截图 + 标注线说明4px细网格和24px安全区</li>
+    <li><b>素材05 · 基础形状标注图</b>：矩形墙体和三角形屋顶的坐标/尺寸标注截图</li>
+    <li><b>素材06 · Boolean运算示意图</b>：Union（合并前→合并后）和Subtract（挖空前→挖空后）的对比动效</li>
+    <li><b>素材07 · 视觉平衡检查图</b>：图标叠加对称线/重心线/安全区框的标注图</li>
+    <li><b>素材08 · 深色背景预览图</b>：图标在深色背景上的效果截图</li>
+    <li><b>素材09 · 导出面板截图</b>：Figma Export设置面板截图，标注SVG/PNG/PDF三种格式</li>
+    <li><b>素材10 · 多尺寸展示图</b>：24/48/96px三种尺寸并排对比图</li>
+    <li><b>素材11 · 片尾画面</b>："C01完成" + 下集预告 + 系列Logo</li>
+    <li><b>素材12 · BGM</b>：轻柔Lo-fi节拍背景音乐（5分钟版本，可循环）</li>
+    <li><b>素材13 · 快捷键提示层</b>：OBS或Keybuster插件录制的按键提示画面</li>
+    <li><b>素材14 · 字幕文件</b>：.srt格式字幕文件，与时间码对齐</li>
+  </ul>
+</div>
+
+<!-- Production Notes -->
+<div class="section">
+  <h2>制作注意事项</h2>
+  <div class="note-box">
+    <p><b>1. 录屏节奏控制</b>：每个操作步骤之间留 2-3 秒"呼吸时间"，让学习者有时间暂停跟做。关键快捷键操作可以放慢到 0.5x 速度展示，正常操作恢复正常速度。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>2. 坐标和尺寸标注</b>：在录屏后期添加标注动效——当操作涉及具体坐标或尺寸时，在画面右侧用浮动标签显示当前 X/Y/W/H 数值，方便学习者对照。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>3. Boolean运算可视化</b>：在讲Union和Subtract时，添加前后对比动效——合并前两个形状叠加显示（半透明），合并后显示为一个路径。Subtract同样展示"挖洞"过程。这是本教程的核心知识点。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>4. 组件化强调</b>：在创建Component步骤时，额外录制一段说明——"Component创建后，你可以在任何Frame中从Assets面板拖入使用，修改主组件所有实例同步更新"。这段可以作为画面B的画外音。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>5. 导出规范</b>：SVG导出时确认"Outline Text"开启（如果图标内含文字，转为路径）；PNG导出时勾选"Include 'id' attribute"关闭（减小文件体积）。导出后展示文件大小（SVG应小于2KB）。</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

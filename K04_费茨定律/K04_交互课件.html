@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>费茨定律基础 — 从数学公式到触控热区设计</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF7;
+  --text:#2C2C2C;
+  --text-dim:#8A8A8A;
+  --text-soft:#B5B5B5;
+  --accent:#E85D4A;
+  --accent-soft:#FCE8E5;
+  --blue:#3B6BD5;
+  --blue-soft:#E3ECFA;
+  --green:#2D9A5E;
+  --green-soft:#DFF2E6;
+  --yellow:#F2C14E;
+  --yellow-soft:#FFF6DB;
+  --border:#E8E5E0;
+  --card:#FFFFFF;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.9;
+  font-size:16px;
+  text-align:left;
+}
+
+/* Nav */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:700;font-size:14px;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;font-size:13px}
+.nav-links a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+
+/* Hero */
+.hero{
+  padding:80px 32px 60px;
+  text-align:center;
+  max-width:780px;
+  margin:0 auto;
+}
+.hero .icon{font-size:48px;margin-bottom:16px}
+.hero .label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:42px;font-weight:700;
+  line-height:1.4;margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:17px;color:var(--text-dim);
+  line-height:1.8;max-width:600px;margin:0 auto;
+}
+.hero .tags{
+  display:flex;gap:8px;justify-content:center;margin-top:28px;
+}
+.hero .tag{
+  border:1px solid var(--border);
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;color:var(--text-dim);
+}
+
+/* Step Nav */
+.step-nav{
+  display:flex;gap:0;justify-content:center;
+  padding:24px 32px;flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+}
+.step-nav a{
+  padding:10px 20px;font-size:14px;
+  color:var(--text-dim);text-decoration:none;
+  border-right:1px solid var(--border);
+  transition:all .2s;
+}
+.step-nav a:first-child{border-left:1px solid var(--border)}
+.step-nav a:hover,.step-nav a.active{color:var(--accent)}
+
+/* Sections */
+.section{
+  max-width:780px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.step-label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.section h2{
+  font-family:var(--serif);
+  font-size:30px;font-weight:700;
+  margin-bottom:28px;line-height:1.5;
+}
+.section h3{
+  font-family:var(--serif);
+  font-size:20px;font-weight:700;
+  margin-bottom:12px;line-height:1.5;
+  display:flex;align-items:center;gap:10px;
+}
+.section h3 .emoji{font-size:24px}
+.section p{margin-bottom:16px;color:#444}
+.section p b{color:var(--text);font-weight:600}
+.section .lead{
+  font-size:17px;line-height:2;
+  color:var(--text);margin-bottom:28px;
+}
+
+/* Knowledge Cards */
+.know-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-bottom:20px;
+}
+.know-card .emoji{font-size:28px;margin-bottom:12px}
+.know-card h3{margin-bottom:8px}
+
+/* Formula Box */
+.formula-box{
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:40px 32px;
+  text-align:center;
+  margin:24px 0;
+}
+.formula{
+  font-family:'JetBrains Mono',Menlo,monospace;
+  font-size:32px;font-weight:600;
+  color:var(--blue);
+  letter-spacing:1px;
+}
+.formula .d{color:var(--accent);font-weight:700}
+.formula .w{color:var(--green);font-weight:700}
+.var-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-top:24px;
+}
+.var-item{
+  background:var(--card);
+  border-radius:8px;padding:14px 12px;
+  text-align:left;
+}
+.var-item .name{
+  font-size:11px;letter-spacing:1px;
+  color:var(--text-soft);text-transform:uppercase;
+}
+.var-item .desc{
+  font-size:14px;font-weight:600;
+  margin-top:4px;
+}
+
+/* Conclusion */
+.conclusion{
+  background:var(--yellow-soft);
+  border-radius:12px;
+  padding:24px 28px;
+  margin:24px 0;
+  font-size:16px;line-height:2;
+}
+.conclusion b{color:#92400e}
+
+/* Standard Table */
+.std-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;font-size:14px;
+  background:var(--card);
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.std-table th{
+  background:#F6F5F2;padding:14px 16px;
+  text-align:left;font-weight:600;
+  border-bottom:2px solid var(--border);
+}
+.std-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.std-table tr:last-child td{border-bottom:none}
+
+/* Thumb Zone */
+.thumb-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:32px;
+  margin:24px 0;
+  position:relative;
+}
+.thumb-zone-wrap{
+  display:flex;gap:32px;align-items:center;
+}
+.thumb-phone{
+  width:160px;height:300px;
+  border-radius:24px;overflow:hidden;
+  border:3px solid #D4D0C8;
+  flex-shrink:0;position:relative;
+}
+.tz{position:absolute;left:0;right:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.tz.green{top:66%;height:34%;background:rgba(45,154,94,.15);color:var(--green)}
+.tz.yellow{top:33%;height:33%;background:rgba(242,193,78,.15);color:#B8860B}
+.tz.red{top:0;height:33%;background:rgba(232,93,74,.12);color:var(--accent)}
+.tz-tab{
+  position:absolute;bottom:0;left:0;right:0;
+  height:36px;background:rgba(59,107,213,.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--blue);font-size:10px;font-weight:600;
+}
+.thumb-info{flex:1;font-size:14px;line-height:2}
+.thumb-info p{margin-bottom:8px}
+.thumb-info .label{font-weight:700}
+.thumb-info .green .label{color:var(--green)}
+.thumb-info .yellow .label{color:#B8860B}
+.thumb-info .red .label{color:var(--accent)}
+
+/* Edge Effect */
+.edge-compare{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:24px 0;
+}
+.edge-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;padding:24px;
+}
+.edge-card .title{
+  font-weight:700;font-size:15px;margin-bottom:12px;
+}
+.edge-visual{
+  height:90px;background:#F6F5F2;
+  border-radius:8px;position:relative;
+  margin-bottom:12px;
+}
+.edge-target{position:absolute}
+.edge-target.mid{
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:18px;height:18px;background:var(--accent);border-radius:3px;
+}
+.edge-target.edge{
+  bottom:0;left:20%;right:20%;
+  height:12px;background:var(--green);border-radius:3px 3px 0 0;
+}
+.edge-card .desc{font-size:13px;color:var(--text-dim);line-height:1.8}
+
+/* Compare */
+.compare-row{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:24px 0;
+}
+.compare-card{
+  background:var(--card);
+  border:2px solid var(--border);
+  border-radius:12px;padding:24px;
+}
+.compare-card.bad{border-color:var(--accent)}
+.compare-card.good{border-color:var(--green)}
+.compare-card h4{
+  font-size:16px;font-weight:700;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.compare-card.bad h4{color:var(--accent)}
+.compare-card.good h4{color:var(--green)}
+.compare-card p{font-size:14px;color:var(--text-dim);line-height:1.8}
+
+/* Quiz Section */
+.quiz-section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.quiz-progress{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score{
+  font-size:13px;color:var(--text-dim);
+}
+.quiz-score b{color:var(--green);font-size:16px}
+.quiz-q{
+  font-size:18px;font-weight:600;
+  line-height:1.7;margin-bottom:20px;
+}
+.quiz-options{
+  display:flex;gap:12px;margin-bottom:20px;
+}
+.quiz-btn{
+  flex:1;padding:16px 20px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+}
+.quiz-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.quiz-btn.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.quiz-btn.wrong{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+.quiz-feedback{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:16px 20px;
+  font-size:14px;line-height:1.8;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:all .4s;
+}
+.quiz-feedback.show{
+  opacity:1;max-height:300px;
+  margin-bottom:16px;
+}
+.quiz-feedback b{color:var(--text)}
+.quiz-nav{
+  display:flex;justify-content:flex-end;
+  gap:12px;margin-top:20px;
+  padding-top:20px;border-top:1px solid var(--border);
+}
+.quiz-nav button{
+  padding:10px 20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.quiz-nav button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+}
+.quiz-nav button.primary{
+  background:var(--text);color:#fff;
+  border-color:var(--text);
+}
+.quiz-nav button.primary:hover{
+  background:#000;
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.quiz-nav button:disabled{
+  opacity:.4;cursor:not-allowed;
+}
+
+/* MCQ Options */
+.mcq-options{
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:20px;
+}
+.mcq-option{
+  padding:14px 18px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;transition:all .2s;
+  font-family:var(--sans);
+  text-align:left;
+}
+.mcq-option:hover{
+  transform:translateY(-1px);
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+  background:var(--card);
+}
+.mcq-option.correct{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+}
+.mcq-option.wrong{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+.mcq-option .opt-label{
+  font-weight:700;margin-right:8px;
+}
+
+/* Result Screen */
+.quiz-result{
+  text-align:center;padding:40px 20px;
+  display:none;
+}
+.quiz-result.show{display:block}
+.quiz-result .score-circle{
+  width:140px;height:140px;
+  border-radius:50%;
+  margin:0 auto 24px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--green-soft);
+  border:4px solid var(--green);
+}
+.quiz-result .score-num{
+  font-size:42px;font-weight:800;
+  color:var(--green);
+}
+.quiz-result .score-total{
+  font-size:14px;color:var(--text-dim);
+}
+.quiz-result h3{
+  font-family:var(--serif);
+  font-size:24px;margin-bottom:12px;
+  justify-content:center;
+}
+.quiz-result p{
+  color:var(--text-dim);font-size:15px;
+  max-width:400px;margin:0 auto 24px;
+}
+.quiz-result button{
+  padding:12px 28px;
+  background:var(--text);color:#fff;
+  border:none;border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+}
+
+/* Mock Interview */
+.interview-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.interview-bubble{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.interview-avatar{
+  width:52px;height:52px;
+  background:#EEF2FF;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+}
+.interview-question{
+  flex:1;
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:18px 22px;
+  font-size:15px;line-height:1.9;
+  position:relative;
+}
+.interview-question::before{
+  content:'';
+  position:absolute;
+  left:-8px;top:20px;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:8px solid #F6F5F2;
+}
+.interview-question b{color:#6366f1}
+.interview-think{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:14px;
+  margin:28px 0 16px;
+  font-style:italic;
+}
+.interview-btn{
+  display:block;
+  width:100%;
+  padding:14px 20px;
+  background:#EEF2FF;
+  border:2px dashed #6366f1;
+  color:#6366f1;
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+}
+.interview-btn:hover{
+  background:#E0E7FF;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(99,102,241,.15);
+}
+.interview-btn:active{
+  transform:translateY(0);
+}
+.interview-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .5s ease, margin-top .4s ease;
+}
+.interview-answer.show{
+  max-height:1200px;
+  margin-top:20px;
+}
+.answer-intro{
+  background:var(--green-soft);
+  color:var(--green);
+  padding:14px 20px;
+  border-radius:10px 10px 0 0;
+  font-size:14px;font-weight:600;
+}
+.answer-list{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 10px 10px;
+  padding:20px 24px;
+}
+.answer-item{
+  display:flex;gap:14px;
+  margin-bottom:16px;
+  align-items:flex-start;
+}
+.answer-item:last-child{margin-bottom:0}
+.answer-item-num{
+  width:28px;height:28px;
+  background:#6366f1;
+  color:#fff;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.answer-item-content b{
+  color:var(--text);font-size:14px;
+  display:block;margin-bottom:4px;
+}
+.answer-item-content{
+  font-size:13px;color:var(--text-dim);line-height:1.8;
+}
+
+/* Tips Section */
+.tips-list{margin:20px 0}
+.tip-item{
+  background:var(--card);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:18px 24px;
+  margin-bottom:12px;
+}
+.tip-item h4{
+  font-family:var(--serif);
+  font-size:17px;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.tip-item p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+.footer-links{
+  display:flex;gap:16px;justify-content:center;
+  margin-bottom:16px;
+}
+.footer-links a{color:var(--text-dim);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--text)}
+
+/* Copy Value */
+.copy-value{
+  position:relative;
+  cursor:pointer;
+  padding:2px 8px;
+  border-radius:5px;
+  background:rgba(59,107,213,.08);
+  transition:all .2s;
+  font-weight:600;
+  display:inline-block;
+  font-family:'JetBrains Mono',Menlo,monospace;
+}
+.copy-value:hover{
+  background:rgba(59,107,213,.18);
+}
+.copy-tooltip{
+  position:absolute;
+  top:-32px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--text);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:12px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s;
+  z-index:10;
+  font-family:var(--sans);
+  font-weight:500;
+}
+.copy-tooltip.show{
+  opacity:1;
+}
+
+/* Related Knowledge */
+.related-knowledge{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px 28px;
+  margin-top:32px;
+}
+.related-knowledge h4{
+  font-family:var(--serif);
+  font-size:16px;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.rk-list{display:flex;flex-direction:column;gap:10px}
+.rk-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;
+  background:#F6F5F2;
+  border-radius:8px;
+  font-size:14px;
+}
+.rk-item .rk-type{
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:12px;
+  font-weight:600;
+  flex-shrink:0;
+  letter-spacing:.5px;
+}
+.rk-item .rk-type.pre{background:var(--blue-soft);color:var(--blue)}
+.rk-item .rk-type.post{background:var(--green-soft);color:var(--green)}
+.rk-item .rk-type.practice{background:var(--yellow-soft);color:#B8860B}
+.rk-item .rk-content{flex:1}
+.rk-item .rk-content a{color:var(--text);text-decoration:none;font-weight:500;transition:color .2s}
+.rk-item .rk-content a:hover{color:var(--accent)}
+.rk-item.disabled .rk-content{color:var(--text-soft);cursor:not-allowed}
+.rk-badge{
+  font-size:10px;
+  padding:2px 6px;
+  background:var(--text-soft);
+  color:#fff;
+  border-radius:4px;
+  margin-left:8px;
+  font-weight:500;
+}
+
+/* Interactive Fitts Demo */
+.fitts-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.fitts-demo h3{
+  font-family:var(--serif);
+  font-size:20px;
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+.fitts-demo .demo-desc{
+  font-size:14px;
+  color:var(--text-dim);
+  margin-bottom:20px;
+  line-height:1.8;
+}
+.demo-controls{
+  display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;
+  align-items:center;
+}
+.demo-controls .label{
+  font-size:13px;color:var(--text-dim);margin-right:4px;
+}
+.demo-size-btn{
+  padding:6px 14px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  border-radius:6px;
+  font-size:13px;
+  cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.demo-size-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  border-color:var(--text-dim);
+}
+.demo-size-btn.active{
+  background:var(--text);
+  color:#fff;
+  border-color:var(--text);
+}
+.demo-arena{
+  position:relative;
+  height:200px;
+  background:#F6F5F2;
+  border-radius:10px;
+  overflow:hidden;
+}
+.demo-start{
+  position:absolute;
+  left:20px;
+  top:50%;
+  transform:translateY(-50%);
+  width:40px;height:40px;
+  border-radius:50%;
+  background:var(--accent);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:10px;font-weight:700;
+  transition:transform .2s, box-shadow .2s;
+  z-index:2;
+  user-select:none;
+}
+.demo-start:hover{transform:translateY(-50%) scale(1.1)}
+.demo-start.active{box-shadow:0 0 0 4px rgba(232,93,74,.3)}
+.demo-target{
+  position:absolute;
+  right:40px;
+  top:50%;
+  transform:translateY(-50%);
+  border-radius:6px;
+  background:var(--green);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:10px;font-weight:700;
+  transition:width .3s, height .3s, opacity .2s;
+  z-index:2;
+  user-select:none;
+}
+.demo-target:hover{opacity:.85}
+.demo-distance-line{
+  position:absolute;
+  left:60px;
+  right:calc(40px + 40px);
+  top:50%;
+  height:2px;
+  background:repeating-linear-gradient(90deg,var(--text-soft) 0 4px,transparent 4px 8px);
+  transform:translateY(-50%);
+  pointer-events:none;
+}
+.demo-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:16px;
+}
+.demo-stat{
+  background:#F6F5F2;
+  border-radius:8px;
+  padding:12px 16px;
+  text-align:center;
+}
+.demo-stat .stat-label{
+  font-size:11px;
+  color:var(--text-soft);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+.demo-stat .stat-value{
+  font-size:22px;
+  font-weight:700;
+  margin-top:2px;
+  font-family:'JetBrains Mono',Menlo,monospace;
+}
+.demo-stat.d .stat-value{color:var(--accent)}
+.demo-stat.w .stat-value{color:var(--green)}
+.demo-stat.t .stat-value{color:var(--blue)}
+.demo-feedback{
+  margin-top:12px;
+  padding:10px 14px;
+  background:var(--blue-soft);
+  border-radius:8px;
+  font-size:13px;
+  color:var(--blue);
+  min-height:20px;
+  text-align:center;
+  line-height:1.6;
+}
+
+/* Effect Demo Hover & Click */
+.effect-demo{
+  cursor:pointer;
+  transition:all .3s ease;
+  position:relative;
+}
+.effect-demo:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+.effect-demo::after{
+  content:"点击查看详情";
+  position:absolute;
+  top:12px;right:12px;
+  font-size:11px;
+  color:var(--text-soft);
+  background:var(--card);
+  padding:2px 8px;
+  border-radius:4px;
+  opacity:0;
+  transition:opacity .2s;
+  border:1px solid var(--border);
+}
+.effect-demo:hover::after{opacity:1}
+.detail-panel{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .4s ease, margin-top .4s ease;
+  margin-top:0;
+}
+.effect-demo.expanded .detail-panel,
+.detail-panel.show{
+  max-height:500px;
+  margin-top:16px;
+}
+.detail-panel-inner{
+  background:#F6F5F2;
+  border-radius:8px;
+  padding:16px 20px;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--text-dim);
+}
+.detail-panel-inner b{color:var(--text)}
+.detail-panel-inner ul{margin:8px 0;padding-left:20px}
+.detail-panel-inner li{margin-bottom:4px}
+
+/* Edge cards hover */
+.edge-card{
+  transition:all .3s ease;
+  cursor:pointer;
+}
+.edge-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+
+/* Shortcut */
+.shortcut{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:2px 8px;
+  background:#F6F5F2;
+  border-radius:4px;
+  font-size:12px;
+  font-family:'JetBrains Mono',Menlo,monospace;
+  color:var(--text);
+  border:1px solid var(--border);
+  white-space:nowrap;
+}
+.shortcut .shortcut-mac,.shortcut .shortcut-win{white-space:nowrap}
+.shortcut .divider{color:var(--text-soft)}
+/* OS-specific: JS adds os-mac or os-win class to body */
+body.os-mac .shortcut .shortcut-win,
+body.os-mac .shortcut .divider{display:none}
+body.os-win .shortcut .shortcut-mac,
+body.os-win .shortcut .divider{display:none}
+
+/* Tip shortcut note */
+.tip-shortcut{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--text-dim);
+  display:flex;align-items:center;gap:8px;
+}
+.tip-shortcut .label{font-weight:600;color:var(--text-soft)}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .section{padding:40px 20px}
+  .section h2{font-size:24px}
+  .var-grid{grid-template-columns:repeat(2,1fr)}
+  .thumb-zone-wrap{flex-direction:column}
+  .edge-compare,.compare-row{grid-template-columns:1fr}
+  .formula{font-size:22px}
+  .step-nav{flex-wrap:wrap}
+  .step-nav a{border-right:none;border-bottom:1px solid var(--border)}
+  .demo-stats{grid-template-columns:repeat(3,1fr)}
+  .demo-stat .stat-value{font-size:18px}
+  .fitts-demo{padding:20px}
+  .interview-section{padding:24px 20px}
+  .chat-bubble{max-width:90%;font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">UI<span>设计</span>基础</div>
+  <div class="nav-links">
+    <a href="#step1">STEP 1</a>
+    <a href="#step2">STEP 2</a>
+    <a href="#step3">STEP 3</a>
+    <a href="#step4">STEP 4</a>
+    <a href="#plus">PLUS</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="icon">🎯</div>
+  <div class="label">FITT'S LAW — LEARNING BY UNDERSTANDING</div>
+  <h1>指针为什么总"够不到"<br>右上角的按钮？</h1>
+  <p class="subtitle">
+    你有没有觉得，手机底部的 Tab 栏总比顶部的按钮更好点？<br>
+    这不是错觉——一个1954年的数学公式早就给出了答案。
+  </p>
+  <div class="tags">
+    <span class="tag">人机交互</span>
+    <span class="tag">触控设计</span>
+    <span class="tag">约2分钟</span>
+  </div>
+</section>
+
+<!-- Step Nav -->
+<div class="step-nav">
+  <a href="#step1">STEP 1 费茨定律基础</a>
+  <a href="#step2">STEP 2 判断题</a>
+  <a href="#step3">STEP 3 选择题</a>
+  <a href="#step4">STEP 4 模拟面试</a>
+  <a href="#plus">PLUS 设计三原则</a>
+</div>
+
+<!-- STEP 1: Knowledge -->
+<section class="section" id="step1">
+  <div class="step-label">STEP 1</div>
+  <h2>费茨定律（Fitts's Law）基础</h2>
+  <p class="lead">
+    1954年，心理学家 <b>Paul Fitts</b> 提出了一个关于人类指向运动的数学模型。<br>
+    它量化了"把手指/光标从起点移动到目标"这件事，到底受什么影响。
+  </p>
+
+  <div class="formula-box">
+    <div class="formula">
+      MT = a + b · log₂(2<span class="d">D</span> / <span class="w">W</span>)
+    </div>
+    <div class="var-grid">
+      <div class="var-item">
+        <div class="name">MT</div>
+        <div class="desc">运动时间（movement time）</div>
+      </div>
+      <div class="var-item">
+        <div class="name"><span style="color:var(--accent)">D</span> Distance</div>
+        <div class="desc">起点到目标的距离</div>
+      </div>
+      <div class="var-item">
+        <div class="name"><span style="color:var(--green)">W</span> Width</div>
+        <div class="desc">目标的宽度</div>
+      </div>
+      <div class="var-item">
+        <div class="name">a, b</div>
+        <div class="desc">经验常数</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <b>📌 一句话总结：</b>距离越远 → 操作越慢；目标越小 → 操作越慢。<br>
+    反过来说：<b>缩短距离</b>、<b>放大目标</b>，就能让用户更快更准。
+  </div>
+
+  <!-- Interactive Fitts Demo -->
+  <div class="fitts-demo">
+    <h3><span class="emoji">🎮</span> 动手试试：目标大小 vs 点击难度</h3>
+    <p class="demo-desc">
+      点击左侧红色圆点开始计时，然后尽快点击右侧绿色目标按钮。切换不同按钮大小，感受目标宽度 W 如何影响点击速度。
+    </p>
+    <div class="demo-controls">
+      <span class="label">目标大小：</span>
+      <button class="demo-size-btn active" onclick="setDemoSize('small')">小 24px</button>
+      <button class="demo-size-btn" onclick="setDemoSize('medium')">中 44px</button>
+      <button class="demo-size-btn" onclick="setDemoSize('large')">大 80px</button>
+    </div>
+    <div class="demo-arena" id="demoArena">
+      <div class="demo-start" id="demoStart" onclick="demoStart()">起点</div>
+      <div class="demo-target" id="demoTarget" style="width:24px;height:24px" onclick="demoTargetClick()">目标</div>
+      <div class="demo-distance-line"></div>
+    </div>
+    <div class="demo-stats">
+      <div class="demo-stat d">
+        <div class="stat-label">距离 D</div>
+        <div class="stat-value" id="demoDist">—</div>
+      </div>
+      <div class="demo-stat w">
+        <div class="stat-label">目标宽 W</div>
+        <div class="stat-value" id="demoWidth">24px</div>
+      </div>
+      <div class="demo-stat t">
+        <div class="stat-label">用时</div>
+        <div class="stat-value" id="demoTime">—</div>
+      </div>
+    </div>
+    <div class="demo-feedback" id="demoFeedback">
+      👆 点击左侧红色圆点开始
+    </div>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">📱</div>
+    <h3>触控热区（touch hot zone）规范</h3>
+    <p>Apple 和 Google 都基于费茨定律，制定了最小触控区域的规范——这是"大多数用户在合理时间内能命中的最小目标尺寸"。</p>
+    <table class="std-table">
+      <tr><th>平台</th><th>最小触控区域</th><th>说明</th></tr>
+      <tr><td>Apple iOS HIG</td><td><b><span class="copy-value" onclick="copyValue(this)">44 × 44 pt</span></b></td><td>人机交互指南下限</td></tr>
+      <tr><td>Material Design</td><td><b><span class="copy-value" onclick="copyValue(this)">48 × 48 dp</span></b></td><td>Material 规范下限</td></tr>
+      <tr><td>设计建议</td><td><b><span class="copy-value" onclick="copyValue(this)">56 dp</span> 以上</b></td><td>主操作按钮推荐</td></tr>
+    </table>
+    <div class="tip-shortcut">
+      <span class="label">Figma 技巧</span>
+      <span class="shortcut"><span class="shortcut-mac">⌘ + ⌥ + C</span><span class="divider">|</span><span class="shortcut-win">Ctrl + Alt + C</span></span>
+    </div>
+  </div>
+
+  <div class="thumb-card effect-demo" onclick="toggleDetail(this)" style="cursor:pointer">
+    <div class="thumb-zone-wrap">
+    <div class="thumb-phone">
+      <div class="tz red">困难区</div>
+      <div class="tz yellow">伸展区</div>
+      <div class="tz green">自然区</div>
+      <div class="tz-tab">底部 Tab 栏</div>
+    </div>
+    <div class="thumb-info">
+      <p style="font-weight:700;margin-bottom:10px;font-size:15px">拇指热区（thumb hot zone）示意</p>
+      <p class="green"><span class="label">自然区（绿色）</span>：屏幕底部1/3，拇指自然弯曲即可到达 → 放高频操作</p>
+      <p class="yellow"><span class="label">伸展区（黄色）</span>：屏幕中间1/3，拇指需要伸展 → 放中频操作</p>
+      <p class="red"><span class="label">困难区（红色）</span>：屏幕顶部1/3，需要调整握姿 → 避免放关键操作</p>
+    </div>
+  </div>
+  <div class="detail-panel">
+    <div class="detail-panel-inner">
+      <b>💡 设计要点：</b>
+      <ul>
+        <li><b>主操作按钮</b>放在底部通栏或右下角，落在自然区内</li>
+        <li><b>底部 Tab 栏</b>是移动端最高频的导航方式，完全符合费茨定律</li>
+        <li><b>顶部导航栏</b>只放返回、关闭等低频操作，或使用大尺寸按钮</li>
+        <li>大屏手机（≥ 6.5 英寸）的困难区更大，尤其需要注意布局</li>
+      </ul>
+    </div>
+  </div>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">🧱</div>
+    <h3>边缘效应（edge effect）：屏幕边缘 = 无限大</h3>
+    <p>屏幕边缘的目标等效于"无限大"（W → ∞），因为光标/手指无法超出屏幕边界。用户只要朝边缘方向"推过去"就一定能命中，不需要精准定位。</p>
+    <div class="edge-compare">
+      <div class="edge-card" onclick="void(0)">
+        <div class="title">屏幕中间的目标</div>
+        <div class="edge-visual"><div class="edge-target mid"></div></div>
+        <div class="desc">需要精准对准<br>W 有限 → MT 较大</div>
+      </div>
+      <div class="edge-card" onclick="void(0)">
+        <div class="title">屏幕边缘的目标</div>
+        <div class="edge-visual"><div class="edge-target edge"></div></div>
+        <div class="desc">推到底就行<br>W → ∞ → MT 最小</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--text-dim);margin-top:8px">
+      <b>经典应用：</b>macOS Dock 栏（底部边缘）、Windows 任务栏（底部边缘）、iOS 控制中心（顶部下拉）
+    </p>
+    <div class="detail-panel" id="edgeDetail">
+      <div class="detail-panel-inner">
+        <b>🔍 深入理解：</b>
+        <ul>
+          <li><b>两个边缘交汇</b>（如屏幕四角）的目标"无限大"效应最强，操作最快</li>
+          <li>桌面端 UI 中，窗口关闭按钮放在右上角就是利用了这个原理</li>
+          <li>移动端底部横条（Home Indicator）放在最底部，也是边缘效应的应用</li>
+          <li>把菜单栏/工具栏靠边放，不仅节省空间，还能提升点击效率</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-soft);margin-top:12px;text-align:center;cursor:pointer" onclick="toggleEdgeDetail()">
+      <span id="edgeToggleText">点击展开更多分析 ▾</span>
+    </p>
+  </div>
+
+  <!-- Related Knowledge -->
+  <div class="related-knowledge">
+    <h4>🔗 相关知识</h4>
+    <div class="rk-list">
+      <div class="rk-item disabled">
+        <span class="rk-type pre">前置知识</span>
+        <div class="rk-content">UI 设计四大原则（K01）— 对比原则是按钮层级设计的基础 <span class="rk-badge">即将上线</span></div>
+      </div>
+      <div class="rk-item disabled">
+        <span class="rk-type post">后续知识</span>
+        <div class="rk-content">席克定律与米勒定律（K05）— 选项数量如何影响决策速度 <span class="rk-badge">即将上线</span></div>
+      </div>
+      <div class="rk-item">
+        <span class="rk-type practice">相关实践</span>
+        <div class="rk-content"><a href="../C01_扁平风格图标/C01_交互课件.html">扁平图标基础（C01）— 图标目标大小的实际应用</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: True/False Quiz -->
+<section class="section" id="step2">
+  <div class="step-label">STEP 2</div>
+  <h2>「对吗？」判断题</h2>
+  <p class="lead">
+    UI 设计中常见的场景，判断下面的说法是对是错。<br>
+    觉得对就点 <b>✓</b>，觉得错就点 <b>✗</b>，每道题都有详细解析。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q1Progress">Q1 / 4</div>
+      <div class="quiz-score">答对 <b id="q1Score">0</b> / 4</div>
+    </div>
+
+    <div id="q1Container">
+      <div class="quiz-q" id="q1Question">
+        移动端 App 的"提交"按钮放在屏幕底部通栏，比放在顶部导航栏更好点。
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-btn" onclick="checkTF(1, true)">✓ 对</button>
+        <button class="quiz-btn" onclick="checkTF(1, false)">✗ 错</button>
+      </div>
+      <div class="quiz-feedback" id="q1Feedback">
+        <b style="color:var(--green)">✓ 答对了！</b><br>
+        根据费茨定律的拇指热区理论，屏幕底部1/3是拇指自然区——用户不需要调整握姿就能轻松点击。主操作按钮放在底部通栏，既缩短了距离 D，又增大了目标宽度 W，操作最快最准。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevTF()" id="q1Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextTF()" id="q1Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q1Result">
+      <div class="score-circle">
+        <div class="score-num" id="q1FinalScore">0</div>
+        <div class="score-total">/ 4 题</div>
+      </div>
+      <h3>🎉 判断题完成！</h3>
+      <p>费茨定律的核心是"距离"和"目标大小"两个变量。<br>记住：缩短距离、放大目标，就能让操作更快更准。</p>
+      <button onclick="resetTF()">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: Multiple Choice -->
+<section class="section" id="step3">
+  <div class="step-label">STEP 3</div>
+  <h2>选择：最好的设计方案</h2>
+  <p class="lead">
+    从四个选项中，选出最符合费茨定律的设计方案。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="q2Progress">Q1 / 3</div>
+      <div class="quiz-score">答对 <b id="q2Score">0</b> / 3</div>
+    </div>
+
+    <div id="q2Container">
+      <div class="quiz-q" id="q2Question">
+        某电商 App 的"立即购买"按钮，以下哪种设计方案操作最快？
+      </div>
+      <div class="mcq-options" id="q2Options">
+        <button class="mcq-option" onclick="checkMCQ(1, 'A')"><span class="opt-label">A.</span>放在屏幕顶部导航栏右侧，按钮尺寸 <span class="copy-value" onclick="copyValue(this)">44 × 44 pt</span></button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'B')"><span class="opt-label">B.</span>放在屏幕底部通栏，按钮高度 <span class="copy-value" onclick="copyValue(this)">56 pt</span>，宽度占满屏幕</button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'C')"><span class="opt-label">C.</span>放在商品图片下方，按钮尺寸 <span class="copy-value" onclick="copyValue(this)">48 × 48 dp</span></button>
+        <button class="mcq-option" onclick="checkMCQ(1, 'D')"><span class="opt-label">D.</span>悬浮在屏幕右下角，圆形按钮直径 <span class="copy-value" onclick="copyValue(this)">40 dp</span></button>
+      </div>
+      <div class="quiz-feedback" id="q2Feedback">
+        <b style="color:var(--green)">✓ 正确答案：B</b><br>
+        底部通栏按钮同时满足两个条件：① 距离近（拇指自然区，D 最小）② 目标大（通栏宽度 + <span class="copy-value" onclick="copyValue(this)">56 pt</span> 高度，W 最大）。A 选项距离太远（顶部困难区），C 选项位置在中间但目标不够大，D 选项尺寸太小且位置靠边不够精准。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevMCQ()" id="q2Prev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextMCQ()" id="q2Next" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="q2Result">
+      <div class="score-circle" style="background:var(--blue-soft);border-color:var(--blue)">
+        <div class="score-num" id="q2FinalScore" style="color:var(--blue)">0</div>
+        <div class="score-total">/ 3 题</div>
+      </div>
+      <h3>🌟 选择题完成！</h3>
+      <p>把费茨定律用到设计决策里——每次放按钮时，问问自己：<br>距离够近吗？目标够大吗？能靠边放吗？</p>
+      <button onclick="resetMCQ()" style="background:var(--blue)">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4: Mock Interview -->
+<section class="section" id="step4">
+  <div class="step-label">STEP 4</div>
+  <h2>模拟面试</h2>
+  <p class="lead">
+    试试用费茨定律回答真实的面试题，<br>
+    检验一下你对交互设计的理解深度。
+  </p>
+
+  <div class="interview-card">
+    <div class="interview-bubble">
+      <div class="interview-avatar">👨‍💼</div>
+      <div class="interview-question">
+        <b>面试官：</b>如果让你 redesign 我们 App 的底部导航栏，你会怎么运用费茨定律来提升点击效率？
+      </div>
+    </div>
+    
+    <div class="interview-think">
+      🤔 先想想你的答案
+    </div>
+    
+    <button class="interview-btn" onclick="toggleInterviewAnswer()" id="interviewBtn">
+      💡 查看参考答案
+    </button>
+    
+    <div class="interview-answer" id="interviewAnswer">
+      <div class="answer-intro">
+        ✅ 参考答案：从以下 5 个维度优化底部导航
+      </div>
+      <div class="answer-list">
+        <div class="answer-item">
+          <div class="answer-item-num">1</div>
+          <div class="answer-item-content">
+            <b>增大目标（W↑）</b>
+            底部 Tab 栏高度设为 49-56 dp，每个 Tab 宽度均分，保证每个图标的触控热区 ≥ 48 dp。图标和文字同时呈现，增大视觉目标的有效宽度。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">2</div>
+          <div class="answer-item-content">
+            <b>缩短距离（D↓）</b>
+            主操作（如发布/首页）放在拇指热区中心位置，减少手指移动距离。高频 Tab 放在中间和两侧的自然点击位置，最低频的放两端。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">3</div>
+          <div class="answer-item-content">
+            <b>利用边缘效应（edge effect）</b>
+            Tab 栏固定在屏幕最底部，利用边缘效应降低误触——用户手指往下一推就能到底，不需要精准定位垂直方向。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">4</div>
+          <div class="answer-item-content">
+            <b>视觉强化选中态</b>
+            选中态用品牌色 + 填充图标，增大视觉目标的"有效宽度"，让用户一眼就能看到当前在哪，也减少切换时的视觉搜索时间。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">5</div>
+          <div class="answer-item-content">
+            <b>控制选项数量</b>
+            底部导航控制在 3-5 个 Tab，配合席克定律降低决策成本。选项太多不仅决策慢，每个 Tab 的触控宽度也会被压缩。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLUS: Tips -->
+<section class="section" id="plus">
+  <div class="step-label">PLUS</div>
+  <h2>设计的三原则</h2>
+  <p class="lead">
+    费茨定律落到 UI 设计实践，记住这三条原则就够了。
+  </p>
+
+  <div class="tips-list">
+    <div class="tip-item">
+      <h4>🏃 ① 缩短操作距离（D↓）</h4>
+      <p>高频操作放在拇指自然区（屏幕底部1/3），主按钮靠近用户的操作起点。导航和工具栏靠边放置，利用屏幕边缘的"无限大"效应。</p>
+    </div>
+    <div class="tip-item">
+      <h4>🎯 ② 放大触控目标（touch target）（W↑）</h4>
+      <p>触控热区不小于 <span class="copy-value" onclick="copyValue(this)">44 pt</span>（iOS）/ <span class="copy-value" onclick="copyValue(this)">48 dp</span>（Android），主操作按钮建议 <span class="copy-value" onclick="copyValue(this)">56 dp</span> 以上。按钮之间保持足够间距（<span class="copy-value" onclick="copyValue(this)">≥ 8 px</span>），避免互相"侵蚀"有效目标宽度。</p>
+      <div class="tip-shortcut">
+        <span class="label">Figma 测量</span>
+        <span class="shortcut"><span class="shortcut-mac">⌥ + 悬停</span><span class="divider">|</span><span class="shortcut-win">Alt + 悬停</span></span>
+        <span>快速查看间距</span>
+      </div>
+    </div>
+    <div class="tip-item">
+      <h4>⚖️ ③ 主次操作差异化</h4>
+      <p>主操作按钮（确认/提交/购买）尺寸更大、颜色更突出；次操作（取消/返回）尺寸标准、视觉弱化。通过大小差异引导用户快速找到主要操作。</p>
+    </div>
+  </div>
+
+  <div class="conclusion" style="margin-top:32px">
+    <b>💡 费茨定律要点口诀：</b><br>
+    ① 距离近一点 ② 目标大一点 ③ 靠边放一点<br>
+    —— 这三点做到了，按钮就"好点"了。
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#step1">STEP 1 知识</a>
+    <a href="#step2">STEP 2 判断</a>
+    <a href="#step3">STEP 3 选择</a>
+    <a href="#step4">STEP 4 面试</a>
+    <a href="#plus">PLUS 原则</a>
+  </div>
+  <p>费茨定律基础 — 从数学公式到触控热区设计</p>
+  <p style="margin-top:4px">UI 设计理论知识点 K04 · 交互课件</p>
+</footer>
+
+<script>
+// ========== True/False Quiz ==========
+const tfQuestions = [
+  {
+    q: '移动端 App 的"提交"按钮放在屏幕底部通栏，比放在顶部导航栏更好点。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>根据费茨定律的拇指热区理论，屏幕底部1/3是拇指自然区——用户不需要调整握姿就能轻松点击。主操作按钮放在底部通栏，既缩短了距离 D，又增大了目标宽度 W，操作最快最准。'
+  },
+  {
+    q: '按钮越小，用户点击的速度越快，因为瞄准更简单。',
+    answer: false,
+    explain: '<b style="color:var(--accent)">✗ 答错了</b><br>正好相反。根据费茨定律，目标宽度 W 越小，运动时间 MT 越长——小按钮需要更精准的对准，反而更难点。这就是为什么移动端规范要求触控热区不小于 <span class="copy-value" onclick="copyValue(this)">44 × 44 pt</span>。'
+  },
+  {
+    q: 'macOS 把 Dock 栏放在屏幕最底部，是为了美观，和交互效率无关。',
+    answer: false,
+    explain: '<b style="color:var(--accent)">✗ 答错了</b><br>Dock 栏放底部是费茨定律"边缘效应"的经典应用。屏幕边缘的目标等效于无限大（W → ∞），用户只要把鼠标往下推就一定能命中，不需要精准定位，操作效率最高。'
+  },
+  {
+    q: '两个相邻按钮间距太小，会让用户更容易误触，因为有效目标宽度被"侵蚀"了。',
+    answer: true,
+    explain: '<b style="color:var(--green)">✓ 答对了！</b><br>相邻按钮间距不足时，每个按钮的"安全点击范围"变小——用户点偏一点就会按到旁边的按钮。这相当于有效目标宽度 W 被侵蚀了，MT 增加且误触率上升。规范建议按钮间距<span class="copy-value" onclick="copyValue(this)">≥ 8 px</span>。'
+  }
+];
+
+let tfCur = 0;
+let tfScore = 0;
+let tfAnswered = new Array(tfQuestions.length).fill(false);
+let tfUserAnswer = new Array(tfQuestions.length).fill(null);
+
+function renderTF() {
+  const q = tfQuestions[tfCur];
+  document.getElementById('q1Question').textContent = q.q;
+  document.getElementById('q1Progress').textContent = `Q${tfCur+1} / ${tfQuestions.length}`;
+  document.getElementById('q1Score').textContent = tfScore;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  btns.forEach(b => { b.classList.remove('correct','wrong'); b.disabled = false; });
+
+  const fb = document.getElementById('q1Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q1Prev').disabled = tfCur === 0;
+  document.getElementById('q1Next').disabled = !tfAnswered[tfCur];
+
+  if (tfAnswered[tfCur]) {
+    const correct = tfUserAnswer[tfCur] === q.answer;
+    const idx = tfUserAnswer[tfCur] ? 0 : 1;
+    btns[idx].classList.add(correct ? 'correct' : 'wrong');
+    btns.forEach(b => b.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q1Next').disabled = false;
+  }
+}
+
+function checkTF(idx, userAnswer) {
+  if (tfAnswered[tfCur]) return;
+  const correct = userAnswer === tfQuestions[tfCur].answer;
+  tfAnswered[tfCur] = true;
+  tfUserAnswer[tfCur] = userAnswer;
+  if (correct) tfScore++;
+
+  const btns = document.querySelectorAll('#q1Container .quiz-btn');
+  const correctIdx = tfQuestions[tfCur].answer ? 0 : 1;
+  btns[correctIdx].classList.add('correct');
+  if (!correct) {
+    const wrongIdx = userAnswer ? 0 : 1;
+    btns[wrongIdx].classList.add('wrong');
+  }
+  btns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('q1Feedback');
+  fb.innerHTML = tfQuestions[tfCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q1Score').textContent = tfScore;
+  document.getElementById('q1Next').disabled = false;
+}
+
+function nextTF() {
+  if (tfCur < tfQuestions.length - 1) {
+    tfCur++;
+    renderTF();
+  } else {
+    document.getElementById('q1Container').style.display = 'none';
+    document.getElementById('q1Result').classList.add('show');
+    document.getElementById('q1FinalScore').textContent = tfScore;
+  }
+}
+
+function prevTF() {
+  if (tfCur > 0) {
+    tfCur--;
+    renderTF();
+  }
+}
+
+function resetTF() {
+  tfCur = 0;
+  tfScore = 0;
+  tfAnswered = new Array(tfQuestions.length).fill(false);
+  tfUserAnswer = new Array(tfQuestions.length).fill(null);
+  document.getElementById('q1Container').style.display = 'block';
+  document.getElementById('q1Result').classList.remove('show');
+  renderTF();
+}
+
+// ========== Multiple Choice Quiz ==========
+const mcqQuestions = [
+  {
+    q: '某电商 App 的"立即购买"按钮，以下哪种设计方案操作最快？',
+    options: [
+      '放在屏幕顶部导航栏右侧，按钮尺寸 <span class="copy-value" onclick="copyValue(this)">44 × 44 pt</span>',
+      '放在屏幕底部通栏，按钮高度 <span class="copy-value" onclick="copyValue(this)">56 pt</span>，宽度占满屏幕',
+      '放在商品图片下方，按钮尺寸 <span class="copy-value" onclick="copyValue(this)">48 × 48 dp</span>',
+      '悬浮在屏幕右下角，圆形按钮直径 <span class="copy-value" onclick="copyValue(this)">40 dp</span>'
+    ],
+    answer: 1,
+    explain: '<b style="color:var(--green)">✓ 正确答案：B</b><br>底部通栏按钮同时满足两个条件：① 距离近（拇指自然区，D 最小）② 目标大（通栏宽度 + <span class="copy-value" onclick="copyValue(this)">56 pt</span> 高度，W 最大）。A 选项距离太远（顶部困难区），C 选项位置在中间但目标不够大，D 选项尺寸太小且位置靠边不够精准。'
+  },
+  {
+    q: '设计师想让 App 的"设置"按钮更好点，以下哪种改法不符合费茨定律？',
+    options: [
+      '把按钮从 <span class="copy-value" onclick="copyValue(this)">32 × 32 dp</span> 放大到 <span class="copy-value" onclick="copyValue(this)">48 × 48 dp</span>',
+      '把按钮从屏幕顶部移到底部 Tab 栏',
+      '把按钮颜色从灰色改成品牌色',
+      '把按钮和相邻按钮的间距从 <span class="copy-value" onclick="copyValue(this)">4 dp</span> 增加到 <span class="copy-value" onclick="copyValue(this)">12 dp</span>'
+    ],
+    answer: 2,
+    explain: '<b style="color:var(--green)">✓ 正确答案：C</b><br>费茨定律的变量是距离 D 和目标宽度 W。A 是增大 W，B 是缩短 D，D 是增加间距防止 W 被侵蚀。C 改变的是颜色（视觉权重），和费茨定律的物理运动时间无关——颜色影响的是视觉搜索时间，不是指向运动时间。'
+  },
+  {
+    q: '根据费茨定律的"边缘效应"，以下哪个界面设计利用了这一原理？',
+    options: [
+      '弹窗的关闭按钮放在右上角',
+      '手机的底部 Tab 导航栏',
+      '网页顶部的水平导航菜单',
+      '表单的提交按钮放在表单底部'
+    ],
+    answer: 0,
+    explain: '<b style="color:var(--green)">✓ 正确答案：A</b><br>弹窗关闭按钮放在右上角，利用了屏幕两个边缘（顶部+右侧）的交汇——用户把鼠标往右上角一推就能命中，相当于两个方向都是"无限大目标"。这比放在弹窗中间要快得多。这是桌面端 UI 的经典设计模式。'
+  }
+];
+
+let mcqCur = 0;
+let mcqScore = 0;
+let mcqAnswered = new Array(mcqQuestions.length).fill(false);
+let mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+
+function renderMCQ() {
+  const q = mcqQuestions[mcqCur];
+  document.getElementById('q2Question').textContent = q.q;
+  document.getElementById('q2Progress').textContent = `Q${mcqCur+1} / ${mcqQuestions.length}`;
+  document.getElementById('q2Score').textContent = mcqScore;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts.forEach((o, i) => {
+    o.classList.remove('correct','wrong');
+    o.disabled = false;
+    o.innerHTML = `<span class="opt-label">${String.fromCharCode(65+i)}.</span> ${q.options[i]}`;
+  });
+
+  const fb = document.getElementById('q2Feedback');
+  fb.classList.remove('show');
+
+  document.getElementById('q2Prev').disabled = mcqCur === 0;
+  document.getElementById('q2Next').disabled = !mcqAnswered[mcqCur];
+
+  if (mcqAnswered[mcqCur]) {
+    const correct = mcqUserAnswer[mcqCur] === q.answer;
+    opts[q.answer].classList.add('correct');
+    if (!correct) opts[mcqUserAnswer[mcqCur]].classList.add('wrong');
+    opts.forEach(o => o.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('q2Next').disabled = false;
+  }
+}
+
+function checkMCQ(idx, letter) {
+  if (mcqAnswered[mcqCur]) return;
+  const userIdx = letter.charCodeAt(0) - 65;
+  const correct = userIdx === mcqQuestions[mcqCur].answer;
+  mcqAnswered[mcqCur] = true;
+  mcqUserAnswer[mcqCur] = userIdx;
+  if (correct) mcqScore++;
+
+  const opts = document.querySelectorAll('#q2Options .mcq-option');
+  opts[mcqQuestions[mcqCur].answer].classList.add('correct');
+  if (!correct) opts[userIdx].classList.add('wrong');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('q2Feedback');
+  fb.innerHTML = mcqQuestions[mcqCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('q2Score').textContent = mcqScore;
+  document.getElementById('q2Next').disabled = false;
+}
+
+function nextMCQ() {
+  if (mcqCur < mcqQuestions.length - 1) {
+    mcqCur++;
+    renderMCQ();
+  } else {
+    document.getElementById('q2Container').style.display = 'none';
+    document.getElementById('q2Result').classList.add('show');
+    document.getElementById('q2FinalScore').textContent = mcqScore;
+  }
+}
+
+function prevMCQ() {
+  if (mcqCur > 0) {
+    mcqCur--;
+    renderMCQ();
+  }
+}
+
+function resetMCQ() {
+  mcqCur = 0;
+  mcqScore = 0;
+  mcqAnswered = new Array(mcqQuestions.length).fill(false);
+  mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+  document.getElementById('q2Container').style.display = 'block';
+  document.getElementById('q2Result').classList.remove('show');
+  renderMCQ();
+}
+
+// ========== Copy Value ==========
+function copyValue(el) {
+  // Get text content, remove the copy icon (📋) if present
+  let text = el.textContent.replace(/📋/g, '').trim();
+  // Use clipboard API
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showCopyTooltip(el);
+    }).catch(() => {
+      fallbackCopy(text, el);
+    });
+  } else {
+    fallbackCopy(text, el);
+  }
+}
+
+function fallbackCopy(text, el) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    showCopyTooltip(el);
+  } catch (e) {
+    console.error('Copy failed:', e);
+  }
+  document.body.removeChild(textarea);
+}
+
+function showCopyTooltip(el) {
+  // Remove existing tooltip
+  const existing = el.querySelector('.copy-tooltip');
+  if (existing) existing.remove();
+  
+  const tooltip = document.createElement('span');
+  tooltip.className = 'copy-tooltip show';
+  tooltip.textContent = '✓ 已复制';
+  el.appendChild(tooltip);
+  
+  setTimeout(() => {
+    tooltip.classList.remove('show');
+    setTimeout(() => {
+      if (tooltip.parentNode) tooltip.parentNode.removeChild(tooltip);
+    }, 200);
+  }, 1200);
+}
+
+// ========== Toggle Detail Panel ==========
+function toggleDetail(el) {
+  el.classList.toggle('expanded');
+  const panel = el.querySelector('.detail-panel');
+  if (panel) {
+    panel.classList.toggle('show');
+  }
+}
+
+function toggleEdgeDetail() {
+  const panel = document.getElementById('edgeDetail');
+  const text = document.getElementById('edgeToggleText');
+  if (panel.classList.contains('show')) {
+    panel.classList.remove('show');
+    text.textContent = '点击展开更多分析 ▾';
+  } else {
+    panel.classList.add('show');
+    text.textContent = '收起 ▴';
+  }
+}
+
+// ========== Mock Interview Toggle ==========
+function toggleInterviewAnswer() {
+  const panel = document.getElementById('interviewAnswer');
+  const btn = document.getElementById('interviewBtn');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    btn.textContent = '🙈 收起参考答案';
+  } else {
+    btn.textContent = '💡 查看参考答案';
+  }
+}
+
+// ========== Interactive Fitts Demo ==========
+let demoState = 'idle'; // idle, ready, done
+let demoStartTime = 0;
+let demoCurrentSize = 'small';
+const demoSizes = {
+  small: { px: 24, label: '24px', difficulty: '很难命中' },
+  medium: { px: 44, label: '44px', difficulty: '标准触控尺寸' },
+  large: { px: 80, label: '80px', difficulty: '轻松命中' }
+};
+let demoBestTimes = { small: null, medium: null, large: null };
+
+function setDemoSize(size) {
+  demoCurrentSize = size;
+  const target = document.getElementById('demoTarget');
+  const sz = demoSizes[size];
+  target.style.width = sz.px + 'px';
+  target.style.height = sz.px + 'px';
+  document.getElementById('demoWidth').textContent = sz.label;
+  
+  // Update button states
+  document.querySelectorAll('.demo-size-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', 
+      (size === 'small' && i === 0) ||
+      (size === 'medium' && i === 1) ||
+      (size === 'large' && i === 2)
+    );
+  });
+  
+  // Reset demo
+  demoState = 'idle';
+  document.getElementById('demoStart').classList.remove('active');
+  document.getElementById('demoTime').textContent = '—';
+  document.getElementById('demoFeedback').textContent = '👆 点击左侧红色圆点开始';
+  document.getElementById('demoFeedback').style.background = 'var(--blue-soft)';
+  document.getElementById('demoFeedback').style.color = 'var(--blue)';
+  
+  updateDistanceDisplay();
+}
+
+function updateDistanceDisplay() {
+  const arena = document.getElementById('demoArena');
+  const start = document.getElementById('demoStart');
+  const target = document.getElementById('demoTarget');
+  if (!arena || !start || !target) return;
+  
+  const arenaRect = arena.getBoundingClientRect();
+  const startRect = start.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  
+  const startCenterX = startRect.left + startRect.width / 2 - arenaRect.left;
+  const targetCenterX = targetRect.left + targetRect.width / 2 - arenaRect.left;
+  const distance = Math.round(Math.abs(targetCenterX - startCenterX));
+  
+  document.getElementById('demoDist').textContent = distance + 'px';
+}
+
+function demoStart() {
+  if (demoState === 'ready') return; // Already ready
+  
+  demoState = 'ready';
+  demoStartTime = performance.now();
+  document.getElementById('demoStart').classList.add('active');
+  document.getElementById('demoFeedback').textContent = '⚡ 快速点击右侧绿色目标！';
+  document.getElementById('demoFeedback').style.background = 'var(--yellow-soft)';
+  document.getElementById('demoFeedback').style.color = '#B8860B';
+  
+  updateDistanceDisplay();
+}
+
+function demoTargetClick() {
+  if (demoState !== 'ready') {
+    // If not started yet, prompt to start first
+    document.getElementById('demoFeedback').textContent = '⚠️ 请先点击左侧红色圆点开始';
+    document.getElementById('demoFeedback').style.background = 'var(--accent-soft)';
+    document.getElementById('demoFeedback').style.color = 'var(--accent)';
+    return;
+  }
+  
+  const endTime = performance.now();
+  const elapsed = Math.round(endTime - demoStartTime);
+  demoState = 'done';
+  
+  document.getElementById('demoStart').classList.remove('active');
+  document.getElementById('demoTime').textContent = elapsed + 'ms';
+  
+  // Update best time
+  const sz = demoCurrentSize;
+  if (demoBestTimes[sz] === null || elapsed < demoBestTimes[sz]) {
+    demoBestTimes[sz] = elapsed;
+  }
+  
+  // Feedback based on time and size
+  let feedback = '';
+  const difficulty = demoSizes[sz].difficulty;
+  if (elapsed < 300) {
+    feedback = `🏆 超快！${demoSizes[sz].label} 的目标对你来说太简单了`;
+  } else if (elapsed < 500) {
+    feedback = `👍 不错！${demoSizes[sz].label} 的目标——${difficulty}`;
+  } else if (elapsed < 800) {
+    feedback = `⏱️ 正常速度。${demoSizes[sz].label} 的目标——${difficulty}`;
+  } else {
+    feedback = `😅 有点慢呢。${demoSizes[sz].label} 的目标——${difficulty}`;
+  }
+  
+  if (demoBestTimes[sz] === elapsed) {
+    feedback += '（最佳记录！）';
+  }
+  
+  document.getElementById('demoFeedback').textContent = feedback;
+  document.getElementById('demoFeedback').style.background = 'var(--green-soft)';
+  document.getElementById('demoFeedback').style.color = 'var(--green)';
+  
+  // Reset after a delay
+  setTimeout(() => {
+    if (demoState === 'done') {
+      demoState = 'idle';
+      document.getElementById('demoFeedback').textContent = '🔄 点击左侧圆点再来一次，或切换目标大小试试';
+      document.getElementById('demoFeedback').style.background = 'var(--blue-soft)';
+      document.getElementById('demoFeedback').style.color = 'var(--blue)';
+    }
+  }, 2500);
+}
+
+// ========== OS Shortcut Detection ==========
+function initShortcuts() {
+  const platform = navigator.platform || '';
+  const userAgent = navigator.userAgent || '';
+  const isMac = /Mac|iPod|iPhone|iPad/.test(platform) || /Macintosh|Mac OS X|iOS/.test(userAgent);
+  
+  if (isMac) {
+    document.body.classList.add('os-mac');
+  } else {
+    document.body.classList.add('os-win');
+  }
+}
+
+// Init demo distance on load
+window.addEventListener('load', () => {
+  initShortcuts();
+  setTimeout(updateDistanceDisplay, 100);
+});
+window.addEventListener('resize', () => {
+  if (document.getElementById('demoArena')) {
+    updateDistanceDisplay();
+  }
+});
+
+// Init
+renderTF();
+renderMCQ();
+</script>
+
+</body>
+</html>

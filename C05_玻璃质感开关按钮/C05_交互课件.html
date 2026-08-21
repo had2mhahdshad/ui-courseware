@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玻璃质感开关按钮 — Glassmorphism Toggle Switch 设计教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF7;
+  --text:#2C2C2C;
+  --text-dim:#8A8A8A;
+  --text-soft:#B5B5B5;
+  --accent:#06B6D4;
+  --accent-soft:#ECFEFF;
+  --green:#2D9A5E;
+  --green-soft:#DFF2E6;
+  --danger:#E85D4A;
+  --danger-soft:#FCE8E5;
+  --yellow:#F2C14E;
+  --yellow-soft:#FFF6DB;
+  --purple:#6366f1;
+  --purple-soft:#EEF2FF;
+  --border:#E8E5E0;
+  --card:#FFFFFF;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.9;
+  font-size:16px;
+}
+
+/* Nav */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:700;font-size:14px;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;font-size:13px}
+.nav-links a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+
+/* Hero */
+.hero{
+  padding:80px 32px 60px;
+  text-align:center;
+  max-width:780px;
+  margin:0 auto;
+}
+.hero .icon{font-size:48px;margin-bottom:16px}
+.hero .label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:42px;font-weight:700;
+  line-height:1.4;margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:17px;color:var(--text-dim);
+  line-height:1.8;max-width:600px;margin:0 auto;
+}
+.hero .tags{
+  display:flex;gap:8px;justify-content:center;margin-top:28px;
+}
+.hero .tag{
+  border:1px solid var(--border);
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;color:var(--text-dim);
+}
+
+/* Step Nav */
+.step-nav{
+  display:flex;gap:0;justify-content:center;
+  padding:24px 32px;flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+}
+.step-nav a{
+  padding:10px 20px;font-size:14px;
+  color:var(--text-dim);text-decoration:none;
+  border-right:1px solid var(--border);
+  transition:all .2s;
+}
+.step-nav a:first-child{border-left:1px solid var(--border)}
+.step-nav a:hover,.step-nav a.active{color:var(--accent)}
+
+/* Sections */
+.section{
+  max-width:780px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.step-label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.section h2{
+  font-family:var(--serif);
+  font-size:30px;font-weight:700;
+  margin-bottom:28px;line-height:1.5;
+}
+.section h3{
+  font-family:var(--serif);
+  font-size:20px;font-weight:700;
+  margin-bottom:12px;line-height:1.5;
+  display:flex;align-items:center;gap:10px;
+}
+.section h3 .emoji{font-size:24px}
+.section p{margin-bottom:16px;color:#444}
+.section p b{color:var(--text);font-weight:600}
+.section .lead{
+  font-size:17px;line-height:2;
+  color:var(--text);margin-bottom:28px;
+}
+
+/* Knowledge Cards */
+.know-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-bottom:20px;
+}
+.know-card .emoji{font-size:28px;margin-bottom:12px}
+.know-card h3{margin-bottom:8px}
+
+/* Toggle Preview */
+.toggle-preview{
+  display:flex;gap:32px;justify-content:center;
+  align-items:flex-start;
+  margin:24px 0;
+  flex-wrap:wrap;
+}
+.toggle-item{
+  text-align:center;
+  cursor:pointer;
+  transition:transform .3s ease;
+  flex:0 0 auto;
+  width:180px;
+}
+.toggle-item:hover{
+  transform:scale(1.05);
+}
+.toggle-item:hover .toggle-box{
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.toggle-box{
+  width:160px;height:100px;
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--border);
+  transition:box-shadow .3s ease;
+  margin:0 auto;
+  position:relative;
+  overflow:hidden;
+}
+.toggle-box.on-bg{background:linear-gradient(135deg,#06B6D4,#0891B2)}
+.toggle-box.off-bg{background:linear-gradient(135deg,#E2E8F0,#CBD5E1)}
+.toggle-box.glass-bg{
+  background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.05));
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+.toggle-box.glass-bg::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2306B6D4' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.toggle-label{font-size:13px;color:var(--text-dim);margin-top:8px}
+
+/* Step Flow */
+.step-flow{
+  display:flex;flex-direction:column;gap:0;
+  margin:24px 0;
+  position:relative;
+}
+.step-flow::before{
+  content:'';position:absolute;
+  left:24px;top:30px;bottom:30px;
+  width:2px;background:var(--border);
+}
+.flow-item{
+  display:flex;gap:20px;
+  padding:16px 0;
+  position:relative;
+}
+.flow-num{
+  width:50px;height:50px;
+  background:var(--card);
+  border:2px solid var(--accent);
+  color:var(--accent);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:18px;
+  flex-shrink:0;
+  position:relative;z-index:1;
+}
+.flow-content{
+  flex:1;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px 24px;
+}
+.flow-content h4{
+  font-size:16px;font-weight:700;margin-bottom:8px;
+}
+.flow-content p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Shortcut dual platform */
+.shortcut{
+  display:inline-flex;
+  align-items:center;
+  background:#F6F5F2;
+  padding:3px 10px;
+  border-radius:6px;
+  font-family:monospace;
+  font-size:12px;
+  margin-top:8px;
+  gap:6px;
+  color:var(--text-dim);
+}
+.shortcut-mac{color:#555}
+.shortcut-win{color:#555}
+.shortcut-divider{color:var(--text-soft);font-size:11px}
+body.os-mac .shortcut-win,
+body.os-mac .shortcut-divider{display:none}
+body.os-win .shortcut-mac,
+body.os-win .shortcut-divider{display:none}
+
+/* Standard Table */
+.std-table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0;font-size:14px;
+  background:var(--card);
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.std-table th{
+  background:#F6F5F2;padding:14px 16px;
+  text-align:left;font-weight:600;
+  border-bottom:2px solid var(--border);
+}
+.std-table td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.std-table tr:last-child td{border-bottom:none}
+.std-table code{
+  background:#CFFAFE;padding:2px 6px;
+  border-radius:3px;font-family:monospace;
+  font-size:12px;color:#0E7490;
+}
+
+/* Copy Value */
+.copy-value{
+  cursor:pointer;
+  background:var(--accent-soft);
+  padding:2px 8px;
+  border-radius:5px;
+  transition:background .2s;
+  font-family:monospace;
+  font-size:13px;
+  color:var(--accent);
+  display:inline-block;
+}
+.copy-value:hover{
+  background:#CFFAFE;
+}
+.copy-tooltip{
+  position:fixed;
+  background:var(--text);
+  color:#fff;
+  padding:6px 12px;
+  border-radius:6px;
+  font-size:12px;
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:all .2s;
+  z-index:1000;
+}
+.copy-tooltip.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Related Knowledge */
+.related-knowledge{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-top:24px;
+}
+.related-knowledge h3{
+  margin-bottom:16px;
+  font-size:18px;
+}
+.knowledge-chips{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.knowledge-chip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  transition:all .2s;
+  text-decoration:none;
+  color:var(--text);
+}
+.knowledge-chip.available{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  cursor:pointer;
+}
+.knowledge-chip.available:hover{
+  transform:translateX(4px);
+  box-shadow:0 4px 12px rgba(6,182,212,.15);
+}
+.knowledge-chip.disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+.knowledge-chip .chip-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+}
+.knowledge-chip .chip-label .chip-icon{font-size:18px}
+.knowledge-chip .chip-label .chip-type{
+  font-size:11px;
+  color:var(--text-dim);
+  margin-right:4px;
+}
+.knowledge-chip .chip-badge{
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+}
+.knowledge-chip.disabled .chip-badge{
+  background:var(--text-soft);
+}
+
+/* Glass Effect Demo */
+.glass-demo{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  margin:24px 0;
+}
+.glass-demo h3{margin-bottom:16px}
+.glass-canvas{
+  height:200px;
+  background:linear-gradient(135deg,#06B6D4 0%,#8B5CF6 50%,#EC4899 100%);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:16px;
+  position:relative;
+  overflow:hidden;
+}
+.glass-card{
+  width:180px;height:120px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.4);
+  box-shadow:0 8px 32px rgba(0,0,0,0.1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:8px;
+  transition:all .3s ease;
+}
+.glass-card .glass-toggle{
+  width:52px;height:28px;
+  background:rgba(255,255,255,0.3);
+  border-radius:14px;
+  position:relative;
+  border:1px solid rgba(255,255,255,0.5);
+}
+.glass-card .glass-toggle::after{
+  content:'';position:absolute;
+  top:2px;left:2px;
+  width:22px;height:22px;
+  background:white;
+  border-radius:50%;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15);
+  transition:all .3s ease;
+}
+.glass-card.on .glass-toggle{
+  background:rgba(6,182,212,0.6);
+}
+.glass-card.on .glass-toggle::after{
+  left:26px;
+}
+.glass-label{
+  font-size:12px;color:white;
+  font-weight:600;
+  letter-spacing:1px;
+}
+.glass-demo-buttons{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.glass-demo-btn{
+  flex:1;
+  min-width:100px;
+  padding:10px 12px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:8px;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+  font-weight:600;
+  color:var(--text);
+}
+.glass-demo-btn:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(6,182,212,.1)}
+.glass-demo-btn:active{transform:translateY(0)}
+.glass-demo-btn.active{
+  background:var(--accent);
+  color:#fff;
+  border-color:var(--accent);
+  transform:translateY(0);
+  box-shadow:none;
+}
+.glass-demo-desc{
+  font-size:13px;
+  color:var(--text-dim);
+  margin-top:12px;
+  line-height:1.8;
+  text-align:left;
+}
+
+/* Quiz Section */
+.quiz-section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.quiz-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.quiz-progress{font-size:13px;color:var(--text-dim)}
+.quiz-score{font-size:13px;color:var(--text-dim)}
+.quiz-score b{color:var(--green);font-size:16px}
+.quiz-q{
+  font-size:18px;font-weight:600;
+  line-height:1.7;margin-bottom:20px;
+}
+.mcq-options{
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:20px;
+}
+.mcq-option{
+  padding:14px 18px;
+  border:2px solid var(--border);
+  background:var(--bg);
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;transition:all .25s ease;
+  font-family:var(--sans);
+  text-align:left;
+}
+.mcq-option:hover{border-color:var(--text);background:var(--card);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.mcq-option:active{transform:translateY(0)}
+.mcq-option.correct{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.mcq-option.wrong{border-color:var(--danger);background:var(--danger-soft);color:var(--danger)}
+.mcq-option .opt-label{font-weight:700;margin-right:8px}
+.quiz-feedback{
+  background:#F6F5F2;
+  border-radius:10px;
+  padding:16px 20px;
+  font-size:14px;line-height:1.8;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:all .4s;
+}
+.quiz-feedback.show{opacity:1;max-height:300px;margin-bottom:16px}
+.quiz-feedback b{color:var(--text)}
+.quiz-nav{
+  display:flex;justify-content:flex-end;
+  gap:12px;margin-top:20px;
+  padding-top:20px;border-top:1px solid var(--border);
+}
+.quiz-nav button{
+  padding:10px 20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+  transition:all .2s;
+}
+.quiz-nav button:hover{border-color:var(--text)}
+.quiz-nav button.primary{background:var(--text);color:#fff;border-color:var(--text)}
+.quiz-nav button.primary:hover{background:#000}
+.quiz-nav button:disabled{opacity:.4;cursor:not-allowed}
+
+/* Result Screen */
+.quiz-result{
+  text-align:center;padding:40px 20px;
+  display:none;
+}
+.quiz-result.show{display:block}
+.quiz-result .score-circle{
+  width:140px;height:140px;
+  border-radius:50%;
+  margin:0 auto 24px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--accent-soft);
+  border:4px solid var(--accent);
+}
+.quiz-result .score-num{
+  font-size:42px;font-weight:800;
+  color:var(--accent);
+}
+.quiz-result .score-total{
+  font-size:14px;color:var(--text-dim);
+}
+.quiz-result h3{
+  font-family:var(--serif);
+  font-size:24px;margin-bottom:12px;
+  justify-content:center;
+}
+.quiz-result p{
+  color:var(--text-dim);font-size:15px;
+  max-width:400px;margin:0 auto 24px;
+}
+.quiz-result button{
+  padding:12px 28px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:8px;
+  font-size:14px;cursor:pointer;
+  font-family:var(--sans);
+}
+
+/* Matching Quiz */
+.match-area{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:16px;margin:20px 0;
+}
+.match-col h4{
+  font-size:14px;color:var(--text-dim);
+  margin-bottom:10px;font-weight:600;
+}
+.match-item{
+  padding:12px 16px;
+  background:var(--bg);
+  border:2px solid var(--border);
+  border-radius:8px;
+  font-size:14px;
+  cursor:pointer;transition:all .25s ease;
+  margin-bottom:8px;
+}
+.match-item:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(6,182,212,.1)}
+.match-item:active{transform:translateY(0)}
+.match-item.selected{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+.match-item.matched-ok{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green);
+  cursor:default;
+}
+.match-item.matched-wrong{
+  border-color:var(--danger);
+  background:var(--danger-soft);
+  color:var(--danger);
+}
+
+/* Mock Interview - PURPLE */
+.interview-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  margin:24px 0;
+}
+.interview-bubble{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.interview-avatar{
+  width:52px;height:52px;
+  background:var(--purple-soft);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  flex-shrink:0;
+}
+.interview-question{
+  flex:1;
+  background:#F6F5F2;
+  border-radius:12px;
+  padding:18px 22px;
+  font-size:15px;line-height:1.9;
+  position:relative;
+}
+.interview-question::before{
+  content:'';
+  position:absolute;
+  left:-8px;top:20px;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:8px solid #F6F5F2;
+}
+.interview-question b{color:var(--purple)}
+.interview-think{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:14px;
+  margin:28px 0 16px;
+  font-style:italic;
+}
+.interview-btn{
+  display:block;
+  width:100%;
+  padding:14px 20px;
+  background:var(--purple-soft);
+  border:2px dashed var(--purple);
+  color:var(--purple);
+  border-radius:10px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .25s ease;
+  font-family:var(--sans);
+}
+.interview-btn:hover{
+  background:#E0E7FF;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(99,102,241,.15);
+}
+.interview-btn:active{
+  transform:translateY(0);
+}
+.interview-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .5s ease, margin-top .4s ease;
+}
+.interview-answer.show{
+  max-height:1500px;
+  margin-top:20px;
+}
+.answer-intro{
+  background:var(--green-soft);
+  color:var(--green);
+  padding:14px 20px;
+  border-radius:10px 10px 0 0;
+  font-size:14px;font-weight:600;
+}
+.answer-list{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 10px 10px;
+  padding:20px 24px;
+}
+.answer-item{
+  display:flex;gap:14px;
+  margin-bottom:16px;
+  align-items:flex-start;
+}
+.answer-item:last-child{margin-bottom:0}
+.answer-item-num{
+  width:28px;height:28px;
+  background:var(--purple);
+  color:#fff;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.answer-item-content b{
+  color:var(--text);font-size:14px;
+  display:block;margin-bottom:4px;
+}
+.answer-item-content{
+  font-size:13px;color:var(--text-dim);line-height:1.8;
+}
+
+/* Tips */
+.tips-list{margin:20px 0}
+.tip-item{
+  background:var(--card);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:18px 24px;
+  margin-bottom:12px;
+}
+.tip-item h4{
+  font-family:var(--serif);
+  font-size:17px;margin-bottom:6px;
+}
+.tip-item p{font-size:14px;color:var(--text-dim);line-height:1.8;margin-bottom:0}
+
+/* Conclusion */
+.conclusion{
+  background:var(--yellow-soft);
+  border-radius:12px;
+  padding:24px 28px;
+  margin:24px 0;
+  font-size:16px;line-height:2;
+}
+.conclusion b{color:#92400e}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+.footer-links{
+  display:flex;gap:16px;justify-content:center;
+  margin-bottom:16px;
+}
+.footer-links a{color:var(--text-dim);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--text)}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .section{padding:40px 20px}
+  .section h2{font-size:24px}
+  .toggle-preview{flex-wrap:wrap}
+  .match-area{grid-template-columns:1fr}
+  .step-nav{flex-wrap:wrap}
+  .step-nav a{border-right:none;border-bottom:1px solid var(--border)}
+  .interview-card{padding:24px 20px}
+  .interview-avatar{width:44px;height:44px;font-size:22px}
+  .interview-question{padding:14px 16px;font-size:14px}
+  .answer-list{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">UI<span>设计</span>基础</div>
+  <div class="nav-links">
+    <a href="#step1">STEP 1</a>
+    <a href="#step2">STEP 2</a>
+    <a href="#step3">STEP 3</a>
+    <a href="#step4">STEP 4</a>
+    <a href="#plus">PLUS</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="icon">🔘</div>
+  <div class="label">GLASSMORPHISM TOGGLE — LEARNING BY MAKING</div>
+  <h1>一个玻璃质感的开关按钮<br>是怎么做出来的？</h1>
+  <p class="subtitle">
+    玻璃拟态（Glassmorphism）是当下最流行的 UI 风格之一。<br>
+    用背景模糊 + 半透明填充，打造晶莹剔透的开关组件。
+  </p>
+  <div class="tags">
+    <span class="tag">Figma 实操</span>
+    <span class="tag">玻璃质感</span>
+    <span class="tag">约 5 分钟</span>
+  </div>
+</section>
+
+<!-- Step Nav -->
+<div class="step-nav">
+  <a href="#step1">STEP 1 开关设计流程</a>
+  <a href="#step2">STEP 2 连连看</a>
+  <a href="#step3">STEP 3 选择题</a>
+  <a href="#step4">STEP 4 模拟面试</a>
+  <a href="#plus">PLUS 设计要点</a>
+</div>
+
+<!-- STEP 1: Knowledge -->
+<section class="section" id="step1">
+  <div class="step-label">STEP 1</div>
+  <h2>玻璃质感开关设计流程</h2>
+  <p class="lead">
+    开关按钮（Toggle Switch）是 UI 中最常见的交互组件。<br>
+    玻璃质感的核心是——<b>背景模糊 + 半透明填充 + 微光投影</b>。
+  </p>
+
+  <!-- Toggle Preview -->
+  <div class="toggle-preview">
+    <div class="toggle-item">
+      <div class="toggle-box on-bg">
+        <div style="width:52px;height:32px;background:#fff;border-radius:16px;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.15)">
+          <div style="position:absolute;top:2px;right:2px;width:28px;height:28px;background:#22C55E;border-radius:50%;box-shadow:0 2px 6px rgba(34,197,94,0.4)"></div>
+        </div>
+      </div>
+      <div class="toggle-label">开启状态 ON</div>
+    </div>
+    <div class="toggle-item">
+      <div class="toggle-box off-bg">
+        <div style="width:52px;height:32px;background:#fff;border-radius:16px;position:relative;box-shadow:inset 0 2px 4px rgba(0,0,0,0.1)">
+          <div style="position:absolute;top:2px;left:2px;width:28px;height:28px;background:#fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.15)"></div>
+        </div>
+      </div>
+      <div class="toggle-label">关闭状态 OFF</div>
+    </div>
+    <div class="toggle-item">
+      <div class="toggle-box glass-bg">
+        <div style="width:52px;height:32px;background:rgba(255,255,255,0.25);backdrop-filter:blur(10px);border-radius:16px;position:relative;border:1px solid rgba(255,255,255,0.5);box-shadow:0 4px 16px rgba(0,0,0,0.1)">
+          <div style="position:absolute;top:2px;right:2px;width:28px;height:28px;background:rgba(255,255,255,0.9);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.1),inset 0 1px 0 rgba(255,255,255,0.8)"></div>
+        </div>
+      </div>
+      <div class="toggle-label">玻璃质感 Glass</div>
+    </div>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">🧩</div>
+    <h3>开关按钮结构分析</h3>
+    <table class="std-table">
+      <tr><th>组成部分</th><th>英文术语</th><th>说明</th><th>尺寸</th></tr>
+      <tr><td><b>轨道</b></td><td>Track</td><td>开关的背景底座，开/关时改变颜色</td><td><span class="copy-value" onclick="copyValue(this)">52 × 32 px</span></td></tr>
+      <tr><td><b>滑块</b></td><td>Thumb</td><td>圆形滑动按钮，左右移动表示状态</td><td><span class="copy-value" onclick="copyValue(this)">28 × 28 px</span></td></tr>
+      <tr><td><b>外框</b></td><td>Frame</td><td>整个组件的容器</td><td><span class="copy-value" onclick="copyValue(this)">52 × 32 px</span></td></tr>
+    </table>
+  </div>
+
+  <div class="know-card">
+    <div class="emoji">📐</div>
+    <h3>设计流程：6步完成玻璃质感开关</h3>
+    <div class="step-flow">
+      <div class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <h4>结构分析：轨道 + 滑块</h4>
+          <p>开关 = 轨道（Track）+ 滑块（Thumb），两个核心部分。轨道是背景底座，滑块是滑动的圆形按钮。理解结构是设计的第一步。</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <h4>组件搭建：Frame + 形状</h4>
+          <p>创建 <span class="copy-value" onclick="copyValue(this)">52 × 32 px</span> Frame，轨道为圆角矩形（高度 <span class="copy-value" onclick="copyValue(this)">32 px</span>，圆角 <span class="copy-value" onclick="copyValue(this)">16 px</span>），滑块为圆形 <span class="copy-value" onclick="copyValue(this)">28 × 28 px</span>。</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">F / R / O</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">F / R / O</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <h4>玻璃效果：模糊 + 半透明 + 投影</h4>
+          <p>Background Blur（背景模糊，约 10 px）+ 半透明渐变 Fill（白色 25% 透明度）+ 1 px 内描边 + Drop Shadow（投影），三件套打造玻璃磨砂质感。</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">Effects +</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">Effects +</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <h4>开启状态（ON）：绿色 + 右移 + 微光</h4>
+          <p>轨道变绿色（<span class="copy-value" onclick="copyValue(this)">#22C55E</span>），滑块右移至最右侧，添加边缘微光效果（绿色外发光），营造"点亮"的视觉感。</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <h4>关闭状态（OFF）：灰色 + 左移 + 内阴影</h4>
+          <p>轨道变灰色（<span class="copy-value" onclick="copyValue(this)">#CBD5E1</span>），滑块左移至最左侧，调整阴影角度偏左上（模拟光源方向），轨道添加内阴影体现凹陷感。</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-content">
+          <h4>交互原型：Variants + Smart Animate</h4>
+          <p>用 Variants 创建开/关两种变体，Smart Animate 自动识别元素位置变化，生成平滑的滑动过渡动画。</p>
+          <div class="shortcut">
+            <span class="shortcut-mac">⌘ + Option + K</span>
+            <span class="shortcut-divider">|</span>
+            <span class="shortcut-win">Ctrl + Alt + K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Glass Effect Demo -->
+  <div class="glass-demo">
+    <div class="emoji" style="font-size:28px;margin-bottom:12px">💎</div>
+    <h3>玻璃效果三要素演示</h3>
+    <p style="font-size:14px;color:var(--text-dim);margin-bottom:16px">点击按钮，观察玻璃效果的不同层级组合。</p>
+    <div class="glass-canvas">
+      <div class="glass-card" id="glassDemoCard">
+        <div class="glass-toggle" id="glassDemoToggle"></div>
+        <div class="glass-label" id="glassDemoLabel">Glass OFF</div>
+      </div>
+    </div>
+    <div class="glass-demo-buttons">
+      <button class="glass-demo-btn" onclick="setGlassMode('basic', this)">基础版</button>
+      <button class="glass-demo-btn" onclick="setGlassMode('blur', this)">+ 背景模糊</button>
+      <button class="glass-demo-btn active" onclick="setGlassMode('full', this)">完整玻璃</button>
+      <button class="glass-demo-btn" onclick="toggleGlassState()">切换 ON/OFF</button>
+    </div>
+    <div class="glass-demo-desc" id="glassDemoDesc">
+      <b>完整玻璃效果：</b>半透明填充 + 背景模糊 + 内描边 + 投影，四者结合呈现晶莹剔透的玻璃质感。
+    </div>
+  </div>
+
+  <!-- Related Knowledge -->
+  <div class="related-knowledge">
+    <h3>📚 相关知识</h3>
+    <div class="knowledge-chips">
+      <a class="knowledge-chip available" href="../C02_磨砂玻璃风格图标/C02_交互课件.html">
+        <div class="chip-label">
+          <span class="chip-icon">🔮</span>
+          <span><span class="chip-type">前置知识</span>磨砂玻璃风格图标（C02）</span>
+        </div>
+        <span class="chip-badge">已上线</span>
+      </a>
+      <div class="knowledge-chip disabled">
+        <div class="chip-label">
+          <span class="chip-icon">🪟</span>
+          <span><span class="chip-type">后续知识</span>磨砂玻璃质感卡片区（C06）</span>
+        </div>
+        <span class="chip-badge">即将上线</span>
+      </div>
+      <div class="knowledge-chip disabled">
+        <div class="chip-label">
+          <span class="chip-icon">⚡</span>
+          <span><span class="chip-type">相关理论</span>微交互设计（K19）</span>
+        </div>
+        <span class="chip-badge">即将上线</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: Matching Quiz -->
+<section class="section" id="step2">
+  <div class="step-label">STEP 2</div>
+  <h2>连连看：术语和含义</h2>
+  <p class="lead">
+    左边是开关设计的术语，右边是它的含义。<br>
+    点一个左边的，再点一个右边的，看看配不配。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="mProgress">进度 0 / 5</div>
+      <div class="quiz-score">答对 <b id="mScore">0</b> / 5</div>
+    </div>
+
+    <div id="mContainer">
+      <div class="match-area">
+        <div class="match-col">
+          <h4>术语</h4>
+          <div class="match-item" data-left="0" onclick="matchSelect('left', 0)">Track（轨道）</div>
+          <div class="match-item" data-left="1" onclick="matchSelect('left', 1)">Thumb（滑块）</div>
+          <div class="match-item" data-left="2" onclick="matchSelect('left', 2)">Background Blur</div>
+          <div class="match-item" data-left="3" onclick="matchSelect('left', 3)">Variants</div>
+          <div class="match-item" data-left="4" onclick="matchSelect('left', 4)">Smart Animate</div>
+        </div>
+        <div class="match-col">
+          <h4>含义</h4>
+          <div class="match-item" data-right="1" onclick="matchSelect('right', 1)">圆形/椭圆形的滑动按钮</div>
+          <div class="match-item" data-right="3" onclick="matchSelect('right', 3)">Figma 中创建组件变体的功能</div>
+          <div class="match-item" data-right="0" onclick="matchSelect('right', 0)">开关的背景底座，开/关状态改变颜色</div>
+          <div class="match-item" data-right="4" onclick="matchSelect('right', 4)">自动识别元素变化并生成过渡动画</div>
+          <div class="match-item" data-right="2" onclick="matchSelect('right', 2)">背景模糊，产生玻璃磨砂质感</div>
+        </div>
+      </div>
+      <div class="quiz-feedback" id="mFeedback">
+        点击左侧一个术语，再点击右侧对应的含义，完成配对。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="resetMatch()">重新开始</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="mResult">
+      <div class="score-circle">
+        <div class="score-num" id="mFinalScore">0</div>
+        <div class="score-total">/ 5 对</div>
+      </div>
+      <h3>🎉 连连看完成！</h3>
+      <p>5个术语和含义都配对成功了。<br>这些是玻璃质感开关设计的基础概念，动手做一次就记住了。</p>
+      <button onclick="resetMatch()">再玩一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: Multiple Choice -->
+<section class="section" id="step3">
+  <div class="step-label">STEP 3</div>
+  <h2>选择：正确的设计方式</h2>
+  <p class="lead">
+    从四个选项中选出正确答案，每道题都有详细解析。
+  </p>
+
+  <div class="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="mcqProgress">Q1 / 4</div>
+      <div class="quiz-score">答对 <b id="mcqScore">0</b> / 4</div>
+    </div>
+
+    <div id="mcqContainer">
+      <div class="quiz-q" id="mcqQuestion">
+        一个标准的开关按钮由哪两部分组成？
+      </div>
+      <div class="mcq-options" id="mcqOptions">
+        <button class="mcq-option" onclick="checkMCQ('A')"><span class="opt-label">A.</span>轨道和滑块</button>
+        <button class="mcq-option" onclick="checkMCQ('B')"><span class="opt-label">B.</span>背景和文字</button>
+        <button class="mcq-option" onclick="checkMCQ('C')"><span class="opt-label">C.</span>图标和标签</button>
+        <button class="mcq-option" onclick="checkMCQ('D')"><span class="opt-label">D.</span>线条和圆点</button>
+      </div>
+      <div class="quiz-feedback" id="mcqFeedback">
+        <b>正确答案：A</b><br>
+        开关按钮（Toggle Switch）由轨道（Track）和滑块（Thumb）两部分组成。轨道是背景底座，开/关时改变颜色；滑块是圆形/椭圆形按钮，左右滑动表示不同状态。
+      </div>
+      <div class="quiz-nav">
+        <button onclick="prevMCQ()" id="mcqPrev" disabled>← 上一题</button>
+        <button class="primary" onclick="nextMCQ()" id="mcqNext" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <div class="quiz-result" id="mcqResult">
+      <div class="score-circle">
+        <div class="score-num" id="mcqFinalScore">0</div>
+        <div class="score-total">/ 4 题</div>
+      </div>
+      <h3>🌟 选择题完成！</h3>
+      <p>玻璃质感开关设计的核心知识你已经掌握了。<br>打开 Figma 试试看，做一个属于你的玻璃开关吧！</p>
+      <button onclick="resetMCQ()">再做一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4: Mock Interview -->
+<section class="section" id="step4">
+  <div class="step-label">STEP 4</div>
+  <h2>模拟面试</h2>
+  <p class="lead">
+    来试试这道 UI 设计师的经典面试题，<br>
+    检验一下你对组件设计的理解深度。
+  </p>
+
+  <div class="interview-card">
+    <div class="interview-bubble">
+      <div class="interview-avatar">👨‍💼</div>
+      <div class="interview-question">
+        <b>面试官：</b>如果让你设计一套完整的开关组件，你会考虑哪些状态和变体？为什么？
+      </div>
+    </div>
+    
+    <div class="interview-think">
+      🤔 先想想你的答案
+    </div>
+    
+    <button class="interview-btn" onclick="toggleInterviewAnswer()" id="interviewBtn">
+      💡 查看参考答案
+    </button>
+    
+    <div class="interview-answer" id="interviewAnswer">
+      <div class="answer-intro">
+        ✅ 参考答案：从以下 6 个维度设计完整的开关组件
+      </div>
+      <div class="answer-list">
+        <div class="answer-item">
+          <div class="answer-item-num">1</div>
+          <div class="answer-item-content">
+            <b>基础状态：开启（ON）和关闭（OFF）</b>
+            最核心的两种状态，通过颜色和滑块位置区分。开启时用品牌色或绿色，关闭时用中性灰色，确保视觉差异明确。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">2</div>
+          <div class="answer-item-content">
+            <b>禁用态（Disabled）</b>
+            不可操作时的状态，通常降低透明度（如 40%），光标变为 not-allowed。避免用户在无效状态下反复点击产生困惑。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">3</div>
+          <div class="answer-item-content">
+            <b>加载态（Loading）</b>
+            点击后异步请求时的中间状态，滑块上显示加载动画，避免重复点击。这是微交互设计中"反馈"要素的体现。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">4</div>
+          <div class="answer-item-content">
+            <b>尺寸变体：大 / 中 / 小</b>
+            适配不同场景——大号用于设置页面、中号用于表单中、小号用于列表或工具栏。保持宽高比例一致，缩放时有规律。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">5</div>
+          <div class="answer-item-content">
+            <b>颜色变体：默认色 / 品牌色 / 危险色</b>
+            不同语义用不同颜色——默认状态用中性色、品牌场景用品牌色、危险操作（如删除开关）用红色。颜色传递语义信息。
+          </div>
+        </div>
+        <div class="answer-item">
+          <div class="answer-item-num">6</div>
+          <div class="answer-item-content">
+            <b>无障碍（Accessibility）</b>
+            支持键盘 Tab 键聚焦和 Space/Enter 切换、足够的颜色对比度（至少 4.5:1）、状态有文字标签（aria-label），让所有用户都能使用。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLUS: Tips -->
+<section class="section" id="plus">
+  <div class="step-label">PLUS</div>
+  <h2>开关组件设计要点</h2>
+  <p class="lead">
+    一个"好"的开关组件，不只是好看，<br>
+    还要满足这五个条件。
+  </p>
+
+  <div class="tips-list">
+    <div class="tip-item">
+      <h4>① 🧩 结构清晰</h4>
+      <p>轨道（Track）+ 滑块（Thumb）的经典结构，比例协调。标准尺寸 <span class="copy-value" onclick="copyValue(this)">52 × 32 px</span>，滑块 <span class="copy-value" onclick="copyValue(this)">28 × 28 px</span>，边距 <span class="copy-value" onclick="copyValue(this)">2 px</span>，保证点击区域足够大。</p>
+    </div>
+    <div class="tip-item">
+      <h4>② 🔄 状态完整</h4>
+      <p>开 / 关 / 禁用 / 加载，四种状态缺一不可。每种状态有明确的视觉区分——颜色变化、位置变化、透明度变化，用户一眼就能看懂当前状态。</p>
+    </div>
+    <div class="tip-item">
+      <h4>③ ✨ 动效流畅</h4>
+      <p>Smart Animate 平滑过渡，滑块移动自然有弹性。动画时长控制在 <span class="copy-value" onclick="copyValue(this)">200-300 ms</span>，缓动函数用 ease-out，既流畅又不拖沓。</p>
+    </div>
+    <div class="tip-item">
+      <h4>④ 🎨 语义明确</h4>
+      <p>颜色区分不同含义——绿色/品牌色表示开启、灰色表示关闭、红色表示危险、低透明度表示禁用。不要用难以区分的颜色，确保色盲用户也能识别。</p>
+    </div>
+    <div class="tip-item">
+      <h4>⑤ 📏 尺寸规范</h4>
+      <p>大 / 中 / 小三种尺寸适配不同场景。所有尺寸保持统一的宽高比（约 1.6:1），圆角半径和滑块大小按比例缩放，保证视觉一致性。</p>
+    </div>
+  </div>
+
+  <div class="conclusion" style="margin-top:32px">
+    <b>💡 玻璃质感开关要点口诀：</b><br>
+    ① 轨道加滑块 ② 模糊半透明 ③ 状态要分明 ④ 动效要顺滑 ⑤ 变体全覆盖<br>
+    —— 这五点做到了，开关就"高级"了。
+  </div>
+</section>
+
+<!-- Copy Tooltip -->
+<div class="copy-tooltip" id="copyTooltip">✓ 已复制</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#step1">STEP 1 知识</a>
+    <a href="#step2">STEP 2 连连看</a>
+    <a href="#step3">STEP 3 选择</a>
+    <a href="#step4">STEP 4 面试</a>
+    <a href="#plus">PLUS 要点</a>
+  </div>
+  <p>玻璃质感开关按钮 — Glassmorphism Toggle Switch 设计教程</p>
+  <p style="margin-top:4px">UI 设计案例教程 C05 · 交互课件</p>
+</footer>
+
+<script>
+// ========== Copy Value ==========
+function copyValue(element) {
+  const text = element.textContent.replace('📋', '').replace('✓', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    showCopyTooltip(element);
+  }).catch(() => {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showCopyTooltip(element);
+  });
+}
+
+function showCopyTooltip(element) {
+  const tooltip = document.getElementById('copyTooltip');
+  const rect = element.getBoundingClientRect();
+  tooltip.textContent = '✓ 已复制';
+  tooltip.style.left = rect.left + rect.width / 2 - 30 + 'px';
+  tooltip.style.top = rect.top - 32 + 'px';
+  tooltip.classList.add('show');
+  clearTimeout(window._copyTimer);
+  window._copyTimer = setTimeout(() => {
+    tooltip.classList.remove('show');
+  }, 1200);
+}
+
+// ========== OS-based Shortcut Detection ==========
+function initShortcuts() {
+  const platform = navigator.platform || navigator.userAgent;
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(platform);
+  if (isMac) {
+    document.body.classList.add('os-mac');
+  } else {
+    document.body.classList.add('os-win');
+  }
+}
+
+// ========== Glass Effect Demo ==========
+let glassState = false;
+let glassMode = 'full';
+
+function setGlassMode(mode, btn) {
+  document.querySelectorAll('.glass-demo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  glassMode = mode;
+  updateGlassCard();
+  
+  const descs = {
+    basic: '<b>基础版：</b>只有半透明白色填充，看起来像磨砂塑料，缺乏通透感。',
+    blur: '<b>+ 背景模糊：</b>添加 Background Blur 后，背景颜色透过玻璃模糊呈现，质感大幅提升。',
+    full: '<b>完整玻璃效果：</b>半透明填充 + 背景模糊 + 内描边 + 投影，四者结合呈现晶莹剔透的玻璃质感。'
+  };
+  document.getElementById('glassDemoDesc').innerHTML = descs[mode];
+}
+
+function toggleGlassState() {
+  glassState = !glassState;
+  updateGlassCard();
+}
+
+function updateGlassCard() {
+  const card = document.getElementById('glassDemoCard');
+  const toggle = document.getElementById('glassDemoToggle');
+  const label = document.getElementById('glassDemoLabel');
+  
+  if (glassState) {
+    card.classList.add('on');
+    label.textContent = 'Glass ON';
+  } else {
+    card.classList.remove('on');
+    label.textContent = 'Glass OFF';
+  }
+  
+  // Apply different glass modes
+  if (glassMode === 'basic') {
+    card.style.background = 'rgba(255,255,255,0.25)';
+    card.style.backdropFilter = 'none';
+    card.style.webkitBackdropFilter = 'none';
+    card.style.border = 'none';
+    card.style.boxShadow = 'none';
+  } else if (glassMode === 'blur') {
+    card.style.background = 'rgba(255,255,255,0.15)';
+    card.style.backdropFilter = 'blur(20px)';
+    card.style.webkitBackdropFilter = 'blur(20px)';
+    card.style.border = 'none';
+    card.style.boxShadow = 'none';
+  } else {
+    card.style.background = 'rgba(255,255,255,0.25)';
+    card.style.backdropFilter = 'blur(20px)';
+    card.style.webkitBackdropFilter = 'blur(20px)';
+    card.style.border = '1px solid rgba(255,255,255,0.4)';
+    card.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
+  }
+}
+
+// ========== Matching Quiz ==========
+const matchPairs = [
+  { left: 'Track（轨道）', right: '开关的背景底座，开/关状态改变颜色' },
+  { left: 'Thumb（滑块）', right: '圆形/椭圆形的滑动按钮' },
+  { left: 'Background Blur', right: '背景模糊，产生玻璃磨砂质感' },
+  { left: 'Variants', right: 'Figma 中创建组件变体的功能' },
+  { left: 'Smart Animate', right: '自动识别元素变化并生成过渡动画' }
+];
+
+let selectedLeft = null;
+let selectedRight = null;
+let matchCount = 0;
+let matchScore = 0;
+let matchedLeft = new Set();
+let matchedRight = new Set();
+
+function matchSelect(side, idx) {
+  if (side === 'left') {
+    if (matchedLeft.has(idx)) return;
+    document.querySelectorAll('[data-left]').forEach(el => el.classList.remove('selected'));
+    selectedLeft = idx;
+    document.querySelector(`[data-left="${idx}"]`).classList.add('selected');
+  } else {
+    if (matchedRight.has(idx)) return;
+    document.querySelectorAll('[data-right]').forEach(el => el.classList.remove('selected'));
+    selectedRight = idx;
+    document.querySelector(`[data-right="${idx}"]`).classList.add('selected');
+  }
+
+  if (selectedLeft !== null && selectedRight !== null) {
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  const leftEl = document.querySelector(`[data-left="${selectedLeft}"]`);
+  const rightEl = document.querySelector(`[data-right="${selectedRight}"]`);
+  const correct = selectedLeft === selectedRight;
+
+  if (correct) {
+    leftEl.classList.add('matched-ok');
+    rightEl.classList.add('matched-ok');
+    leftEl.classList.remove('selected');
+    rightEl.classList.remove('selected');
+    matchedLeft.add(selectedLeft);
+    matchedRight.add(selectedRight);
+    matchScore++;
+    matchCount++;
+    document.getElementById('mFeedback').innerHTML =
+      '<b style="color:var(--green)">✓ 配对成功！</b><br>' +
+      matchPairs[selectedLeft].left + ' → ' + matchPairs[selectedRight].right;
+    document.getElementById('mFeedback').classList.add('show');
+  } else {
+    leftEl.classList.add('matched-wrong');
+    rightEl.classList.add('matched-wrong');
+    setTimeout(() => {
+      leftEl.classList.remove('matched-wrong', 'selected');
+      rightEl.classList.remove('matched-wrong', 'selected');
+    }, 600);
+    document.getElementById('mFeedback').innerHTML =
+      '<b style="color:var(--danger)">✗ 不对哦，再试试</b><br>' +
+      '提示：Track 是"轨道"，Thumb 是"拇指/滑块"，从英文意思联想一下。';
+    document.getElementById('mFeedback').classList.add('show');
+  }
+
+  document.getElementById('mProgress').textContent = `进度 ${matchScore} / 5`;
+  document.getElementById('mScore').textContent = matchScore;
+  selectedLeft = null;
+  selectedRight = null;
+
+  if (matchScore === 5) {
+    setTimeout(() => {
+      document.getElementById('mContainer').style.display = 'none';
+      document.getElementById('mResult').classList.add('show');
+      document.getElementById('mFinalScore').textContent = matchScore;
+    }, 800);
+  }
+}
+
+function resetMatch() {
+  selectedLeft = null;
+  selectedRight = null;
+  matchCount = 0;
+  matchScore = 0;
+  matchedLeft = new Set();
+  matchedRight = new Set();
+  document.querySelectorAll('[data-left], [data-right]').forEach(el => {
+    el.classList.remove('matched-ok', 'matched-wrong', 'selected');
+  });
+  document.getElementById('mContainer').style.display = 'block';
+  document.getElementById('mResult').classList.remove('show');
+  document.getElementById('mProgress').textContent = '进度 0 / 5';
+  document.getElementById('mScore').textContent = '0';
+  document.getElementById('mFeedback').innerHTML = '点击左侧一个术语，再点击右侧对应的含义，完成配对。';
+}
+
+// ========== Multiple Choice Quiz ==========
+const mcqQuestions = [
+  {
+    q: '一个标准的开关按钮由哪两部分组成？',
+    options: [
+      '轨道和滑块',
+      '背景和文字',
+      '图标和标签',
+      '线条和圆点'
+    ],
+    answer: 0,
+    explain: '<b>正确答案：A</b><br>开关按钮（Toggle Switch）由轨道（Track）和滑块（Thumb）两部分组成。轨道是背景底座，开/关时改变颜色；滑块是圆形/椭圆形按钮，左右滑动表示不同状态。'
+  },
+  {
+    q: '在 Figma 中创建开/关两种状态，用什么功能最方便？',
+    options: [
+      'Group 分组',
+      'Component + Variants',
+      'Frame 画板',
+      'Boolean 运算'
+    ],
+    answer: 1,
+    explain: '<b>正确答案：B</b><br>Component + Variants（组件 + 变体）是 Figma 中管理多状态组件的最佳方式。创建主组件后添加 Variants，可以在开/关等不同状态之间切换，还能配合 Smart Animate 做过渡动画。'
+  },
+  {
+    q: '玻璃质感开关的玻璃效果主要通过什么实现？',
+    options: [
+      '渐变填充',
+      '背景模糊 + 半透明填充',
+      '投影',
+      '描边'
+    ],
+    answer: 1,
+    explain: '<b>正确答案：B</b><br>玻璃质感（Glassmorphism）的核心是 Background Blur（背景模糊）+ 半透明填充。背景模糊让底层内容透过玻璃产生虚化效果，半透明填充增加白色调的"玻璃感"，再配合内描边和投影增强层次。'
+  },
+  {
+    q: 'Smart Animate 最适合用来做什么？',
+    options: [
+      '静态排版',
+      '导出图片',
+      '元素位置/大小变化的平滑过渡动画',
+      '矢量路径编辑'
+    ],
+    answer: 2,
+    explain: '<b>正确答案：C</b><br>Smart Animate（智能动画）是 Figma 的原型动画功能，它能自动识别两个 Variant 之间元素的位置、大小、透明度、颜色等变化，并生成平滑的过渡动画。开关按钮的滑动效果就是 Smart Animate 的典型应用场景。'
+  }
+];
+
+let mcqCur = 0;
+let mcqScoreVal = 0;
+let mcqAnswered = new Array(mcqQuestions.length).fill(false);
+let mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+
+function renderMCQ() {
+  const q = mcqQuestions[mcqCur];
+  document.getElementById('mcqQuestion').textContent = q.q;
+  document.getElementById('mcqProgress').textContent = `Q${mcqCur+1} / ${mcqQuestions.length}`;
+  document.getElementById('mcqScore').textContent = mcqScoreVal;
+
+  const opts = document.querySelectorAll('#mcqOptions .mcq-option');
+  opts.forEach((o, i) => {
+    o.classList.remove('correct','wrong');
+    o.disabled = false;
+    o.innerHTML = `<span class="opt-label">${String.fromCharCode(65+i)}.</span> ${q.options[i]}`;
+  });
+
+  const fb = document.getElementById('mcqFeedback');
+  fb.classList.remove('show');
+
+  document.getElementById('mcqPrev').disabled = mcqCur === 0;
+  document.getElementById('mcqNext').disabled = !mcqAnswered[mcqCur];
+
+  if (mcqAnswered[mcqCur]) {
+    const correct = mcqUserAnswer[mcqCur] === q.answer;
+    opts[q.answer].classList.add('correct');
+    if (!correct) opts[mcqUserAnswer[mcqCur]].classList.add('wrong');
+    opts.forEach(o => o.disabled = true);
+    fb.innerHTML = q.explain;
+    fb.classList.add('show');
+    document.getElementById('mcqNext').disabled = false;
+  }
+}
+
+function checkMCQ(letter) {
+  if (mcqAnswered[mcqCur]) return;
+  const userIdx = letter.charCodeAt(0) - 65;
+  const correct = userIdx === mcqQuestions[mcqCur].answer;
+  mcqAnswered[mcqCur] = true;
+  mcqUserAnswer[mcqCur] = userIdx;
+  if (correct) mcqScoreVal++;
+
+  const opts = document.querySelectorAll('#mcqOptions .mcq-option');
+  opts[mcqQuestions[mcqCur].answer].classList.add('correct');
+  if (!correct) opts[userIdx].classList.add('wrong');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('mcqFeedback');
+  fb.innerHTML = mcqQuestions[mcqCur].explain;
+  fb.classList.add('show');
+
+  document.getElementById('mcqScore').textContent = mcqScoreVal;
+  document.getElementById('mcqNext').disabled = false;
+}
+
+function nextMCQ() {
+  if (mcqCur < mcqQuestions.length - 1) {
+    mcqCur++;
+    renderMCQ();
+  } else {
+    document.getElementById('mcqContainer').style.display = 'none';
+    document.getElementById('mcqResult').classList.add('show');
+    document.getElementById('mcqFinalScore').textContent = mcqScoreVal;
+  }
+}
+
+function prevMCQ() {
+  if (mcqCur > 0) {
+    mcqCur--;
+    renderMCQ();
+  }
+}
+
+function resetMCQ() {
+  mcqCur = 0;
+  mcqScoreVal = 0;
+  mcqAnswered = new Array(mcqQuestions.length).fill(false);
+  mcqUserAnswer = new Array(mcqQuestions.length).fill(null);
+  document.getElementById('mcqContainer').style.display = 'block';
+  document.getElementById('mcqResult').classList.remove('show');
+  renderMCQ();
+}
+
+// ========== Mock Interview Toggle ==========
+function toggleInterviewAnswer() {
+  const panel = document.getElementById('interviewAnswer');
+  const btn = document.getElementById('interviewBtn');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    btn.textContent = '🙈 收起参考答案';
+  } else {
+    btn.textContent = '💡 查看参考答案';
+  }
+}
+
+// Init
+initShortcuts();
+renderMCQ();
+resetMatch();
+</script>
+
+</body>
+</html>

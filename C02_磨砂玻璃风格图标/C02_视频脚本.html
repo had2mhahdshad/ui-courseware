@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C02 磨砂玻璃风格图标从0到1设计 | 视频脚本</title>
+<style>
+:root {
+  --primary: #2563eb; --primary-dark: #1e40af; --accent: #f59e0b;
+  --success: #10b981; --danger: #ef4444; --purple: #8b5cf6;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+  --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+  --bg: #f0f4f8; --card: #fff; --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; background:var(--bg); color:var(--gray-900); line-height:1.7; font-size:14px; }
+.container { max-width:1100px; margin:0 auto; padding:32px; }
+.header { background:linear-gradient(135deg, #8B5CF6, #A78BFA); color:#fff; padding:36px 32px; border-radius:var(--radius); margin-bottom:28px; }
+.header .ep { font-size:13px; opacity:0.8; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.header h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+.header .meta { display:flex; gap:12px; flex-wrap:wrap; }
+.header .meta span { background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; }
+.section { background:var(--card); border-radius:var(--radius); padding:28px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.section h2 { font-size:18px; font-weight:700; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #8B5CF6; }
+.shot-table { width:100%; border-collapse:collapse; font-size:13px; }
+.shot-table th { background:var(--gray-100); padding:10px; text-align:left; font-weight:600; color:var(--gray-700); border-bottom:2px solid var(--gray-200); white-space:nowrap; }
+.shot-table td { padding:12px 10px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+.shot-num { font-weight:700; color:#8B5CF6; }
+.time-code { font-family:'SF Mono',Monaco,monospace; font-weight:600; color:var(--accent); white-space:nowrap; }
+.narration { background:#ede9fe; padding:10px 14px; border-radius:6px; border-left:3px solid #8B5CF6; margin-top:4px; }
+.narration::before { content:"旁白："; font-weight:700; color:#8B5CF6; font-size:12px; }
+.subtitle { color:var(--gray-500); font-style:italic; font-size:12px; margin-top:4px; }
+.subtitle::before { content:"字幕："; font-weight:600; font-style:normal; }
+.figma-op { background:#f0fdf4; padding:8px 12px; border-radius:6px; border-left:3px solid var(--success); margin-top:4px; font-size:12px; }
+.figma-op::before { content:"Figma操作："; font-weight:700; color:var(--success); }
+.asset-list { list-style:none; }
+.asset-list li { padding:8px 12px; margin-bottom:6px; background:var(--gray-50); border-radius:6px; border-left:3px solid var(--accent); font-size:13px; }
+.asset-list li b { color:var(--gray-700); }
+.note-box { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:16px; margin-top:16px; font-size:13px; }
+.note-box b { color:#92400e; }
+.tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.tag-sfx { background:#fce7f3; color:#9d174d; }
+.tag-visual { background:#dbeafe; color:#1e40af; }
+.tag-transition { background:#d1fae5; color:#065f46; }
+.tag-rec { background:#fef3c7; color:#92400e; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="ep">EPISODE C02 · 案例教程</div>
+  <h1>磨砂玻璃风格图标从0到1设计</h1>
+  <div class="meta">
+    <span>时长：5分00秒</span>
+    <span>格式：Figma录屏操作演示</span>
+    <span>教材来源：4.4.2</span>
+    <span>工具：Figma</span>
+    <span>分辨率：1920×1080 / 30fps</span>
+  </div>
+</div>
+
+<!-- Production Overview -->
+<div class="section">
+  <h2>制作概述</h2>
+  <table class="shot-table">
+    <tr><td style="width:140px;"><b>视频类型</b></td><td>操作演示型（Figma录屏 + 旁白讲解 + 关键步骤标注）</td></tr>
+    <tr><td><b>目标受众</b></td><td>UI设计初学者、掌握基础扁平图标后想进阶的设计师、对Glassmorphism风格感兴趣的爱好者</td></tr>
+    <tr><td><b>核心目标</b></td><td>跟随视频在Figma中从零完成一个"相机"磨砂玻璃风格图标，掌握背景模糊、半透明填充、高光边缘三层叠加的制作方法</td></tr>
+    <tr><td><b>最终交付物</b></td><td>一个"相机"（Camera）磨砂玻璃风格图标 Figma Component，含彩色渐变/深色/纯色三种背景预览效果</td></tr>
+    <tr><td><b>风格基调</b></td><td>手把手教学——每一步效果都有画面+参数+旁白，初学者可以暂停跟随操作，实时看到效果变化</td></tr>
+    <tr><td><b>旁白语速</b></td><td>约 3 字/秒（5分钟约 900 字旁白）</td></tr>
+    <tr><td><b>录屏设置</b></td><td>Figma界面全屏录制（1920×1080），鼠标光标开启高亮（紫色光圈），快捷键操作时左下角显示按键提示</td></tr>
+    <tr><td><b>BGM</b></td><td>梦幻空灵电子氛围音乐，音量 -24dB，不干扰旁白</td></tr>
+  </table>
+</div>
+
+<!-- Pre-Production Setup -->
+<div class="section">
+  <h2>录屏前准备</h2>
+  <table class="shot-table">
+    <tr><td style="width:160px;"><b>Figma文件</b></td><td>在"UI图标教程"项目中新建Page "C02-磨砂玻璃风格图标"</td></tr>
+    <tr><td><b>画板规格</b></td><td>Frame 120×120px（图标容器），内部图标尺寸 80×80px，背景使用彩色渐变</td></tr>
+    <tr><td><b>背景设置</b></td><td>底层背景：线性渐变（Linear Gradient）135度，从 #8B5CF6 到 #EC4899 到 #F59E0B，营造彩色渐变氛围</td></tr>
+    <tr><td><b>图标形状</b></td><td>相机图标：圆角矩形（机身）+ 圆形（镜头）+ 小圆（闪光灯），整体 80×80px</td></tr>
+    <tr><td><b>效果参数</b></td><td>Background Blur 10px / Fill Opacity 60% / Inner Shadow 1px 白 / Stroke 1px 白 40% / Drop Shadow 4px 12px 15%</td></tr>
+    <tr><td><b>字体</b></td><td>旁白字幕：思源黑体 Regular 28px / 操作提示：JetBrains Mono 20px / 参数标注：Inter 18px</td></tr>
+    <tr><td><b>快捷键提示插件</b></td><td>安装 Figma 插件 "Keybuster" 或使用 OBS 快捷键显示层，录制时自动显示按键</td></tr>
+    <tr><td><b>光标样式</b></td><td>系统设置调大光标 + 录屏软件添加紫色高亮光圈（半径30px，透明度40%）</td></tr>
+  </table>
+</div>
+
+<!-- Shot-by-Shot Storyboard -->
+<div class="section">
+  <h2>分镜脚本（逐镜头）</h2>
+  <table class="shot-table">
+    <thead>
+      <tr>
+        <th style="width:50px;">镜头</th>
+        <th style="width:85px;">时间码</th>
+        <th style="width:200px;">画面描述</th>
+        <th>旁白文案 / Figma操作</th>
+        <th style="width:110px;">音效 / 转场</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- Shot 1 -->
+      <tr>
+        <td class="shot-num">01</td>
+        <td class="time-code">0:00—0:30<br>(30s)</td>
+        <td>
+          <span class="tag tag-visual">需求分析</span><br>
+          <b>画面A（0-10s）</b>：片头——系列Logo + "C02 磨砂玻璃风格图标从0到1设计"，紫色渐变背景，淡入。<br>
+          <b>画面B（10-20s）</b>：展示最终效果——一个精美的"相机"磨砂玻璃风格图标（80×80px），在彩色渐变背景上缓慢旋转展示，玻璃高光流动效果。再切换深色背景、纯色背景展示不同效果。<br>
+          <b>画面C（20-30s）</b>：切换到Figma界面，创建背景渐变。画面左侧出现需求分析要点卡片：<br>
+          - 图标含义：相机/Camera<br>
+          - 风格：磨砂玻璃（Glassmorphism）<br>
+          - 核心：半透明 + 模糊 + 高光<br>
+          - 背景：彩色渐变（效果最佳）
+        </td>
+        <td>
+          <div class="narration">大家好，今天我们来做一个当下非常流行的磨砂玻璃风格图标，也叫 Glassmorphism。磨砂玻璃的核心原理很简单——三层效果叠加：半透明填充、背景模糊、高光边缘。我们以相机图标为例，从零开始一步步实现。先看最终效果。</div>
+          <div class="subtitle">Glassmorphism = 半透明 + 模糊 + 高光<br>目标：80×80px 磨砂玻璃相机图标</div>
+          <div class="figma-op">新建 Frame：快捷键 F → 输入 400×300 → 命名 "Glass Icon Demo" → 设置背景渐变 #8B5CF6 → #EC4899 → #F59E0B</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 梦幻玻璃音效<br>
+          <span class="tag tag-transition">转场</span> 缩放进入Figma界面
+        </td>
+      </tr>
+
+      <!-- Shot 2 -->
+      <tr>
+        <td class="shot-num">02</td>
+        <td class="time-code">0:30—1:15<br>(45s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（30-50s）</b>：绘制相机机身——快捷键R激活Rectangle工具，拖出一个圆角矩形。<br>
+          尺寸：W=72 H=56，圆角 16px<br>
+          位置：在画板中居中，X=24 Y=32（相对于图标容器）<br>
+          填充：纯白色 #FFFFFF<br>
+          画面标注尺寸数字。<br>
+          <b>画面B（50-1:05）</b>：绘制镜头——快捷键O激活Ellipse工具，画一个正圆形作为镜头：<br>
+          尺寸：W=28 H=28<br>
+          位置：机身正中间，与机身后部对齐<br>
+          填充：纯白色 #FFFFFF<br>
+          画面用动效箭头标注圆形位置。<br>
+          <b>画面C（1:05-1:15）</b>：绘制闪光灯——右上角一个小圆，W=8 H=8，填充白色。三个形状居中对齐，组成相机基础造型。
+        </td>
+        <td>
+          <div class="narration">第一步，我们先画出相机的基础形状。用圆角矩形做机身，圆角16像素让造型圆润。然后画一个圆形镜头放在中间，右上角加一个小圆做闪光灯。三个形状都是纯白色填充——这是我们的基础层，后面的玻璃效果都要加在这些形状上。</div>
+          <div class="subtitle">机身：Rectangle 72×56 圆角16px<br>镜头：Ellipse 28×28 居中<br>闪光灯：Ellipse 8×8 右上角</div>
+          <div class="figma-op">R → 拖出矩形 → 右侧设 W:72 H:56 Corner Radius:16 Fill:#FFFFFF<br>O → 按住Shift画正圆 → W:28 H:28 Fill:#FFFFFF → 居中对齐<br>O → 画小圆 W:8 H:8 Fill:#FFFFFF → 放在右上角</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 绘制音效<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 3 -->
+      <tr>
+        <td class="shot-num">03</td>
+        <td class="time-code">1:15—2:15<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（1:15-1:35）</b>：合并形状——选中机身、镜头、闪光灯三个形状，执行 Boolean Union 合并为一个路径。画面标注："Union = 合并为单一路径，方便统一加效果"。<br>
+          <b>画面B（1:35-1:55）</b>：添加 Background Blur——选中合并后的形状，在右侧 Effects 面板点击 + 号，选择 Background Blur（背景模糊），设置模糊值为 10px。<br>
+          画面放大右侧Effects面板，鼠标拖动模糊值滑块，从0到20px来回拖动，展示不同模糊程度的效果变化，最后停在10px。<br>
+          <b>画面C（1:55-2:15）</b>：降低填充不透明度——当前填充是纯白不透明，所以背景模糊完全看不见。将 Fill 的 Opacity 从 100% 降到 60%。画面明显看到背景的彩色渐变透过白色填充变得模糊朦胧，磨砂质感出现了。
+        </td>
+        <td>
+          <div class="narration">形状画好后，先Union合并成一个整体，方便统一加效果。接下来是磨砂玻璃最关键的一步——Background Blur 背景模糊。注意，是 Background Blur 不是 Layer Blur，前者模糊的是形状后面的背景，后者模糊的是形状本身。现在填充还是纯白不透明的，所以模糊效果看不见——我们需要把填充的不透明度降到60%，让背景透出来。看，磨砂质感一下子就出来了。</div>
+          <div class="subtitle">Boolean Union：合并为单一路径<br>Effects → Background Blur: 10px<br>Fill Opacity: 60% → 磨砂质感出现</div>
+          <div class="figma-op">全选三个形状 → Boolean Union (Ctrl+Shift+U)<br>选中合并后形状 → Effects → + → Background Blur → 设为 10px<br>Fill → Opacity 从 100% 降到 60%</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 合并音效 + 模糊出现音效<br>
+          <span class="tag tag-transition">转场</span> 直接切镜
+        </td>
+      </tr>
+
+      <!-- Shot 4 -->
+      <tr>
+        <td class="shot-num">04</td>
+        <td class="time-code">2:15—3:15<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（2:15-2:40）</b>：添加 Inner Shadow 内阴影——在 Effects 中再添加一个 Inner Shadow。参数设置：X=0, Y=1px, Blur=2px, Spread=0, Color=白色, Opacity=60%。<br>
+          画面特写图标顶部边缘——内阴影让顶部边缘出现一条细细的白色高光，模拟玻璃表面的反光。<br>
+          <b>画面B（2:40-2:55）</b>：添加白色描边——在 Stroke 中添加 1px 描边，颜色白色，不透明度 40%。描边让玻璃的边缘更清晰，增强"有厚度"的感觉。<br>
+          <b>画面C（2:55-3:15）</b>：效果对比——画面分屏展示：左侧只有背景模糊+半透明，右侧加上高光边缘后。对比之下，右侧的玻璃更有质感和立体感。画面标注："高光边缘 = 玻璃质感的点睛之笔"。
+        </td>
+        <td>
+          <div class="narration">现在有了磨砂的感觉，但还不够像玻璃。玻璃的特点是边缘有高光反射——我们用 Inner Shadow 内阴影来模拟这个效果。Y轴偏移1像素，白色，不透明度60%，模糊2像素。看，顶部边缘出现了一条细细的高光，就像光线照在玻璃上的反射。再加上1像素的白色半透明描边，玻璃的边缘就更清晰了。这两层高光效果是玻璃质感的点睛之笔。</div>
+          <div class="subtitle">Inner Shadow: Y=1px Blur=2px 白 60%<br>Stroke: 1px 白 40%<br>高光边缘 = 玻璃质感的点睛之笔</div>
+          <div class="figma-op">Effects → + → Inner Shadow → X:0 Y:1 Blur:2 Spread:0 Color:#FFFFFF Opacity:60%<br>Stroke → + → 1px → Color:#FFFFFF Opacity:40%</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 高光出现音效<br>
+          <span class="tag tag-transition">转场</span> 分屏对比淡入
+        </td>
+      </tr>
+
+      <!-- Shot 5 -->
+      <tr>
+        <td class="shot-num">05</td>
+        <td class="time-code">3:15—4:00<br>(45s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（3:15-3:35）</b>：添加 Drop Shadow 投影——在 Effects 中添加 Drop Shadow。参数：X=0, Y=4px, Blur=12px, Spread=0, Color=黑色, Opacity=15%。投影让图标从背景中"浮"起来，增强立体感和悬浮感。<br>
+          <b>画面B（3:35-3:50）</b>：不同背景预览——复制三个相同的玻璃图标，分别放在三种背景上：<br>
+          - 彩色渐变背景（效果最佳）<br>
+          - 深色背景（神秘高级）<br>
+          - 纯白色背景（效果最弱，几乎看不出玻璃感）<br>
+          画面用箭头标注三种效果的差异。<br>
+          <b>画面C（3:50-4:00）</b>：参数微调——展示调整模糊值（8px / 10px / 12px）和不透明度（50% / 60% / 70%）带来的细微变化，根据背景和需求灵活调整。
+        </td>
+        <td>
+          <div class="narration">最后加一个投影，让图标从背景上浮起来，立体感就更强了。磨砂玻璃效果有个重要的特点——它在彩色或渐变背景上效果最好，在纯白色背景上几乎看不出效果。所以使用磨砂玻璃风格时，一定要确保背后有丰富的背景内容。模糊度和透明度也不是固定的，8到12像素、50%到70%不透明度都可以，根据具体背景和需求微调。</div>
+          <div class="subtitle">Drop Shadow: Y=4px Blur=12px 黑 15%<br>彩色背景效果最佳 / 纯白背景效果最弱<br>模糊 8-12px / 透明度 50-70% 灵活调整</div>
+          <div class="figma-op">Effects → + → Drop Shadow → X:0 Y:4 Blur:12 Spread:0 Color:#000000 Opacity:15%<br>复制图标 → 分别放在渐变/深色/白色背景上对比效果</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 柔和提示音<br>
+          <span class="tag tag-transition">转场</span> 淡入淡出
+        </td>
+      </tr>
+
+      <!-- Shot 6 -->
+      <tr>
+        <td class="shot-num">06</td>
+        <td class="time-code">4:00—5:00<br>(60s)</td>
+        <td>
+          <span class="tag tag-rec">Figma录屏</span><br>
+          <b>画面A（4:00-4:20）</b>：创建Component——选中完整的玻璃图标Frame，点击顶部工具栏"Create Component"，快捷键 Ctrl+Alt+K。命名为"Icon / Camera / Glass"。<br>
+          <b>画面B（4:20-4:40）</b>：Variants 变体管理——复制主组件，修改模糊值和透明度，创建不同强度的变体：Light（轻）/ Regular（标准）/ Heavy（重）。展示 Variants 如何快速切换效果强度。<br>
+          <b>画面C（4:40-5:00）</b>：多场景应用展示+片尾——玻璃图标用在不同场景：音乐播放器控件、设置面板、Dashboard卡片。最后片尾Logo + "C02完成" + 下集预告"C03 拟物化图标设计"，淡出。
+        </td>
+        <td>
+          <div class="narration">最后一步，把图标创建为Component，方便以后复用。你还可以用 Variants 创建不同强度的玻璃效果变体——轻度、标准、重度，根据不同场景快速切换。磨砂玻璃风格的应用非常广泛：音乐播放器控件、设置面板、Dashboard卡片等等。记住三个核心要素：背景模糊、半透明填充、高光边缘。掌握了这三点，你就能做出各种漂亮的磨砂玻璃效果。</div>
+          <div class="subtitle">Component: Ctrl+Alt+K<br>Variants: Light / Regular / Heavy<br>磨砂玻璃三要素：模糊 / 半透明 / 高光</div>
+          <div class="figma-op">选中Frame → Create Component (Ctrl+Alt+K) → 命名 "Icon / Camera / Glass"<br>复制主组件 → 修改参数 → 组合为 Variants (Light/Regular/Heavy)<br>Export → SVG 1x / PNG 2x</div>
+        </td>
+        <td>
+          <span class="tag tag-sfx">SFX</span> 完成音效<br>
+          <span class="tag tag-sfx">BGM</span> 结尾渐强后淡出<br>
+          <span class="tag tag-transition">转场</span> 缩放淡出
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- Asset List -->
+<div class="section">
+  <h2>素材清单</h2>
+  <ul class="asset-list">
+    <li><b>素材01 · 片头动画</b>：系列Logo + "C02 磨砂玻璃风格图标从0到1设计" 标题卡，紫色渐变背景 + 玻璃质感光效（AE或Figma Smart Animate制作，3秒淡入）</li>
+    <li><b>素材02 · 最终效果图</b>："相机"磨砂玻璃图标在彩色渐变/深色/纯色三种背景上的展示图，含高光流动动效</li>
+    <li><b>素材03 · 需求分析卡片</b>：左侧浮动信息卡，列出图标含义/风格/核心要素/最佳背景（Figma或AE制作）</li>
+    <li><b>素材04 · 基础形状标注图</b>：相机机身、镜头、闪光灯的坐标/尺寸标注截图</li>
+    <li><b>素材05 · 背景模糊演示动效</b>：模糊值从0到20px动态变化的对比动效，展示磨砂质感如何逐步出现</li>
+    <li><b>素材06 · 半透明效果对比图</b>：Fill Opacity 从100%降到60%的前后对比动效</li>
+    <li><b>素材07 · 高光边缘分解图</b>：Inner Shadow 和 Stroke 分别添加的分层示意图，标注每层效果的作用</li>
+    <li><b>素材08 · 三种背景对比图</b>：同一玻璃图标在彩色渐变/深色/纯白色背景上的效果对比</li>
+    <li><b>素材09 · 参数速查表</b>：Background Blur / Fill / Inner Shadow / Stroke / Drop Shadow 五层参数汇总图</li>
+    <li><b>素材10 · Variants变体展示图</b>：Light / Regular / Heavy 三种强度玻璃效果并排对比</li>
+    <li><b>素材11 · 应用场景展示图</b>：玻璃图标在音乐播放器/设置面板/Dashboard中的应用效果图</li>
+    <li><b>素材12 · 片尾画面</b>："C02完成" + 下集预告 + 系列Logo</li>
+    <li><b>素材13 · BGM</b>：梦幻空灵电子氛围音乐（5分钟版本，可循环）</li>
+    <li><b>素材14 · 快捷键提示层</b>：OBS或Keybuster插件录制的按键提示画面</li>
+    <li><b>素材15 · 字幕文件</b>：.srt格式字幕文件，与时间码对齐</li>
+  </ul>
+</div>
+
+<!-- Production Notes -->
+<div class="section">
+  <h2>制作注意事项</h2>
+  <div class="note-box">
+    <p><b>1. 效果叠加节奏控制</b>：每添加一层效果（模糊/半透明/高光/投影），都要留2-3秒"效果展示时间"，让学习者清晰看到添加前后的变化。可以用分屏对比的方式更直观。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>2. 参数滑块动态演示</b>：在讲 Background Blur 和 Fill Opacity 时，用鼠标拖动滑块从最小值到最大值再回到推荐值，让学习者直观感受参数变化对效果的影响，而不是只给一个固定数值。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>3. 背景选择的重要性</b>：一定要强调磨砂玻璃在不同背景下的效果差异——彩色渐变最佳、纯色次之、纯白几乎无效。这是初学者最容易踩的坑：在白色背景上做玻璃效果，然后疑惑为什么看不出效果。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>4. 高光边缘的细节</b>：Inner Shadow 是内阴影，注意 Y 值为正（1px）才是顶部高光，不要搞反方向。Stroke 要降低不透明度（40%左右），太高会像边框而不像玻璃边缘。这两个效果配合才是点睛之笔。</p>
+  </div>
+  <div class="note-box" style="margin-top:12px;">
+    <p><b>5. 性能提示</b>：在旁白中可以加一句——磨砂玻璃效果（backdrop-filter）在浏览器中需要注意性能，大量使用可能导致页面卡顿，尤其是在低端设备上。实际项目中要权衡视觉效果和性能。</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

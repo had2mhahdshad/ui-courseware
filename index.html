@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI 设计基础 · 交互课件总览</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF7;
+  --text:#2C2C2C;
+  --text-dim:#8A8A8A;
+  --text-soft:#B5B5B5;
+  --accent:#6366f1;
+  --accent-soft:#EEF2FF;
+  --green:#2D9A5E;
+  --green-soft:#DFF2E6;
+  --orange:#F2994A;
+  --orange-soft:#FFF1E0;
+  --border:#E8E5E0;
+  --card:#FFFFFF;
+  --disabled-bg:#F5F5F2;
+  --disabled-text:#C5C5C0;
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif;
+  --sans:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.8;
+  font-size:15px;
+}
+
+/* Nav */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:700;font-size:14px;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;font-size:13px}
+.nav-links a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+
+/* Hero */
+.hero{
+  padding:80px 32px 60px;
+  text-align:center;
+  max-width:860px;
+  margin:0 auto;
+}
+.hero .icon{font-size:56px;margin-bottom:16px}
+.hero .label{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:44px;font-weight:700;
+  line-height:1.4;margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:17px;color:var(--text-dim);
+  line-height:1.9;max-width:620px;margin:0 auto;
+}
+/* Section */
+.section{
+  max-width:980px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.section-header{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:28px;
+}
+.section-icon{
+  width:40px;height:40px;
+  background:var(--accent-soft);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.section-header h2{
+  font-family:var(--serif);
+  font-size:26px;font-weight:700;
+}
+.section-header .count{
+  font-size:13px;color:var(--text-dim);
+  margin-left:8px;
+}
+
+/* Card Grid */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+}
+.course-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+  position:relative;
+  display:flex;flex-direction:column;
+}
+.course-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 28px rgba(0,0,0,.08);
+  border-color:var(--accent);
+}
+.course-card.disabled{
+  background:var(--disabled-bg);
+  cursor:not-allowed;
+  opacity:.6;
+}
+.course-card.disabled:hover{
+  transform:none;
+  box-shadow:none;
+  border-color:var(--border);
+}
+.card-cover{
+  height:120px;
+  background:linear-gradient(135deg,#6366f1,#818cf8);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+  position:relative;
+  overflow:hidden;
+}
+.card-cover.k01{background:linear-gradient(135deg,#0ea5e9,#38bdf8)}
+.card-cover.k03{background:linear-gradient(135deg,#2563eb,#60a5fa)}
+.card-cover.k04{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.card-cover.k05{background:linear-gradient(135deg,#0891b2,#22d3ee)}
+.card-cover.c01{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.card-cover.c02{background:linear-gradient(135deg,#9333ea,#c084fc)}
+.card-cover.c05{background:linear-gradient(135deg,#7e22ce,#a855f7)}
+.card-cover.theory{background:linear-gradient(135deg,#0284c7,#38bdf8)}
+.card-cover.practice{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.card-cover.disabled-cover{
+  background:linear-gradient(135deg,#d1d5db,#e5e7eb);
+  color:#9ca3af;
+}
+.card-badge{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,.9);
+  color:var(--text);
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;
+}
+.card-badge.theory{background:rgba(56,189,248,.9);color:#0c4a6e}
+.card-badge.practice{background:rgba(167,139,250,.9);color:#4c1d95}
+.card-badge.disabled-badge{background:rgba(156,163,175,.8);color:#fff}
+
+.card-body{padding:20px;flex:1;display:flex;flex-direction:column}
+.card-id{
+  font-size:11px;letter-spacing:2px;
+  color:var(--text-soft);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.card-title{
+  font-size:17px;font-weight:700;
+  margin-bottom:8px;line-height:1.4;
+}
+.card-desc{
+  font-size:13px;color:var(--text-dim);
+  line-height:1.7;margin-bottom:14px;
+  flex:1;
+}
+.card-meta{
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.meta-tag{
+  font-size:11px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  padding:3px 10px;border-radius:10px;
+  font-weight:500;
+}
+.meta-tag.disabled-tag{
+  background:#E8E5E0;
+  color:var(--text-soft);
+}
+.card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+  font-size:12px;
+}
+.card-footer .status{
+  display:flex;align-items:center;gap:6px;
+}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);
+}
+.status-dot.disabled-dot{background:var(--text-soft)}
+.status-text{color:var(--green);font-weight:500}
+.status-text.disabled-status{color:var(--text-soft)}
+.card-footer .arrow{
+  color:var(--text-dim);
+  transition:transform .2s;
+}
+.course-card:hover .arrow{
+  transform:translateX(4px);
+  color:var(--accent);
+}
+
+/* Category Divider */
+.cat-divider{
+  display:flex;align-items:center;gap:16px;
+  margin:48px 0 24px;
+}
+.cat-divider::before,.cat-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.cat-divider span{
+  font-size:12px;letter-spacing:3px;
+  color:var(--text-soft);text-transform:uppercase;
+}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--border);
+  padding:40px 32px;
+  text-align:center;
+  font-size:13px;color:var(--text-soft);
+}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:32px}
+  .section{padding:40px 20px}
+  .section-header h2{font-size:22px}
+  .card-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">UI<span>设计</span>基础</div>
+  <div class="nav-links">
+    <a href="#theory">理论知识</a>
+    <a href="#practice">教程实践</a>
+    <a href="#about">关于</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="icon">📚</div>
+  <div class="label">UI DESIGN FOUNDATION — INTERACTIVE COURSEWARE</div>
+  <h1>边学边练的<br>UI 设计交互课件</h1>
+  <p class="subtitle">
+    从理论知识到实操教程，每个知识点都配好互动练习题。<br>
+    读完就练，做错有解析，做完就会。
+  </p>
+</section>
+
+<!-- Theory Section -->
+<section class="section" id="theory">
+  <div class="section-header">
+    <div class="section-icon">💡</div>
+    <h2>理论知识</h2>
+    <span class="count">20 个知识点 · 已更新 4 个</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- K01 - Active -->
+    <a href="K01_UI设计四大原则/K01_交互课件.html" class="course-card" style="text-decoration:none;color:inherit">
+      <div class="card-cover k01">
+        🎨
+        <span class="card-badge theory">理论</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">K01 · 设计基础</div>
+        <div class="card-title">UI 设计四大原则</div>
+        <div class="card-desc">
+          一致性/易用性/层级性/规范性——好界面的四条评价标准
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">判断题 × 4</span>
+          <span class="meta-tag">选择题 × 3</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span class="status-text">已上线</span>
+          </div>
+          <span class="arrow">前往学习 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- K02 - Disabled -->
+    <div class="course-card disabled">
+      <div class="card-cover disabled-cover">
+        🧠
+        <span class="card-badge disabled-badge">理论</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">K02 · 认知心理学</div>
+        <div class="card-title">心智模型与认知负荷</div>
+        <div class="card-desc">
+          用户怎么理解你的界面？为什么有的设计一看就懂，有的让人迷惑？
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag disabled-tag">即将上线</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot disabled-dot"></div>
+            <span class="status-text disabled-status">筹备中</span>
+          </div>
+          <span class="arrow">敬请期待</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- K03 - Active -->
+    <a href="K03_格式塔原理/K03_交互课件.html" class="course-card" style="text-decoration:none;color:inherit">
+      <div class="card-cover k03">
+        🧩
+        <span class="card-badge theory">理论</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">K03 · 视觉原理</div>
+        <div class="card-title">格式塔原理</div>
+        <div class="card-desc">
+          接近性/相似性/连续性/闭合性/对称性/共同命运——大脑自动分组的视觉规律
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">判断题 × 4</span>
+          <span class="meta-tag">选择题 × 3</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span class="status-text">已上线</span>
+          </div>
+          <span class="arrow">前往学习 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- K04 - Active -->
+    <a href="K04_费茨定律/K04_交互课件.html" class="course-card" style="text-decoration:none;color:inherit">
+      <div class="card-cover k04">
+        🎯
+        <span class="card-badge theory">理论</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">K04 · 交互设计定律</div>
+        <div class="card-title">费茨定律基础</div>
+        <div class="card-desc">
+          从数学公式到触控热区设计，理解按钮为什么总"够不到"，掌握拇指热区与边缘效应。
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">判断题 × 4</span>
+          <span class="meta-tag">选择题 × 3</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span class="status-text">已上线</span>
+          </div>
+          <span class="arrow">前往学习 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- K05 - Active -->
+    <a href="K05_席克定律与米勒定律/K05_交互课件.html" class="course-card" style="text-decoration:none;color:inherit">
+      <div class="card-cover k05">
+        ⚡
+        <span class="card-badge theory">理论</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">K05 · 交互设计定律</div>
+        <div class="card-title">席克定律与米勒定律</div>
+        <div class="card-desc">
+          选项越多决策越慢 + 7±2 记忆上限——简化信息设计的两个心理学依据
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">判断题 × 4</span>
+          <span class="meta-tag">选择题 × 3</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span class="status-text">已上线</span>
+          </div>
+          <span class="arrow">前往学习 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- K06 - Disabled -->
+    <div class="course-card disabled">
+      <div class="card-cover disabled-cover">
+        💬
+        <span class="card-badge disabled-badge">理论</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">K06 · 体验设计</div>
+        <div class="card-title">情感化设计三层次</div>
+        <div class="card-desc">
+          本能层、行为层、反思层——好的设计不只是好用，还要让人喜欢。
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag disabled-tag">即将上线</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot disabled-dot"></div>
+            <span class="status-text disabled-status">筹备中</span>
+          </div>
+          <span class="arrow">敬请期待</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:24px;color:var(--text-soft);font-size:13px">
+    更多知识点持续更新中…
+  </div>
+</section>
+
+<!-- Practice Section -->
+<section class="section" id="practice">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--orange-soft)">🛠️</div>
+    <h2>教程实践</h2>
+    <span class="count">30 个案例 · 已更新 3 个</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- C01 - Active -->
+    <a href="C01_扁平风格图标/C01_交互课件.html" class="course-card" style="text-decoration:none;color:inherit">
+      <div class="card-cover c01">
+        🏠
+        <span class="card-badge practice">实践</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">C01 · 图标设计</div>
+        <div class="card-title">扁平图标基础</div>
+        <div class="card-desc">
+          从 0 到 1 设计「首页」图标，掌握 Figma 基础形状、布尔运算与组件化。
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag" style="background:var(--orange-soft);color:var(--orange)">连连看 × 5</span>
+          <span class="meta-tag" style="background:var(--orange-soft);color:var(--orange)">选择题 × 4</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span class="status-text">已上线</span>
+          </div>
+          <span class="arrow">前往学习 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- C02 - Active -->
+    <a href="C02_磨砂玻璃风格图标/C02_交互课件.html" class="course-card" style="text-decoration:none;color:inherit">
+      <div class="card-cover c02">
+        💎
+        <span class="card-badge practice">实践</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">C02 · 图标设计</div>
+        <div class="card-title">磨砂玻璃风格图标</div>
+        <div class="card-desc">
+          半透明 + 背景模糊 + 高光边缘——用 Figma 打造高级磨砂玻璃质感图标
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag" style="background:var(--orange-soft);color:var(--orange)">连连看 × 5</span>
+          <span class="meta-tag" style="background:var(--orange-soft);color:var(--orange)">选择题 × 4</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span class="status-text">已上线</span>
+          </div>
+          <span class="arrow">前往学习 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- C03 - Disabled -->
+    <div class="course-card disabled">
+      <div class="card-cover disabled-cover">
+        🤖
+        <span class="card-badge disabled-badge">实践</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">C03 · AI 辅助</div>
+        <div class="card-title">即梦 AI 生成 B 端图标</div>
+        <div class="card-desc">
+          用 AI 快速生成 B 端风格图标，再用 Figma 精修，效率翻倍。
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag disabled-tag">即将上线</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot disabled-dot"></div>
+            <span class="status-text disabled-status">筹备中</span>
+          </div>
+          <span class="arrow">敬请期待</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- C04 - Disabled -->
+    <div class="course-card disabled">
+      <div class="card-cover disabled-cover">
+        ✏️
+        <span class="card-badge disabled-badge">实践</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">C04 · 图标设计</div>
+        <div class="card-title">线性图标集系统制作</div>
+        <div class="card-desc">
+          从单个图标到一整套 24 个线性图标，学会建立统一的图标系统。
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag disabled-tag">即将上线</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot disabled-dot"></div>
+            <span class="status-text disabled-status">筹备中</span>
+          </div>
+          <span class="arrow">敬请期待</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- C05 - Active -->
+    <a href="C05_玻璃质感开关按钮/C05_交互课件.html" class="course-card" style="text-decoration:none;color:inherit">
+      <div class="card-cover c05">
+        🔘
+        <span class="card-badge practice">实践</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">C05 · 组件设计</div>
+        <div class="card-title">玻璃质感开关按钮</div>
+        <div class="card-desc">
+          轨道 + 滑块 + 玻璃质感 + 交互动效——从 0 到 1 设计可交互开关组件
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag" style="background:var(--orange-soft);color:var(--orange)">连连看 × 5</span>
+          <span class="meta-tag" style="background:var(--orange-soft);color:var(--orange)">选择题 × 4</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span class="status-text">已上线</span>
+          </div>
+          <span class="arrow">前往学习 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- C06 - Disabled -->
+    <div class="course-card disabled">
+      <div class="card-cover disabled-cover">
+        ✅
+        <span class="card-badge disabled-badge">实践</span>
+      </div>
+      <div class="card-body">
+        <div class="card-id">C06 · 组件设计</div>
+        <div class="card-title">输入框组件从 0 到 1</div>
+        <div class="card-desc">
+          从默认态到聚焦态、错误态、禁用态，设计完整的输入框交互组件。
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag disabled-tag">即将上线</span>
+        </div>
+        <div class="card-footer">
+          <div class="status">
+            <div class="status-dot disabled-dot"></div>
+            <span class="status-text disabled-status">筹备中</span>
+          </div>
+          <span class="arrow">敬请期待</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:24px;color:var(--text-soft);font-size:13px">
+    更多案例教程持续更新中…
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="section" id="about" style="padding-top:20px">
+  <div class="section-header">
+    <div class="section-icon" style="background:var(--green-soft)">📌</div>
+    <h2>课件特点</h2>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+      <div style="font-size:28px;margin-bottom:10px">🎯</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">边学边练</div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.8">每节知识配互动练习题，学完就测，做错有详细解析。</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+      <div style="font-size:28px;margin-bottom:10px">📋</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">即取即用</div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.8">色值、尺寸、快捷键一键复制，直接粘到 Figma 里用。</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+      <div style="font-size:28px;margin-bottom:10px">🧩</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">体系完整</div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.8">从理论到实践，从基础到进阶，循序渐进的学习路径。</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+      <div style="font-size:28px;margin-bottom:10px">🔗</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">知识串联</div>
+      <div style="font-size:13px;color:var(--text-dim);line-height:1.8">上下游知识点关联，学完这个知道下一个该学什么。</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>UI 设计基础 · 交互课件总览</p>
+  <p style="margin-top:4px">基于教材《UI 设计》延伸制作</p>
+</footer>
+
+</body>
+</html>

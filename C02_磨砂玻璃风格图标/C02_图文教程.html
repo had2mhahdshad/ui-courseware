@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C02 磨砂玻璃风格图标从0到1设计 | 图文教程</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#8B5CF6;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--purple:#7c3aed;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-dim:#64748b;--border:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.tutorial{max-width:720px;margin:0 auto;background:var(--card);min-height:100vh}
+.hero{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;padding:48px 40px;text-align:center}
+.hero .ep{font-size:13px;opacity:.8;letter-spacing:2px;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;margin-bottom:8px}
+.hero .subtitle{font-size:16px;opacity:.9}
+.hero .tags{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.hero .tag{background:rgba(255,255,255,.2);padding:4px 14px;border-radius:20px;font-size:12px}
+.section{padding:32px 40px;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.section h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h2::before{content:'';width:4px;height:24px;background:var(--primary);border-radius:2px}
+.preview-row{display:flex;gap:24px;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.preview-item{text-align:center}
+.preview-box{width:120px;height:120px;border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.preview-box.gradient{background:linear-gradient(135deg,#8B5CF6 0%,#EC4899 50%,#F59E0B 100%)}
+.preview-box.dark{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%)}
+.preview-box.solid{background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 100%)}
+.preview-glass-icon{
+  width:72px;height:72px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.4);
+  box-shadow:0 4px 16px rgba(0,0,0,0.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+}
+.preview-label{font-size:13px;color:var(--text-dim);margin-top:8px}
+.step{background:var(--bg);border-radius:16px;padding:24px;margin:16px 0;position:relative;overflow:hidden}
+.step::before{content:attr(data-step);position:absolute;top:-8px;right:16px;font-size:80px;font-weight:900;color:var(--primary);opacity:.08}
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.step-badge{width:36px;height:36px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.step-title{font-size:18px;font-weight:700;color:var(--text)}
+.param-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.param-table th{background:var(--primary);color:#fff;padding:8px 12px;text-align:left;font-weight:600}
+.param-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.param-table td:first-child{font-weight:600;color:var(--primary)}
+.param-table code{background:#ede9fe;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:12px;color:#5b21b6}
+.kbd{background:#334155;color:#c4b5fd;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px;font-weight:600}
+.visual-demo{display:flex;gap:16px;align-items:center;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.visual-step{text-align:center}
+.visual-box{width:90px;height:90px;background:linear-gradient(135deg,#8B5CF6,#EC4899);border-radius:12px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.visual-box.result{border-color:var(--success)}
+.visual-glass{
+  width:60px;height:60px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+}
+.visual-label{font-size:12px;color:var(--text-dim);margin-top:6px}
+.arrow{font-size:20px;color:var(--primary)}
+.glass-explain{background:#ede9fe;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#4c1d95}
+.glass-explain b{color:#2e1065}
+.effect-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:16px 0}
+.effect-card{background:var(--bg);border-radius:12px;padding:16px;text-align:center;border-top:3px solid}
+.effect-card:nth-child(1){border-color:#8B5CF6}
+.effect-card:nth-child(2){border-color:#EC4899}
+.effect-card:nth-child(3){border-color:#F59E0B}
+.effect-card .icon{font-size:24px;margin-bottom:4px}
+.effect-card .title{font-size:14px;font-weight:700}
+.effect-card .desc{font-size:12px;color:var(--text-dim);margin-top:4px}
+.export-tags{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap}
+.export-tag{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;text-align:center;flex:1;min-width:120px}
+.export-tag .format{font-size:18px;font-weight:700;color:var(--primary)}
+.export-tag .use{font-size:12px;color:var(--text-dim);margin-top:4px}
+.bg-compare{display:flex;gap:16px;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.bg-item{text-align:center;flex:1;min-width:100px}
+.bg-box{height:100px;border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.bg-box.best{background:linear-gradient(135deg,#8B5CF6 0%,#EC4899 50%,#F59E0B 100%)}
+.bg-box.mid{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%)}
+.bg-box.worst{background:#fff;border:2px solid var(--border)}
+.bg-label{font-size:12px;color:var(--text-dim);margin-top:6px}
+.bg-label b{color:var(--text)}
+.summary-grid{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.summary-item{display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:12px;padding:16px 20px;border-left:4px solid var(--primary)}
+.summary-item .emoji{font-size:28px}
+.summary-item .title{font-size:16px;font-weight:700}
+.summary-item .desc{font-size:13px;color:var(--text-dim);margin-top:2px}
+.footer{text-align:center;padding:32px 40px;background:var(--bg);color:var(--text-dim);font-size:13px}
+.footer .next{margin-top:12px;font-size:14px;color:var(--primary);font-weight:600}
+</style>
+</head>
+<body>
+<div class="tutorial">
+
+<div class="hero">
+  <div class="ep">EPISODE C02 · 案例教程 · 图文教程</div>
+  <h1>磨砂玻璃风格图标从0到1设计</h1>
+  <div class="subtitle">Figma 实操 · 以"相机"图标为例</div>
+  <div class="tags">
+    <span class="tag">教材内 4.4.2</span>
+    <span class="tag">工具：Figma</span>
+    <span class="tag">约5分钟</span>
+  </div>
+</div>
+
+<!-- Section 1: Final Preview -->
+<div class="section">
+  <h2>最终效果预览</h2>
+  <div class="preview-row">
+    <div class="preview-item">
+      <div class="preview-box gradient">
+        <div class="preview-glass-icon">📷</div>
+      </div>
+      <div class="preview-label">彩色渐变背景（最佳）</div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-box dark">
+        <div class="preview-glass-icon">📷</div>
+      </div>
+      <div class="preview-label">深色背景</div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-box solid">
+        <div class="preview-glass-icon">📷</div>
+      </div>
+      <div class="preview-label">纯色背景</div>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:14px;color:var(--text-dim)">磨砂玻璃 = 背景模糊 / 半透明填充 / 高光边缘</p>
+</div>
+
+<!-- Step 1: Principle -->
+<div class="section">
+  <h2>步骤一：理解磨砂玻璃原理</h2>
+  <div class="step" data-step="1">
+    <div class="step-header">
+      <div class="step-badge">1</div>
+      <div class="step-title">Glassmorphism 三要素</div>
+    </div>
+    <div class="effect-grid">
+      <div class="effect-card">
+        <div class="icon">🌫️</div>
+        <div class="title">背景模糊</div>
+        <div class="desc">Background Blur<br>8-12 px</div>
+      </div>
+      <div class="effect-card">
+        <div class="icon">💧</div>
+        <div class="title">半透明填充</div>
+        <div class="desc">Fill Opacity<br>50-70%</div>
+      </div>
+      <div class="effect-card">
+        <div class="icon">✨</div>
+        <div class="title">高光边缘</div>
+        <div class="desc">Inner Shadow + Stroke</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--text-dim);margin-top:8px">三层效果叠加，就形成了通透、高级的磨砂玻璃质感。</p>
+  </div>
+</div>
+
+<!-- Step 2: Basic Shapes -->
+<div class="section">
+  <h2>步骤二：绘制基础形状</h2>
+  <div class="step" data-step="2">
+    <div class="step-header">
+      <div class="step-badge">2</div>
+      <div class="step-title">相机图标基础造型</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>部件</th><th>工具</th><th>参数</th></tr></thead>
+      <tbody>
+        <tr><td>机身</td><td><span class="kbd">R</span> Rectangle</td><td>W:72 H:56 圆角:16px 填充:#FFFFFF</td></tr>
+        <tr><td>镜头</td><td><span class="kbd">O</span> Ellipse</td><td>W:28 H:28 居中 填充:#FFFFFF</td></tr>
+        <tr><td>闪光灯</td><td><span class="kbd">O</span> Ellipse</td><td>W:8 H:8 右上角 填充:#FFFFFF</td></tr>
+        <tr><td>合并</td><td><span class="kbd">Ctrl+Shift+U</span></td><td>Boolean Union 合并为单一路径</td></tr>
+      </tbody>
+    </table>
+    <div class="glass-explain">
+      <b>为什么要合并？</b>把多个形状合并为一个路径后，可以统一添加玻璃效果，避免每层形状各自有效果导致混乱。
+    </div>
+  </div>
+</div>
+
+<!-- Step 3: Background Blur -->
+<div class="section">
+  <h2>步骤三：背景模糊效果</h2>
+  <div class="step" data-step="3">
+    <div class="step-header">
+      <div class="step-badge">3</div>
+      <div class="step-title">Background Blur + 半透明填充</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>效果</th><th>属性</th><th>值</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>背景模糊</td><td>Background Blur</td><td><code>10 px</code></td><td>磨砂质感核心来源</td></tr>
+        <tr><td>填充透明度</td><td>Fill Opacity</td><td><code>60%</code></td><td>让模糊的背景透出来</td></tr>
+      </tbody>
+    </table>
+    <div class="glass-explain">
+      <b>注意：</b>Background Blur 是模糊"形状后面的背景"，不是模糊形状本身。如果填充是纯白不透明的，模糊效果完全看不见——必须降低填充不透明度。
+    </div>
+    <div class="visual-demo">
+      <div class="visual-step">
+        <div class="visual-box">
+          <div style="width:60px;height:60px;border-radius:12px;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;font-size:22px;">📷</div>
+        </div>
+        <div class="visual-label">只有填充（不透）</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="visual-step">
+        <div class="visual-box">
+          <div style="width:60px;height:60px;border-radius:12px;background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;font-size:22px;">📷</div>
+        </div>
+        <div class="visual-label">+ 模糊 + 半透明</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 4: Highlight Edge -->
+<div class="section">
+  <h2>步骤四：高光边缘</h2>
+  <div class="step" data-step="4">
+    <div class="step-header">
+      <div class="step-badge">4</div>
+      <div class="step-title">Inner Shadow + 白描边</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>效果</th><th>参数</th><th>值</th><th>作用</th></tr></thead>
+      <tbody>
+        <tr><td>Inner Shadow</td><td>X / Y / Blur / Color / Opacity</td><td>0 / <code>1px</code> / <code>2px</code> / 白 / 60%</td><td>顶部高光，模拟玻璃反光</td></tr>
+        <tr><td>Stroke</td><td>Width / Color / Opacity</td><td><code>1px</code> / 白 / 40%</td><td>边缘描边，增强玻璃边界</td></tr>
+      </tbody>
+    </table>
+    <div class="glass-explain">
+      <b>高光边缘是点睛之笔：</b>Inner Shadow 的 Y 值为正（1px），阴影从顶部向内投射，形成顶部亮边——就像光线照在玻璃上的反射效果。再配合半透明白色描边，玻璃的厚度感就出来了。
+    </div>
+  </div>
+</div>
+
+<!-- Step 5: Drop Shadow -->
+<div class="section">
+  <h2>步骤五：投影增强立体感</h2>
+  <div class="step" data-step="5">
+    <div class="step-header">
+      <div class="step-badge">5</div>
+      <div class="step-title">Drop Shadow 悬浮效果</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>效果</th><th>参数</th><th>值</th></tr></thead>
+      <tbody>
+        <tr><td>Drop Shadow</td><td>X / Y / Blur / Color / Opacity</td><td>0 / <code>4px</code> / <code>12px</code> / 黑 / 15%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:14px;color:var(--text-dim);margin-top:8px">投影让玻璃图标从背景中"浮"起来，增强立体感和悬浮感。注意投影不要太重——15% 不透明度刚刚好。</p>
+  </div>
+</div>
+
+<!-- Step 6: Preview & Export -->
+<div class="section">
+  <h2>步骤六：多背景预览与导出</h2>
+  <div class="step" data-step="6">
+    <div class="step-header">
+      <div class="step-badge">6</div>
+      <div class="step-title">背景测试 + Component 化</div>
+    </div>
+    <div class="bg-compare">
+      <div class="bg-item">
+        <div class="bg-box best">
+          <div style="width:50px;height:50px;border-radius:10px;background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:20px;">📷</div>
+        </div>
+        <div class="bg-label"><b>✓ 最佳</b><br>彩色/渐变背景</div>
+      </div>
+      <div class="bg-item">
+        <div class="bg-box mid">
+          <div style="width:50px;height:50px;border-radius:10px;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;">📷</div>
+        </div>
+        <div class="bg-label"><b>中等</b><br>深色背景</div>
+      </div>
+      <div class="bg-item">
+        <div class="bg-box worst">
+          <div style="width:50px;height:50px;border-radius:10px;background:rgba(255,255,255,0.9);border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:20px;filter:grayscale(0.3);">📷</div>
+        </div>
+        <div class="bg-label"><b>✗ 最差</b><br>纯白色背景</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--text-dim);margin-top:8px">磨砂玻璃效果需要"有东西可模糊"才能体现。纯白色背景下，模糊的白色还是白色，几乎看不出玻璃效果。</p>
+    <div style="margin-top:16px">
+      <p style="font-size:15px;margin-bottom:8px">快捷键 <span class="kbd">Ctrl+Alt+K</span> 创建 Component → 命名 <code style="background:#ede9fe;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:13px;color:#5b21b6">Icon / Camera / Glass</code></p>
+    </div>
+    <div class="export-tags">
+      <div class="export-tag"><div class="format">SVG</div><div class="use">开发使用 · 矢量格式</div></div>
+      <div class="export-tag"><div class="format">PNG</div><div class="use">演示展示 · 2x/3x</div></div>
+      <div class="export-tag"><div class="format">PDF</div><div class="use">打印存档 · 矢量格式</div></div>
+    </div>
+    <p style="text-align:center;font-size:14px;color:var(--text-dim)">导出提示：磨砂玻璃效果在 SVG 中使用 backdrop-filter，部分旧浏览器可能不支持</p>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="section">
+  <h2>知识点总结</h2>
+  <div class="summary-grid">
+    <div class="summary-item" style="border-left-color:var(--primary)">
+      <div class="emoji">🌫️</div>
+      <div><div class="title">背景模糊（Background Blur）</div><div class="desc">8-12px · 磨砂质感的核心来源</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--success)">
+      <div class="emoji">💧</div>
+      <div><div class="title">半透明填充（Fill Opacity）</div><div class="desc">50-70% · 让模糊背景透出来</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--accent)">
+      <div class="emoji">✨</div>
+      <div><div class="title">高光边缘（Inner Shadow + Stroke）</div><div class="desc">内阴影顶部高光 + 1px白描边</div></div>
+    </div>
+    <div class="summary-item" style="border-left-color:var(--purple,#7c3aed)">
+      <div class="emoji">🎨</div>
+      <div><div class="title">背景选择</div><div class="desc">彩色/渐变背景效果最佳，纯白背景几乎无效</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Extension Exercise -->
+<div class="section">
+  <h2>延伸练习</h2>
+  <div style="background:linear-gradient(135deg,#ede9fe,#f3e8ff);border-radius:12px;padding:20px">
+    <p style="font-weight:700;font-size:16px;margin-bottom:8px">用本教程的方法设计一套磨砂玻璃图标</p>
+    <p style="font-size:14px;color:var(--text-dim)">相机 / 音乐 / 设置 / 搜索 / 收藏 / 消息</p>
+    <ul style="margin-top:8px;font-size:14px;color:var(--text-dim);list-style:none;padding-left:0">
+      <li style="padding:4px 0">统一 80×80px 图标尺寸</li>
+      <li style="padding:4px 0">统一 10px 背景模糊</li>
+      <li style="padding:4px 0">统一 60% 填充不透明度</li>
+      <li style="padding:4px 0">统一高光边缘参数</li>
+      <li style="padding:4px 0">创建为 Figma Component Set，用 Variants 管理不同强度</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <p>UI设计案例教程 C02 · 图文教程</p>
+  <p>教材来源：4.4.2 · 工具：Figma</p>
+  <div class="next">下集预告：C03 拟物化图标从0到1设计</div>
+</div>
+
+</div>
+</body>
+</html>
