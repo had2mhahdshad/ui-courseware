@@ -950,38 +950,41 @@ slides.forEach((_, i) => {
 });
 
 function goToSlide(index) {
-  if (isAnimating || index < 0 || index >= totalSlides) return;
+  if (isAnimating || index < 0 || index >= totalSlides || index === currentSlide) return;
   isAnimating = true;
 
-  slides[currentSlide].classList.remove('active');
-  slides[currentSlide].classList.add(index > currentSlide ? 'prev' : '');
-  slides[index].classList.remove('prev');
-  
-  // Reset all slides position classes
+  const direction = index > currentSlide ? 'forward' : 'backward';
+
+  // Update all slides: classify as 'prev' (above), 'active' (current), or default (below)
   slides.forEach((s, i) => {
-    s.classList.remove('prev');
-    if (i < index) s.classList.add('prev');
+    s.classList.remove('active', 'prev');
+    if (i < index) {
+      s.classList.add('prev');
+    } else if (i === index) {
+      // Will be activated below
+    }
   });
 
-  setTimeout(() => {
+  // Small delay to let CSS transitions register the position change
+  requestAnimationFrame(() => {
     slides[index].classList.add('active');
     currentSlide = index;
     updateProgress();
     updateDots();
     updateSlideNum();
-    
+
     // Reset step counters for step slides
-    if (index === 3) { // camera steps
+    if (index === 3) {
       currentStep.camera = 0;
       updateCameraSteps();
     }
-    if (index === 5) { // bulb steps
+    if (index === 5) {
       currentStep.bulb = 0;
       updateBulbSteps();
     }
-    
-    setTimeout(() => { isAnimating = false; }, 600);
-  }, 50);
+
+    setTimeout(() => { isAnimating = false; }, 700);
+  });
 }
 
 function updateProgress() {
@@ -1000,17 +1003,17 @@ function updateSlideNum() {
 }
 
 // ========== Mouse Wheel Navigation ==========
-let wheelTimeout;
+let wheelLock = false;
 document.addEventListener('wheel', (e) => {
-  if (isAnimating) return;
-  clearTimeout(wheelTimeout);
-  wheelTimeout = setTimeout(() => {
-    if (e.deltaY > 30) {
-      goToSlide(currentSlide + 1);
-    } else if (e.deltaY < -30) {
-      goToSlide(currentSlide - 1);
-    }
-  }, 50);
+  if (isAnimating || wheelLock) return;
+  if (Math.abs(e.deltaY) < 20) return;
+  wheelLock = true;
+  if (e.deltaY > 20) {
+    goToSlide(currentSlide + 1);
+  } else if (e.deltaY < -20) {
+    goToSlide(currentSlide - 1);
+  }
+  setTimeout(() => { wheelLock = false; }, 900);
 }, { passive: true });
 
 // ========== Keyboard Navigation ==========
@@ -1104,9 +1107,10 @@ function setBoolean(type) {
         <mask id="exM">
           <rect width="240" height="200" fill="white"/>
           <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="black"/>
+        </mask>
+        <mask id="exM2">
+          <rect width="240" height="200" fill="white"/>
           <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="black"/>
-          <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="white"/>
-          <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="white"/>
         </mask>
         <linearGradient id="gradA3" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stop-color="#3BD7FB"/>
@@ -1117,22 +1121,30 @@ function setBoolean(type) {
           <stop offset="100%" stop-color="#FB8B06"/>
         </linearGradient>
       </defs>
-      <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="url(#gradA3)"/>
-      <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="url(#gradB)"/>
+      <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="url(#gradA3)" mask="url(#exM2)"/>
+      <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="url(#gradB)" mask="url(#exM)"/>
     `;
   }
 
-  document.getElementById('boolLabel').textContent = boolLabels[boolIndex];
+  document.getElementById('boolLabel').innerHTML = '<b style="font-size:17px">' + boolLabels[boolIndex] + '</b><br><span style="font-size:13px;color:rgba(255,255,255,.5)">' + boolDescs[boolIndex] + '</span>';
 }
 
 function nextBool() {
   boolIndex = (boolIndex + 1) % boolTypes.length;
   setBoolean(boolTypes[boolIndex]);
+  updateBoolButtons();
 }
 
 function prevBool() {
   boolIndex = (boolIndex - 1 + boolTypes.length) % boolTypes.length;
   setBoolean(boolTypes[boolIndex]);
+  updateBoolButtons();
+}
+
+function updateBoolButtons() {
+  document.querySelectorAll('.bool-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === boolIndex);
+  });
 }
 
 // Initialize boolean

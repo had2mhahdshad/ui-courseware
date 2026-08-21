@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>K04 · 费茨定律 Fitts's Law</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ==================== Reset & Base ==================== */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;
+  --blue:#3B82F6;
+  --purple:#8B5CF6;
+  --green:#10B981;
+  --orange:#F59E0B;
+  --red:#EF4444;
+  --text:#fff;
+  --sub:rgba(255,255,255,.5);
+  --faint:rgba(255,255,255,.08);
+  --card:rgba(255,255,255,.04);
+  --ease:cubic-bezier(.16,1,.3,1);
+  --dur:.7s;
+}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(--text);
+  font-family:'Noto Sans CJK SC','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{background:
+  radial-gradient(900px 600px at 12% -10%,rgba(59,130,246,.10),transparent 60%),
+  radial-gradient(800px 600px at 100% 110%,rgba(139,92,246,.10),transparent 60%),
+  var(--bg)}
+button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+::selection{background:rgba(59,130,246,.35)}
+
+/* ==================== Progress Bar ==================== */
+.progress-bar{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.06);z-index:200}
+.progress-fill{height:100%;width:0%;
+  background:linear-gradient(90deg,var(--blue),var(--purple),var(--green));
+  box-shadow:0 0 10px rgba(59,130,246,.85),0 0 22px rgba(139,92,246,.5);
+  transition:width var(--dur) var(--ease);border-radius:0 3px 3px 0}
+
+/* ==================== Slides ==================== */
+.slides{position:relative;width:100vw;height:100vh;overflow:hidden}
+.slide{position:absolute;inset:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  padding:64px 88px;overflow:hidden;
+  transform:translateY(100%) scale(.9);opacity:0;
+  transition:transform var(--dur) var(--ease),opacity var(--dur) var(--ease);
+  z-index:1}
+.slide.active{transform:translateY(0) scale(1);opacity:1;z-index:3}
+.slide.prev{transform:translateY(-100%) scale(.9);opacity:0;z-index:2}
+
+.slide-inner{width:100%;max-width:1180px;margin:0 auto}
+.anim-item{opacity:0;transform:translateY(34px);
+  transition:opacity .6s var(--ease),transform .6s var(--ease);transition-delay:0s}
+.slide.active .anim-item{opacity:1;transform:translateY(0)}
+.slide.active .anim-item:nth-child(1){transition-delay:.18s}
+.slide.active .anim-item:nth-child(2){transition-delay:.32s}
+.slide.active .anim-item:nth-child(3){transition-delay:.46s}
+.slide.active .anim-item:nth-child(4){transition-delay:.60s}
+.slide.active .anim-item:nth-child(5){transition-delay:.74s}
+.slide.active .anim-item:nth-child(6){transition-delay:.88s}
+
+/* ==================== Typography ==================== */
+.label-pill{display:inline-flex;align-items:center;gap:8px;
+  padding:7px 16px;border-radius:999px;font-size:13px;font-weight:500;
+  letter-spacing:.08em;color:var(--blue);
+  background:rgba(59,130,246,.10);border:1px solid rgba(59,130,246,.30)}
+.title-xl{font-size:clamp(48px,8vw,108px);font-weight:900;line-height:1.02;
+  letter-spacing:-.02em;margin-top:18px;
+  background:linear-gradient(120deg,#fff 30%,#bcd 70%,#9ab);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.title-en{display:block;font-size:clamp(18px,2.4vw,30px);font-weight:300;
+  letter-spacing:.18em;color:var(--sub);margin-top:14px;-webkit-text-fill-color:rgba(255,255,255,.45)}
+.title-lg{font-size:clamp(32px,5vw,58px);font-weight:800;line-height:1.08;letter-spacing:-.01em;margin-top:14px}
+.subtitle{font-size:clamp(17px,2vw,24px);color:var(--sub);margin-top:22px;line-height:1.6;font-weight:300;max-width:760px}
+
+/* ==================== Data Cards (Cover) ==================== */
+.data-cards{display:flex;gap:18px;margin-top:46px;flex-wrap:wrap}
+.data-card{flex:1;min-width:150px;padding:26px 24px;border-radius:18px;
+  background:var(--card);border:1px solid var(--faint);
+  backdrop-filter:blur(8px);transition:transform .4s var(--ease),border-color .4s}
+.data-card:hover{transform:translateY(-4px);border-color:rgba(59,130,246,.4)}
+.data-num{font-size:46px;font-weight:900;line-height:1;
+  background:linear-gradient(120deg,var(--blue),var(--purple));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.data-num .unit{font-size:18px;font-weight:500;margin-left:4px;-webkit-text-fill-color:var(--sub)}
+.data-label{margin-top:12px;font-size:14px;color:var(--sub);letter-spacing:.04em}
+
+/* ==================== Palette / Chips ==================== */
+.palette{display:flex;gap:12px;margin-top:38px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;
+  font-size:13px;font-weight:500;letter-spacing:.03em;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1px solid var(--faint);
+  transition:transform .25s var(--ease),border-color .25s,background .25s;user-select:none}
+.chip:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.09)}
+.chip:active{transform:translateY(0) scale(.97)}
+.chip .dot{width:13px;height:13px;border-radius:4px;background:var(--c,#fff);box-shadow:0 0 8px var(--c,#fff)}
+.chip.inline{padding:3px 9px;font-size:13px;border-radius:7px;color:var(--blue);
+  border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.10);vertical-align:baseline;margin:0 2px}
+
+/* ==================== Grids ==================== */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:34px;align-items:center}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:38px}
+.cards-3 .grid-3{margin-top:0}
+
+/* ==================== Definition ==================== */
+.def-grid{margin-top:30px}
+.formula{font-size:clamp(26px,4vw,46px);font-weight:700;letter-spacing:.01em;
+  padding:24px 28px;border-radius:16px;text-align:center;
+  background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(139,92,246,.12));
+  border:1px solid var(--faint);font-variant-numeric:tabular-nums}
+.formula sub{font-size:.55em}
+.v-d{color:var(--blue)}.v-w{color:var(--purple)}.v-ab{color:var(--orange)}
+.def-desc{margin-top:20px;color:rgba(255,255,255,.75);line-height:1.7;font-size:16px}
+.def-desc strong{color:var(--blue)}
+.var-list{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:12px}
+.var-list li{display:flex;align-items:center;gap:12px;font-size:15px;color:rgba(255,255,255,.7)}
+.var{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:30px;padding:0 8px;
+  border-radius:8px;font-weight:700;font-size:14px}
+.var.v-d{color:var(--blue);background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3)}
+.var.v-w{color:var(--purple);background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3)}
+.var.v-ab{color:var(--orange);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3)}
+.def-svg{display:flex;justify-content:center;align-items:center}
+.def-svg-img{width:100%;max-width:520px;height:auto}
+
+/* ==================== Interactive Demo ==================== */
+.demo-stage{position:relative;width:100%;max-width:760px;height:220px;margin:14px auto 0;
+  border-radius:18px;background:rgba(255,255,255,.02);border:1px solid var(--faint);overflow:hidden}
+.demo-stage::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0,transparent 38px,rgba(255,255,255,.025) 38px,rgba(255,255,255,.025) 39px)}
+.start-circle{position:absolute;left:34px;top:50%;transform:translateY(-50%);
+  width:60px;height:60px;border-radius:50%;font-size:13px;font-weight:600;color:#1a1205;
+  background:radial-gradient(circle at 35% 30%,#fbbf24,var(--orange));
+  box-shadow:0 0 0 6px rgba(245,158,11,.18),0 8px 24px rgba(245,158,11,.35);
+  transition:transform .25s var(--ease),box-shadow .25s,opacity .25s;z-index:2}
+.start-circle:hover{transform:translateY(-50%) scale(1.06)}
+.start-circle.disabled{opacity:.4;cursor:default;box-shadow:0 0 0 6px rgba(245,158,11,.08)}
+.target-block{position:absolute;right:34px;top:50%;transform:translateY(-50%);
+  background:radial-gradient(circle at 30% 25%,#34d399,var(--green));border-radius:12px;
+  transition:width .35s var(--ease),height .35s var(--ease),box-shadow .3s,opacity .3s;opacity:.45;cursor:default;z-index:2}
+.target-block.ready{opacity:1;box-shadow:0 0 0 6px rgba(16,185,129,.20),0 0 30px rgba(16,185,129,.55);cursor:pointer}
+.target-block.ready:hover{box-shadow:0 0 0 8px rgba(16,185,129,.28),0 0 40px rgba(16,185,129,.7)}
+.demo-axis{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+  font-size:12px;color:var(--sub);letter-spacing:.1em;pointer-events:none;z-index:1}
+.demo-controls{display:flex;justify-content:space-between;align-items:center;gap:24px;
+  flex-wrap:wrap;margin-top:26px}
+.size-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ctrl-label{font-size:13px;color:var(--sub);margin-right:4px}
+.size-btn{padding:9px 16px;border-radius:10px;font-size:14px;font-weight:600;
+  background:rgba(255,255,255,.04);border:1px solid var(--faint);color:var(--sub);
+  transition:all .25s var(--ease)}
+.size-btn:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+.size-btn.active{color:#fff;background:rgba(59,130,246,.16);border-color:rgba(59,130,246,.5);
+  box-shadow:0 0 14px rgba(59,130,246,.35)}
+.stat-group{display:flex;gap:30px}
+.stat{display:flex;flex-direction:column;gap:6px}
+.stat-label{font-size:12px;color:var(--sub);letter-spacing:.06em}
+.stat-val{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:linear-gradient(120deg,var(--green),var(--blue));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.demo-hint{margin-top:22px;text-align:center;color:var(--sub);font-size:15px;min-height:22px}
+
+/* ==================== Design Points ==================== */
+.card{padding:30px 26px;border-radius:20px;background:var(--card);border:1px solid var(--faint);
+  backdrop-filter:blur(8px);transition:transform .4s var(--ease),border-color .4s,box-shadow .4s}
+.card:hover{transform:translateY(-6px);border-color:rgba(59,130,246,.4);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.point-icon{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:700;margin-bottom:18px}
+.point-card:nth-child(1) .point-icon{color:var(--blue);background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3)}
+.point-card:nth-child(2) .point-icon{color:var(--purple);background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3)}
+.point-card:nth-child(3) .point-icon{color:var(--green);background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3)}
+.point-card h3{font-size:21px;font-weight:700;margin-bottom:12px}
+.point-card p{font-size:14.5px;color:rgba(255,255,255,.65);line-height:1.65}
+.tag{display:inline-block;margin-top:16px;padding:4px 12px;border-radius:7px;font-size:12px;
+  color:var(--blue);background:rgba(59,130,246,.10);border:1px solid rgba(59,130,246,.25)}
+
+/* ==================== Cases ==================== */
+.cases-grid{margin-top:30px}
+.case-card{padding:26px;border-radius:18px;background:var(--card);border:1px solid var(--faint);
+  transition:transform .4s var(--ease),border-color .4s}
+.case-card:hover{transform:translateY(-5px);border-color:rgba(139,92,246,.4)}
+.case-emoji{font-size:38px;margin-bottom:14px;line-height:1}
+.case-card h3{font-size:19px;font-weight:700;margin-bottom:10px}
+.case-card p{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6}
+
+/* ==================== Related ==================== */
+.rel-grid{margin-top:30px}
+.rel-card{position:relative;padding:26px 26px 26px 30px;border-radius:18px;
+  background:var(--card);border:1px solid var(--faint);overflow:hidden;
+  transition:transform .4s var(--ease),border-color .4s}
+.rel-card:hover{transform:translateY(-5px);border-color:rgba(16,185,129,.4)}
+.rel-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
+.rel-num{font-size:13px;font-weight:700;color:var(--green);letter-spacing:.1em;margin-bottom:10px}
+.rel-card h3{font-size:19px;font-weight:700;margin-bottom:10px}
+.rel-card p{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6}
+
+/* ==================== Ending ==================== */
+.end-inner{max-width:860px}
+.summary{list-style:none;display:flex;flex-direction:column;gap:16px;margin-top:30px}
+.summary li{padding:18px 22px;border-radius:14px;background:var(--card);border:1px solid var(--faint);
+  font-size:16px;color:rgba(255,255,255,.75);line-height:1.6}
+.summary li b{color:var(--blue)}
+.formula-inline{font-variant-numeric:tabular-nums;color:var(--purple);font-weight:600}
+.btn-restart{margin-top:38px;padding:16px 40px;border-radius:14px;font-size:17px;font-weight:700;
+  color:#fff;letter-spacing:.04em;
+  background:linear-gradient(120deg,var(--blue),var(--purple));
+  box-shadow:0 12px 30px rgba(59,130,246,.4);
+  transition:transform .3s var(--ease),box-shadow .3s}
+.btn-restart:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(139,92,246,.5)}
+.btn-restart:active{transform:translateY(0) scale(.98)}
+
+/* ==================== Nav Dots ==================== */
+.nav-dots{position:fixed;right:30px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:14px;z-index:150}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.2);
+  transition:all .35s var(--ease);padding:0;cursor:pointer}
+.dot:hover{background:rgba(255,255,255,.45)}
+.dot.active{height:30px;border-radius:6px;background:linear-gradient(var(--blue),var(--purple));
+  box-shadow:0 0 12px rgba(59,130,246,.6)}
+
+/* ==================== Page Number & Hints ==================== */
+.page-num{position:fixed;right:30px;bottom:26px;font-size:14px;font-weight:600;
+  color:var(--sub);letter-spacing:.08em;z-index:150;font-variant-numeric:tabular-nums}
+.page-num b{color:#fff}
+.kbd-hints{position:fixed;left:30px;bottom:24px;display:flex;align-items:center;gap:14px;
+  font-size:12px;color:var(--sub);z-index:150;flex-wrap:wrap}
+.kbd-hints .kb{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+  padding:0 6px;border-radius:6px;font-size:13px;color:#fff;
+  background:rgba(255,255,255,.07);border:1px solid var(--faint)}
+.kbd-hints .sep{opacity:.4}
+
+/* ==================== Toast ==================== */
+.toast{position:fixed;left:50%;bottom:80px;transform:translate(-50%,12px);
+  padding:11px 20px;border-radius:11px;font-size:14px;font-weight:600;color:#fff;
+  background:rgba(16,185,129,.95);box-shadow:0 10px 30px rgba(16,185,129,.4);
+  opacity:0;pointer-events:none;z-index:300;transition:opacity .3s,transform .3s var(--ease)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ==================== Responsive ==================== */
+@media (max-width:860px){
+  .slide{padding:70px 22px 80px;align-items:flex-start;justify-content:flex-start;overflow-y:auto}
+  .grid-2,.grid-3{grid-template-columns:1fr;gap:18px}
+  .def-svg{order:-1}
+  .data-cards{gap:12px}
+  .data-card{min-width:100px;padding:18px}
+  .demo-stage{height:180px}
+  .demo-controls{flex-direction:column;align-items:flex-start;gap:16px}
+  .nav-dots{right:14px;gap:10px}
+  .page-num{right:14px;bottom:18px;font-size:12px}
+  .kbd-hints{left:14px;bottom:16px;gap:8px}
+  .start-circle{left:18px;width:50px;height:50px}
+  .target-block{right:18px}
+  .palette{gap:8px}
+}
+@media (max-width:480px){
+  .title-xl{font-size:54px}
+  .kbd-hints .desc{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ Progress Bar ============ -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ============ Slides ============ -->
+<div class="slides" id="slides">
+
+  <!-- ===== Slide 1 · Cover ===== -->
+  <section class="slide active" data-slide="0">
+    <div class="slide-inner">
+      <div class="anim-item"><span class="label-pill">K04 · 人机交互定律</span></div>
+      <div class="anim-item"><h1 class="title-xl">费茨定律<span class="title-en">Fitts's Law</span></h1></div>
+      <div class="anim-item"><p class="subtitle">目标越近、越大，点击越快 —— 衡量人类指向操作效率的黄金定律</p></div>
+      <div class="anim-item">
+        <div class="data-cards">
+          <div class="data-card"><div class="data-num">4</div><div class="data-label">公式变量</div></div>
+          <div class="data-card"><div class="data-num">3</div><div class="data-label">设计要点</div></div>
+          <div class="data-card"><div class="data-num">8<span class="unit">min</span></div><div class="data-label">阅读时长</div></div>
+        </div>
+      </div>
+      <div class="anim-item">
+        <div class="palette">
+          <button class="chip" style="--c:#3B82F6" onclick="copyVal('#3B82F6',event)"><span class="dot"></span>#3B82F6</button>
+          <button class="chip" style="--c:#8B5CF6" onclick="copyVal('#8B5CF6',event)"><span class="dot"></span>#8B5CF6</button>
+          <button class="chip" style="--c:#10B981" onclick="copyVal('#10B981',event)"><span class="dot"></span>#10B981</button>
+          <button class="chip" style="--c:#F59E0B" onclick="copyVal('#F59E0B',event)"><span class="dot"></span>#F59E0B</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 2 · Core Definition ===== -->
+  <section class="slide" data-slide="1">
+    <div class="slide-inner">
+      <div class="anim-item"><span class="label-pill">02 · 核心定义</span><h2 class="title-lg">什么是费茨定律</h2></div>
+      <div class="anim-item grid-2 def-grid">
+        <div class="def-text">
+          <div class="formula">MT = a + b·log<sub>2</sub>(<span class="v-d">D</span>/<span class="v-w">W</span> + 1)</div>
+          <p class="def-desc">人类快速指向一个目标所需的运动时间 <strong>MT</strong>，由起点到目标的<strong>距离 D</strong>与目标<strong>宽度 W</strong>共同决定：距离越近、目标越大，命中越快。</p>
+          <ul class="var-list">
+            <li><span class="var v-d">D</span>起点到目标中心的距离</li>
+            <li><span class="var v-w">W</span>目标命中区域的宽度</li>
+            <li><span class="var v-ab">a · b</span>由输入设备决定的经验常数</li>
+          </ul>
+        </div>
+        <div class="def-svg">
+          <svg class="def-svg-img" viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" aria-label="费茨定律示意">
+            <defs>
+              <marker id="arrEnd" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3B82F6"/></marker>
+              <marker id="arrStart" markerWidth="10" markerHeight="10" refX="2" refY="5" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#3B82F6"/></marker>
+            </defs>
+            <circle cx="70" cy="150" r="16" fill="none" stroke="#F59E0B" stroke-opacity=".35" stroke-width="6"/>
+            <circle cx="70" cy="150" r="16" fill="#F59E0B"/>
+            <text x="70" y="198" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="14">起点</text>
+            <rect x="430" y="90" width="90" height="120" rx="10" fill="rgba(16,185,129,.12)" stroke="#10B981" stroke-width="3"/>
+            <text x="475" y="228" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="14">目标</text>
+            <line x1="88" y1="150" x2="428" y2="150" stroke="#3B82F6" stroke-width="2" stroke-dasharray="7 6" marker-start="url(#arrStart)" marker-end="url(#arrEnd)"/>
+            <rect x="236" y="130" width="44" height="24" rx="6" fill="#0a0a0f"/>
+            <text x="258" y="147" text-anchor="middle" fill="#3B82F6" font-size="16" font-weight="700">D</text>
+            <line x1="430" y1="74" x2="520" y2="74" stroke="#8B5CF6" stroke-width="2"/>
+            <line x1="430" y1="68" x2="430" y2="80" stroke="#8B5CF6" stroke-width="2"/>
+            <line x1="520" y1="68" x2="520" y2="80" stroke="#8B5CF6" stroke-width="2"/>
+            <rect x="460" y="46" width="30" height="24" rx="6" fill="#0a0a0f"/>
+            <text x="475" y="63" text-anchor="middle" fill="#8B5CF6" font-size="16" font-weight="700">W</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 3 · Interactive Demo ===== -->
+  <section class="slide" data-slide="2">
+    <div class="slide-inner">
+      <div class="anim-item"><span class="label-pill">03 · 交互演示</span><h2 class="title-lg">费茨定律实验</h2></div>
+      <div class="anim-item">
+        <div class="demo-stage">
+          <button class="start-circle" id="demoStart">起点</button>
+          <button class="target-block" id="demoTarget"></button>
+          <span class="demo-axis">固定距离 D · 目标越大越快</span>
+        </div>
+      </div>
+      <div class="anim-item demo-controls">
+        <div class="size-group">
+          <span class="ctrl-label">目标宽度 W</span>
+          <button class="size-btn" data-size="24" onclick="setDemoSize(24)">24px</button>
+          <button class="size-btn active" data-size="44" onclick="setDemoSize(44)">44px</button>
+          <button class="size-btn" data-size="80" onclick="setDemoSize(80)">80px</button>
+          <button class="chip" onclick="copyVal('44px',event)">复制 44px</button>
+        </div>
+        <div class="stat-group">
+          <div class="stat"><span class="stat-label">本次用时</span><span class="stat-val" id="demoTime">0.000s</span></div>
+          <div class="stat"><span class="stat-label">最佳成绩</span><span class="stat-val" id="demoBest">—</span></div>
+        </div>
+      </div>
+      <div class="anim-item"><p class="demo-hint" id="demoHint">点击红色起点开始计时</p></div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 4 · Design Points ===== -->
+  <section class="slide" data-slide="3">
+    <div class="slide-inner">
+      <div class="anim-item"><span class="label-pill">04 · 设计要点</span><h2 class="title-lg">三大设计要点</h2></div>
+      <div class="anim-item grid-3">
+        <div class="card point-card">
+          <div class="point-icon">&#8596;</div>
+          <h3>缩短距离 D</h3>
+          <p>减少鼠标移动路径。将高频操作放在易达区域，常用按钮就近放置，让光标走更短的路。</p>
+          <span class="tag">高频操作就近</span>
+        </div>
+        <div class="card point-card">
+          <div class="point-icon">&#10506;</div>
+          <h3>放大目标 W</h3>
+          <p>扩大命中区域、降低精度要求。移动端触控按钮尺寸推荐不小于 <button class="chip inline" onclick="copyVal('44px',event)">44px</button>。</p>
+          <span class="tag">&ge; 44px</span>
+        </div>
+        <div class="card point-card">
+          <div class="point-icon">&#8976;</div>
+          <h3>利用边缘效应</h3>
+          <p>屏幕边缘的目标相当于"无限大"。将菜单、导航贴近边缘，光标 overshoot 也能命中。</p>
+          <span class="tag">边缘 &infin;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 5 · Real Cases ===== -->
+  <section class="slide" data-slide="4">
+    <div class="slide-inner">
+      <div class="anim-item"><span class="label-pill">05 · 真实案例</span><h2 class="title-lg">费茨定律的应用</h2></div>
+      <div class="anim-item grid-2 cases-grid">
+        <div class="case-card"><div class="case-emoji">&#128241;</div><h3>底部导航栏</h3><p>固定在屏幕底部，距离拇指自然位置近，且利用下边缘效应，单手极易命中。</p></div>
+        <div class="case-card"><div class="case-emoji">&#128187;</div><h3>开始菜单</h3><p>位于屏幕左下角，角落目标"无限大"，鼠标快速甩到角落即可触发。</p></div>
+        <div class="case-card"><div class="case-emoji">&#128722;</div><h3>悬浮购买按钮</h3><p>浮动在视线焦点区域，缩短到达距离，配合醒目色彩提升转化率。</p></div>
+        <div class="case-card"><div class="case-emoji">&#128208;</div><h3>侧边工具栏</h3><p>贴边固定排列，边缘效应加持，常用工具一键直达，降低操作疲劳。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 6 · Related Knowledge ===== -->
+  <section class="slide" data-slide="5">
+    <div class="slide-inner">
+      <div class="anim-item"><span class="label-pill">06 · 相关知识</span><h2 class="title-lg">延伸学习</h2></div>
+      <div class="anim-item grid-2 rel-grid">
+        <div class="rel-card"><div class="rel-num">01</div><h3>席克定律</h3><p>决策时间与可选数量正相关：选择越多，反应越慢。与费茨定律互补，共同影响交互效率。</p></div>
+        <div class="rel-card"><div class="rel-num">02</div><h3>格式塔原理</h3><p>接近性、相似性、连续性等视觉组织原则，决定用户如何快速识别可点击区域。</p></div>
+        <div class="rel-card"><div class="rel-num">03</div><h3>UI 四大原则</h3><p>一致性、反馈、效率、容错，构建可用且易学的界面体系。</p></div>
+        <div class="rel-card"><div class="rel-num">04</div><h3>扁平图标设计</h3><p>简洁、可识别的视觉语言，降低认知负荷，配合足够大的命中区域。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 7 · Ending ===== -->
+  <section class="slide" data-slide="6">
+    <div class="slide-inner end-inner">
+      <div class="anim-item"><span class="label-pill">07 · 总结回顾</span><h2 class="title-lg">关键要点</h2></div>
+      <div class="anim-item">
+        <ul class="summary">
+          <li><b>距离 D</b> 越小，操作越快 —— 高频功能就近放置，缩短光标路径。</li>
+          <li><b>宽度 W</b> 越大，越易命中 —— 触控按钮不小于 <button class="chip inline" onclick="copyVal('44px',event)">44px</button>。</li>
+          <li><b>边缘效应</b> 让角落与边缘目标"无限大"，导航、菜单贴边布置。</li>
+          <li>核心公式：<span class="formula-inline">MT = a + b·log&#8322;(D/W + 1)</span></li>
+        </ul>
+      </div>
+      <div class="anim-item"><button class="btn-restart" onclick="goToSlide(0)">重新开始</button></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ Navigation Dots ============ -->
+<nav class="nav-dots" id="navDots" aria-label="页面导航"></nav>
+
+<!-- ============ Page Number & Hints ============ -->
+<div class="page-num"><b id="pageCur">01</b>/<span id="pageTotal">07</span></div>
+<div class="kbd-hints">
+  <span class="kb">&#8593;</span><span class="kb">&#8595;</span>
+  <span class="desc">方向键</span>
+  <span class="sep">/</span>
+  <span class="desc">滚轮</span>
+  <span class="sep">/</span>
+  <span class="desc">触屏滑动</span>
+</div>
+
+<!-- ============ Toast ============ -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==================== Slide System ==================== */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let currentSlide = 0;
+let wheelLock = false;
+
+const navDots = document.getElementById('navDots');
+const pageCur = document.getElementById('pageCur');
+const pageTotal = document.getElementById('pageTotal');
+const progressFill = document.getElementById('progressFill');
+pageTotal.textContent = String(total).padStart(2,'0');
+
+/* build nav dots */
+for (let i=0;i<total;i++){
+  const dot = document.createElement('button');
+  dot.className = 'dot' + (i===0?' active':'');
+  dot.setAttribute('aria-label','第'+(i+1)+'页');
+  dot.addEventListener('click', function(){ goToSlide(i); });
+  navDots.appendChild(dot);
+}
+const dots = navDots.querySelectorAll('.dot');
+
+function goToSlide(index){
+  if (index === currentSlide) return;          // same slide, skip
+  if (index < 0 || index >= total) return;     // bounds guard
+  const forward = index > currentSlide;
+  const oldSlide = slides[currentSlide];
+  const newSlide = slides[index];
+
+  /* old slide: forward -> add 'prev' (translateY -); backward -> default (translateY +) */
+  oldSlide.classList.remove('active');
+  if (forward) oldSlide.classList.add('prev');
+  else oldSlide.classList.remove('prev');
+
+  /* new slide via requestAnimationFrame (not setTimeout) */
+  requestAnimationFrame(function(){
+    newSlide.classList.remove('prev');
+    newSlide.classList.add('active');
+  });
+
+  currentSlide = index;
+  updateUI();
+}
+
+function updateUI(){
+  dots.forEach(function(d,i){ d.classList.toggle('active', i===currentSlide); });
+  pageCur.textContent = String(currentSlide+1).padStart(2,'0');
+  progressFill.style.width = ((currentSlide+1)/total*100) + '%';
+}
+
+/* ==================== Wheel (wheelLock, 900ms, no debounce) ==================== */
+window.addEventListener('wheel', function(e){
+  if (wheelLock) return;
+  if (Math.abs(e.deltaY) < 8) return;
+  wheelLock = true;
+  setTimeout(function(){ wheelLock = false; }, 900);
+  if (e.deltaY > 0) goToSlide(currentSlide+1);
+  else goToSlide(currentSlide-1);
+}, { passive:true });
+
+/* ==================== Keyboard ==================== */
+window.addEventListener('keydown', function(e){
+  if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' '){
+    e.preventDefault(); goToSlide(currentSlide+1);
+  } else if (e.key === 'ArrowUp' || e.key === 'PageUp'){
+    e.preventDefault(); goToSlide(currentSlide-1);
+  } else if (e.key === 'Home'){
+    e.preventDefault(); goToSlide(0);
+  } else if (e.key === 'End'){
+    e.preventDefault(); goToSlide(total-1);
+  }
+});
+
+/* ==================== Touch Swipe ==================== */
+let touchStartY = 0, touchStartT = 0;
+window.addEventListener('touchstart', function(e){
+  touchStartY = e.touches[0].clientY;
+  touchStartT = Date.now();
+}, { passive:true });
+window.addEventListener('touchend', function(e){
+  const dy = touchStartY - e.changedTouches[0].clientY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dy) > 45 && dt < 800){
+    if (dy > 0) goToSlide(currentSlide+1);
+    else goToSlide(currentSlide-1);
+  }
+}, { passive:true });
+
+/* ==================== copyVal ==================== */
+function copyVal(val, e){
+  if (e) e.stopPropagation();
+  var text = String(val);
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ showToast('已复制 '+text); }).catch(function(){ fallbackCopy(text); });
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.top='-9999px'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); showToast('已复制 '+text); } catch(err){ showToast('复制失败'); }
+  document.body.removeChild(ta);
+}
+var toastTimer;
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1400);
+}
+
+/* ==================== Interactive Demo ==================== */
+var demoState = 'idle';     /* idle | started */
+var demoStart = 0;
+var demoSize = 44;
+var bestTimes = { 24:null, 44:null, 80:null };
+
+var startCircle = document.getElementById('demoStart');
+var targetBlock = document.getElementById('demoTarget');
+var sizeBtns = document.querySelectorAll('.size-btn');
+var timeDisplay = document.getElementById('demoTime');
+var bestDisplay = document.getElementById('demoBest');
+var demoHint = document.getElementById('demoHint');
+
+function setDemoSize(s){
+  demoSize = s;
+  targetBlock.style.width = s + 'px';
+  targetBlock.style.height = s + 'px';
+  sizeBtns.forEach(function(b){ b.classList.toggle('active', Number(b.dataset.size)===s); });
+  resetDemo();
+  updateBest();
+}
+function resetDemo(){
+  demoState = 'idle';
+  startCircle.classList.remove('disabled');
+  targetBlock.classList.remove('ready');
+  timeDisplay.textContent = '0.000s';
+  demoHint.textContent = '点击红色起点开始计时';
+}
+function onStartClick(){
+  if (demoState !== 'idle') return;
+  demoState = 'started';
+  demoStart = performance.now();
+  startCircle.classList.add('disabled');
+  targetBlock.classList.add('ready');
+  demoHint.textContent = '快！点击绿色目标';
+}
+function onTargetClick(){
+  if (demoState !== 'started') return;
+  var elapsed = performance.now() - demoStart;
+  demoState = 'idle';
+  timeDisplay.textContent = (elapsed/1000).toFixed(3) + 's';
+  var isBest = (bestTimes[demoSize]===null || elapsed < bestTimes[demoSize]);
+  if (isBest){
+    bestTimes[demoSize] = elapsed;
+    updateBest();
+    demoHint.textContent = '新纪录！点击起点再来一次';
+  } else {
+    demoHint.textContent = '点击起点再来一次';
+  }
+  startCircle.classList.remove('disabled');
+  targetBlock.classList.remove('ready');
+}
+function updateBest(){
+  var b = bestTimes[demoSize];
+  bestDisplay.textContent = (b===null) ? '—' : (b/1000).toFixed(3) + 's';
+}
+startCircle.addEventListener('click', onStartClick);
+targetBlock.addEventListener('click', onTargetClick);
+
+/* ==================== Init ==================== */
+setDemoSize(44);
+updateUI();
+</script>
+</body>
+</html>
