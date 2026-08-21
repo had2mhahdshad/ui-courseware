@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>扁平风格图标设计 · PPT 交互课件</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',-apple-system,sans-serif;
+  background:#0a0a0f;
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ========== Slide Container ========== */
+.slides-container{
+  height:100vh;
+  width:100vw;
+  position:relative;
+}
+.slide{
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  padding:60px 80px;
+  opacity:0;
+  transform:translateY(60px) scale(0.95);
+  transition:all .8s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+  overflow:hidden;
+}
+.slide.active{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+.slide.prev{
+  opacity:0;
+  transform:translateY(-60px) scale(1.05);
+}
+
+/* Background gradients */
+.slide::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:.6;
+}
+.slide.s1::before{background:radial-gradient(ellipse at 30% 20%,#1A7DFF40 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,#8B5CF630 0%,transparent 50%)}
+.slide.s2::before{background:radial-gradient(ellipse at 80% 30%,#005EFF40 0%,transparent 50%),radial-gradient(ellipse at 20% 70%,#3BD7FB20 0%,transparent 50%)}
+.slide.s3::before{background:radial-gradient(ellipse at 50% 50%,#FEB82920 0%,transparent 60%)}
+.slide.s4::before{background:radial-gradient(ellipse at 20% 40%,#FB8B0630 0%,transparent 50%),radial-gradient(ellipse at 80% 60%,#FEB82920 0%,transparent 50%)}
+.slide.s5::before{background:radial-gradient(ellipse at 50% 30%,#8B5CF630 0%,transparent 50%)}
+.slide.s6::before{background:radial-gradient(ellipse at 70% 50%,#10B98125 0%,transparent 50%)}
+
+/* Grid pattern overlay */
+.slide::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:40px 40px;
+  z-index:0;
+  pointer-events:none;
+}
+
+.slide-content{
+  position:relative;
+  z-index:1;
+  max-width:1200px;
+  width:100%;
+}
+
+/* ========== Progress Bar ========== */
+.progress-bar{
+  position:fixed;
+  top:0;left:0;
+  height:3px;
+  background:linear-gradient(90deg,#1A7DFF,#8B5CF6);
+  z-index:100;
+  transition:width .5s ease;
+  box-shadow:0 0 20px rgba(26,125,255,.5);
+}
+
+/* ========== Slide Counter ========== */
+.slide-counter{
+  position:fixed;
+  bottom:30px;right:40px;
+  font-size:14px;
+  color:rgba(255,255,255,.4);
+  z-index:100;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:2px;
+}
+.slide-counter .current{
+  font-size:24px;
+  font-weight:700;
+  color:rgba(255,255,255,.8);
+}
+
+/* ========== Nav Dots ========== */
+.nav-dots{
+  position:fixed;
+  right:30px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:100;
+}
+.nav-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  cursor:pointer;
+  transition:all .3s;
+  position:relative;
+}
+.nav-dot:hover{background:rgba(255,255,255,.5)}
+.nav-dot.active{
+  background:#fff;
+  transform:scale(1.3);
+  box-shadow:0 0 12px rgba(255,255,255,.5);
+}
+
+/* ========== Slide Title Styles ========== */
+.slide-label{
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#1A7DFF;
+  margin-bottom:16px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all .6s cubic-bezier(.16,1,.3,1) .2s;
+}
+.slide.active .slide-label{opacity:1;transform:translateY(0)}
+
+.slide h1{
+  font-size:64px;
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:-1.5px;
+  margin-bottom:24px;
+  opacity:0;
+  transform:translateY(30px);
+  transition:all .7s cubic-bezier(.16,1,.3,1) .3s;
+  background:linear-gradient(135deg,#fff 0%,#94a3b8 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.slide.active h1{opacity:1;transform:translateY(0)}
+
+.slide h2{
+  font-size:42px;
+  font-weight:700;
+  line-height:1.2;
+  letter-spacing:-0.5px;
+  margin-bottom:20px;
+  opacity:0;
+  transform:translateY(25px);
+  transition:all .7s cubic-bezier(.16,1,.3,1) .25s;
+}
+.slide.active h2{opacity:1;transform:translateY(0)}
+
+.slide p.lead{
+  font-size:20px;
+  line-height:1.7;
+  color:rgba(255,255,255,.6);
+  max-width:640px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all .6s cubic-bezier(.16,1,.3,1) .45s;
+}
+.slide.active p.lead{opacity:1;transform:translateY(0)}
+
+/* ========== Cover Slide ========== */
+.cover-slide{
+  text-align:center;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.cover-slide .tag-badge{
+  display:inline-block;
+  padding:8px 20px;
+  border:1px solid rgba(26,125,255,.4);
+  border-radius:30px;
+  font-size:13px;
+  font-weight:600;
+  color:#60a5fa;
+  letter-spacing:2px;
+  margin-bottom:32px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all .6s cubic-bezier(.16,1,.3,1) .2s;
+  backdrop-filter:blur(10px);
+}
+.slide.active .tag-badge{opacity:1;transform:translateY(0)}
+
+.cover-slide h1{
+  font-size:72px;
+  font-weight:800;
+  letter-spacing:-2px;
+  margin-bottom:20px;
+  background:linear-gradient(135deg,#fff 0%,#60a5fa 50%,#a78bfa 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.cover-slide .subtitle{
+  font-size:22px;
+  color:rgba(255,255,255,.5);
+  margin-bottom:48px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all .6s cubic-bezier(.16,1,.3,1) .5s;
+}
+.slide.active .subtitle{opacity:1;transform:translateY(0)}
+
+.cover-meta{
+  display:flex;gap:40px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all .6s cubic-bezier(.16,1,.3,1) .65s;
+}
+.slide.active .cover-meta{opacity:1;transform:translateY(0)}
+.cover-meta .meta-item{
+  text-align:center;
+  padding:16px 28px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  backdrop-filter:blur(10px);
+}
+.meta-item .meta-num{
+  font-size:28px;font-weight:700;
+  color:#fff;
+}
+.meta-item .meta-label{
+  font-size:12px;
+  color:rgba(255,255,255,.4);
+  margin-top:4px;
+  letter-spacing:1px;
+}
+
+.scroll-hint{
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:13px;
+  color:rgba(255,255,255,.3);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;
+  animation:fadeInUp 1s ease 1.5s forwards;
+}
+.scroll-hint .arrow{
+  width:20px;height:20px;
+  border-right:2px solid rgba(255,255,255,.3);
+  border-bottom:2px solid rgba(255,255,255,.3);
+  transform:rotate(45deg);
+  animation:bounceDown 2s infinite;
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateX(-50%) translateY(10px)}
+  to{opacity:1;transform:translateX(-50%) translateY(0)}
+}
+@keyframes bounceDown{
+  0%,100%{transform:rotate(45deg) translate(0,0)}
+  50%{transform:rotate(45deg) translate(4px,4px)}
+}
+
+/* ========== Two Column Layout ========== */
+.two-col{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  align-items:center;
+}
+.col-text{opacity:0;transform:translateX(-30px);transition:all .7s cubic-bezier(.16,1,.3,1) .35s}
+.col-visual{opacity:0;transform:translateX(30px);transition:all .7s cubic-bezier(.16,1,.3,1) .45s}
+.slide.active .col-text{opacity:1;transform:translateX(0)}
+.slide.active .col-visual{opacity:1;transform:translateX(0)}
+
+/* ========== Boolean Demo (PPT style) ========== */
+.bool-visual{
+  position:relative;
+  height:400px;
+  display:flex;align-items:center;justify-content:center;
+}
+.bool-canvas{
+  width:320px;height:320px;
+  position:relative;
+  background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.bool-shape{
+  position:absolute;
+  border-radius:50%;
+  transition:all .6s cubic-bezier(.16,1,.3,1);
+}
+.bool-a{
+  width:160px;height:160px;
+  background:linear-gradient(135deg,#1A7DFF,#3BD7FB);
+  left:30px;
+  box-shadow:0 0 60px rgba(26,125,255,.4);
+}
+.bool-b{
+  width:160px;height:160px;
+  background:linear-gradient(135deg,#FEB829,#FB8B06);
+  right:30px;
+  box-shadow:0 0 60px rgba(254,184,41,.4);
+}
+.bool-result-svg{
+  position:absolute;
+  z-index:5;
+  transition:all .5s ease;
+}
+.bool-label{
+  position:absolute;
+  bottom:0;
+  font-size:15px;
+  font-weight:600;
+  color:rgba(255,255,255,.7);
+  text-align:center;
+  width:100%;
+  letter-spacing:1px;
+}
+
+/* ========== Feature Cards ========== */
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-top:40px;
+}
+.feature-card{
+  padding:28px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  backdrop-filter:blur(10px);
+  opacity:0;
+  transform:translateY(30px);
+  transition:all .5s cubic-bezier(.16,1,.3,1);
+}
+.slide.active .feature-card:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.35s}
+.slide.active .feature-card:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.45s}
+.slide.active .feature-card:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.55s}
+.slide.active .feature-card:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.65s}
+.slide.active .feature-card:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.75s}
+.slide.active .feature-card:nth-child(6){opacity:1;transform:translateY(0);transition-delay:.85s}
+
+.feature-card:hover{
+  border-color:rgba(26,125,255,.4);
+  background:rgba(26,125,255,.08);
+  transform:translateY(-4px);
+}
+.feature-icon{
+  width:48px;height:48px;
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(26,125,255,.2),rgba(139,92,246,.2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  margin-bottom:16px;
+}
+.feature-card h4{
+  font-size:17px;font-weight:600;
+  margin-bottom:8px;
+}
+.feature-card p{
+  font-size:14px;
+  color:rgba(255,255,255,.5);
+  line-height:1.6;
+}
+
+/* ========== Steps Slide ========== */
+.steps-wrap{
+  display:grid;
+  grid-template-columns:80px 1fr;
+  gap:40px;
+  align-items:start;
+  margin-top:30px;
+}
+.step-rail{
+  position:relative;
+  height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;
+  padding:10px 0;
+}
+.step-dot{
+  width:40px;height:40px;
+  border-radius:50%;
+  background:rgba(255,255,255,.05);
+  border:2px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.4);
+  position:relative;
+  z-index:2;
+  flex-shrink:0;
+}
+.step-dot.active{
+  background:linear-gradient(135deg,#1A7DFF,#8B5CF6);
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 0 20px rgba(26,125,255,.5);
+}
+.step-line{
+  width:2px;flex:1;
+  background:rgba(255,255,255,.08);
+  margin:4px 0;
+}
+.step-line.active{
+  background:linear-gradient(to bottom,#1A7DFF,#8B5CF6);
+}
+
+.step-cards{
+  position:relative;
+  min-height:320px;
+}
+.step-card{
+  position:absolute;
+  top:0;left:0;right:0;
+  padding:32px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  backdrop-filter:blur(10px);
+  opacity:0;
+  transform:translateX(20px);
+  transition:all .5s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+}
+.step-card.active{
+  opacity:1;transform:translateX(0);pointer-events:auto;
+}
+.step-card h3{
+  font-size:24px;font-weight:700;
+  margin-bottom:12px;
+}
+.step-card p{
+  font-size:15px;
+  color:rgba(255,255,255,.6);
+  line-height:1.7;
+  margin-bottom:10px;
+}
+.step-card .step-tip{
+  margin-top:16px;
+  padding:14px 18px;
+  background:rgba(254,184,41,.1);
+  border-left:3px solid #FEB829;
+  border-radius:8px;
+  font-size:14px;
+  color:rgba(254,184,41,.9);
+  line-height:1.6;
+}
+.step-nav-buttons{
+  display:flex;gap:12px;
+  margin-top:20px;
+}
+.step-nav-btn{
+  padding:10px 20px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
+  color:#fff;
+  border-radius:8px;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:inherit;
+}
+.step-nav-btn:hover{background:rgba(26,125,255,.2);border-color:rgba(26,125,255,.4)}
+.step-nav-btn.primary{
+  background:linear-gradient(135deg,#1A7DFF,#8B5CF6);
+  border-color:transparent;
+}
+
+/* ========== Icon Showcase ========== */
+.icon-showcase{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  margin-top:30px;
+}
+.icon-showcase-item{
+  text-align:center;
+  padding:40px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  backdrop-filter:blur(10px);
+  opacity:0;
+  transform:translateY(30px);
+  transition:all .6s cubic-bezier(.16,1,.3,1);
+}
+.slide.active .icon-showcase-item:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.35s}
+.slide.active .icon-showcase-item:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.5s}
+
+.icon-showcase-item:hover{
+  transform:translateY(-6px);
+  border-color:rgba(26,125,255,.3);
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.big-icon{
+  font-size:96px;
+  margin-bottom:20px;
+  display:inline-block;
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+.icon-showcase-item:nth-child(2) .big-icon{animation-delay:-2s}
+.icon-showcase-item h4{
+  font-size:22px;font-weight:700;margin-bottom:8px;
+}
+.icon-showcase-item p{
+  font-size:14px;color:rgba(255,255,255,.5);
+}
+
+/* ========== Homework ========== */
+.homework-wrap{
+  display:flex;gap:40px;
+  margin-top:30px;
+  justify-content:center;
+}
+.hw-card{
+  width:220px;
+  padding:36px 24px;
+  text-align:center;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  backdrop-filter:blur(10px);
+  opacity:0;
+  transform:scale(.9) translateY(20px);
+  transition:all .6s cubic-bezier(.16,1,.3,1);
+}
+.slide.active .hw-card:nth-child(1){opacity:1;transform:scale(1) translateY(0);transition-delay:.35s}
+.slide.active .hw-card:nth-child(2){opacity:1;transform:scale(1) translateY(0);transition-delay:.5s}
+.hw-card:hover{
+  transform:scale(1.05) translateY(-4px);
+  border-color:rgba(26,125,255,.4);
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+}
+.hw-icon{font-size:64px;margin-bottom:16px}
+.hw-card h4{font-size:18px;font-weight:600;margin-bottom:8px}
+.hw-card p{font-size:13px;color:rgba(255,255,255,.4)}
+
+/* ========== End Slide ========== */
+.end-slide{text-align:center}
+.end-slide h2{
+  font-size:56px;
+  background:linear-gradient(135deg,#fff,#60a5fa,#a78bfa);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:16px;
+}
+.end-slide p{
+  font-size:18px;
+  color:rgba(255,255,255,.5);
+  margin-bottom:40px;
+}
+.end-slide .restart-btn{
+  display:inline-block;
+  padding:14px 32px;
+  background:linear-gradient(135deg,#1A7DFF,#8B5CF6);
+  color:#fff;
+  text-decoration:none;
+  border-radius:12px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .3s;
+  border:none;
+  font-family:inherit;
+}
+.end-slide .restart-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(26,125,255,.4);
+}
+
+/* ========== Keyboard Hint ========== */
+.keyboard-hint{
+  position:fixed;
+  bottom:30px;left:40px;
+  display:flex;gap:8px;align-items:center;
+  z-index:100;
+  opacity:.4;
+  font-size:12px;
+  color:rgba(255,255,255,.5);
+}
+.key{
+  display:inline-block;
+  padding:4px 8px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:4px;
+  font-size:11px;
+  font-family:ui-monospace,monospace;
+}
+
+/* ========== Copy Value ========== */
+.copy-val{
+  display:inline-block;
+  padding:2px 10px;
+  background:rgba(26,125,255,.2);
+  color:#60a5fa;
+  border-radius:4px;
+  font-family:ui-monospace,'SF Mono',monospace;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+}
+.copy-val:hover{background:rgba(26,125,255,.35)}
+
+/* ========== Responsive ========== */
+@media(max-width:900px){
+  .slide{padding:40px 24px}
+  .slide h1{font-size:36px}
+  .cover-slide h1{font-size:42px}
+  .slide h2{font-size:28px}
+  .slide p.lead{font-size:16px}
+  .two-col{grid-template-columns:1fr;gap:30px}
+  .feature-grid{grid-template-columns:1fr 1fr;gap:16px}
+  .icon-showcase{grid-template-columns:1fr}
+  .cover-meta{gap:16px;flex-wrap:wrap;justify-content:center}
+  .cover-meta .meta-item{padding:12px 18px}
+  .meta-item .meta-num{font-size:20px}
+  .steps-wrap{grid-template-columns:50px 1fr;gap:20px}
+  .step-card{padding:20px}
+  .step-card h3{font-size:18px}
+  .nav-dots{right:12px}
+  .slide-counter{right:20px;bottom:20px}
+  .keyboard-hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" style="width:0%"></div>
+
+<div class="nav-dots" id="navDots"></div>
+
+<div class="slide-counter">
+  <span class="current" id="slideNum">01</span> / <span id="slideTotal">08</span>
+</div>
+
+<div class="keyboard-hint">
+  <span class="key">↑</span><span class="key">↓</span>
+  <span>或滚轮切换</span>
+</div>
+
+<div class="slides-container" id="slidesContainer">
+
+  <!-- Slide 1: Cover -->
+  <div class="slide s1 active" data-index="0">
+    <div class="slide-content cover-slide">
+      <div class="tag-badge">C01 · ICON DESIGN</div>
+      <h1>扁平风格图标设计</h1>
+      <p class="subtitle">从相机到灯泡，掌握布尔运算与渐变的核心技法</p>
+      <div class="cover-meta">
+        <div class="meta-item">
+          <div class="meta-num">2</div>
+          <div class="meta-label">图标案例</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-num">15</div>
+          <div class="meta-label">操作步骤</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-num">6</div>
+          <div class="meta-label">核心知识</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>向下滚动开始</span>
+      <div class="arrow"></div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Boolean Operations -->
+  <div class="slide s2" data-index="1">
+    <div class="slide-content">
+      <div class="two-col">
+        <div class="col-text">
+          <div class="slide-label">CORE SKILL · 01</div>
+          <h2>布尔运算<br>图标造型的基础</h2>
+          <p class="lead">
+            布尔运算是用简单形状组合出复杂图标的核心方法。<br>
+            本教程重点使用<b>交集运算</b>来制作色块衔接效果。
+          </p>
+          <div class="step-nav-buttons">
+            <button class="step-nav-btn" onclick="prevBool()">← 上一种</button>
+            <button class="step-nav-btn primary" onclick="nextBool()">下一种 →</button>
+          </div>
+        </div>
+        <div class="col-visual">
+          <div class="bool-visual">
+            <div class="bool-canvas">
+              <div class="bool-shape bool-a" id="boolA"></div>
+              <div class="bool-shape bool-b" id="boolB"></div>
+              <svg class="bool-result-svg" id="boolResult" width="240" height="200" viewBox="0 0 240 200"></svg>
+            </div>
+            <div class="bool-label" id="boolLabel">合并 · Union</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Camera Icon Intro -->
+  <div class="slide s2" data-index="2">
+    <div class="slide-content">
+      <div class="slide-label">CASE 01 · CAMERA ICON</div>
+      <h2>相机图标<br>8 步完成绘制</h2>
+      <p class="lead">
+        矩形 + 梯形 + 圆形描边 + 交集运算<br>
+        用最简单的几何形状，组合出精致的相机图标
+      </p>
+      <div class="icon-showcase" style="margin-top:40px">
+        <div class="icon-showcase-item">
+          <div class="big-icon">📷</div>
+          <h4>相机图标</h4>
+          <p>8 个步骤 · 矩形 + 梯形 + 圆形</p>
+        </div>
+        <div class="icon-showcase-item" style="opacity:.3;filter:grayscale(.5)">
+          <div class="big-icon">💡</div>
+          <h4>提示图标</h4>
+          <p>下一个案例</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Camera Steps -->
+  <div class="slide s2" data-index="3">
+    <div class="slide-content">
+      <div class="slide-label">STEP BY STEP</div>
+      <h2 style="font-size:32px">相机图标绘制步骤</h2>
+      <div class="steps-wrap">
+        <div class="step-rail" id="stepRail"></div>
+        <div class="step-cards" id="cameraSteps">
+          <div class="step-card active" data-step="0">
+            <h3>① 创建画板</h3>
+            <p>使用【画板工具】（快捷键 <b>A / F</b>），创建尺寸为 <span class="copy-val" onclick="copyVal(this)">80 × 80 px</span> 的画板。</p>
+            <p>填充颜色设置为 <span class="copy-val" onclick="copyVal(this)">#FFFFFF</span>，作为图标的画布背景。</p>
+            <div class="step-tip">💡 80×80 是比较常用的图标尺寸，既能保留细节，导出后也不会太大。</div>
+          </div>
+          <div class="step-card" data-step="1">
+            <h3>② 绘制机身矩形</h3>
+            <p>使用【矩形工具】（快捷键 <b>R</b>）绘制 <span class="copy-val" onclick="copyVal(this)">46 × 36 px</span> 的矩形。</p>
+            <p>圆角值设为 <span class="copy-val" onclick="copyVal(this)">7.5 px</span>，填充颜色 <span class="copy-val" onclick="copyVal(this)">#1A7DFF</span>。</p>
+            <div class="step-tip">💡 圆角值约为矩形高度的 1/5，视觉上最舒服。记住这个比例！</div>
+          </div>
+          <div class="step-card" data-step="2">
+            <h3>③ 绘制顶部梯形</h3>
+            <p>先画 <span class="copy-val" onclick="copyVal(this)">25 × 12.5 px</span> 的矩形，填充 <span class="copy-val" onclick="copyVal(this)">#3BD7FB</span>。</p>
+            <p>双击进入编辑模式，左上角和右上角锚点各向内移动 <span class="copy-val" onclick="copyVal(this)">4 px</span> 形成梯形。</p>
+            <p>设置圆角值 <span class="copy-val" onclick="copyVal(this)">2.5 px</span>。</p>
+            <div class="step-tip">💡 锚点编辑是图标绘制的基本功，多练习就会熟练。</div>
+          </div>
+          <div class="step-card" data-step="3">
+            <h3>④ 对齐 + 交集运算</h3>
+            <p>矩形和梯形水平居中对齐（快捷键 <b>Alt + H</b>），重叠 <span class="copy-val" onclick="copyVal(this)">4.5 px</span>。</p>
+            <p>复制一组，执行【布尔运算】→【交集】，生成重叠部分。</p>
+            <p>交集图形填充颜色 <span class="copy-val" onclick="copyVal(this)">#005EFF</span>。</p>
+            <div class="step-tip">🎯 深色交集面作为"阴影"，让图标有层次感——这是扁平图标的"伪 3D"手法。</div>
+          </div>
+          <div class="step-card" data-step="4">
+            <h3>⑤ 绘制镜头 + 完成</h3>
+            <p>用圆形工具画 <span class="copy-val" onclick="copyVal(this)">15 × 15 px</span> 的圆，取消填充。</p>
+            <p>添加描边：居中、宽度 <span class="copy-val" onclick="copyVal(this)">3.75 px</span>、颜色 <span class="copy-val" onclick="copyVal(this)">#005EFF</span>。</p>
+            <p>镜头与机身水平垂直居中对齐，检查像素对齐，完成！</p>
+            <div class="step-tip">✨ 放大到 400% 检查边缘，确保每个锚点都对齐像素网格。</div>
+          </div>
+        </div>
+      </div>
+      <div class="step-nav-buttons">
+        <button class="step-nav-btn" onclick="prevStep()">← 上一步</button>
+        <button class="step-nav-btn primary" onclick="nextStep()">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Bulb Icon Intro -->
+  <div class="slide s3" data-index="4">
+    <div class="slide-content">
+      <div class="slide-label">CASE 02 · BULB ICON</div>
+      <h2>提示图标<br>渐变 + 钢笔工具</h2>
+      <p class="lead">
+        椭圆渐变 + 梯形灯头 + 钢笔绘制灯丝<br>
+        学习渐变填充和描边设置的高级技巧
+      </p>
+      <div class="icon-showcase" style="margin-top:40px">
+        <div class="icon-showcase-item" style="opacity:.3;filter:grayscale(.5)">
+          <div class="big-icon">📷</div>
+          <h4>相机图标</h4>
+          <p>已完成</p>
+        </div>
+        <div class="icon-showcase-item">
+          <div class="big-icon">💡</div>
+          <h4>提示图标</h4>
+          <p>7 个步骤 · 渐变 + 钢笔</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: Bulb Steps -->
+  <div class="slide s3" data-index="5">
+    <div class="slide-content">
+      <div class="slide-label">STEP BY STEP</div>
+      <h2 style="font-size:32px">提示图标绘制步骤</h2>
+      <div class="steps-wrap">
+        <div class="step-rail" id="bulbRail"></div>
+        <div class="step-cards" id="bulbSteps">
+          <div class="step-card active" data-step="0">
+            <h3>① 创建画板</h3>
+            <p>使用【画板工具】（快捷键 <b>A / F</b>），创建 <span class="copy-val" onclick="copyVal(this)">80 × 80 px</span> 的画板。</p>
+            <p>填充颜色 <span class="copy-val" onclick="copyVal(this)">#FFFFFF</span>。</p>
+          </div>
+          <div class="step-card" data-step="1">
+            <h3>② 椭圆渐变灯泡</h3>
+            <p>画 <span class="copy-val" onclick="copyVal(this)">42 × 40 px</span> 的椭圆形。</p>
+            <p>填充设为【线性渐变】，方向从上到下，色值为 <span class="copy-val" onclick="copyVal(this)">#FFCE6B</span> → <span class="copy-val" onclick="copyVal(this)">#FEB829</span>。</p>
+            <div class="step-tip">🎨 上浅下深的渐变模拟"光照从上方来"，让图形有立体感。</div>
+          </div>
+          <div class="step-card" data-step="2">
+            <h3>③ 灯头梯形</h3>
+            <p>画 <span class="copy-val" onclick="copyVal(this)">20 × 15 px</span> 矩形，填充 <span class="copy-val" onclick="copyVal(this)">#FADA0A</span>。</p>
+            <p>底部两个锚点各向内收 <span class="copy-val" onclick="copyVal(this)">3 px</span> 形成梯形。</p>
+            <p>上方圆角 <span class="copy-val" onclick="copyVal(this)">1.5 px</span>，下方圆角 <span class="copy-val" onclick="copyVal(this)">3 px</span>。</p>
+          </div>
+          <div class="step-card" data-step="3">
+            <h3>④ 交集 + 灯丝</h3>
+            <p>对齐后复制一组，执行【交集】运算，填充 <span class="copy-val" onclick="copyVal(this)">#FB8B06</span>。</p>
+            <p>用【钢笔工具】（P）画反向"M"形灯丝。</p>
+            <p>描边 3.75 px、颜色 #FB8B06、圆头端点 + 圆角顶点。</p>
+            <div class="step-tip">✒️ 圆头端点让线条更柔和，是精致图标的必备细节。</div>
+          </div>
+        </div>
+      </div>
+      <div class="step-nav-buttons">
+        <button class="step-nav-btn" onclick="prevStep('bulb')">← 上一步</button>
+        <button class="step-nav-btn primary" onclick="nextStep('bulb')">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Knowledge Points -->
+  <div class="slide s5" data-index="6">
+    <div class="slide-content">
+      <div class="slide-label">KEY TAKEAWAYS</div>
+      <h2>6 个核心知识要点</h2>
+      <p class="lead">通过两个图标案例，掌握扁平风格设计的核心方法论</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔲</div>
+          <h4>布尔运算</h4>
+          <p>用交集生成深色衔接面，让图标有层次感和立体感。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h4>渐变填充</h4>
+          <p>上浅下深的线性渐变，模拟自然光照效果。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✏️</div>
+          <h4>锚点编辑</h4>
+          <p>双击进入编辑模式，移动锚点改变形状。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📐</div>
+          <h4>对齐工具</h4>
+          <p>Alt+H 水平居中，Alt+V 垂直居中，最常用快捷键。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✒️</div>
+          <h4>描边设置</h4>
+          <p>圆头端点 + 圆角顶点，线条更柔和精致。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h4>视觉平衡</h4>
+          <p>几何居中不等于视觉居中，要用人眼微调。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: Homework -->
+  <div class="slide s6" data-index="7">
+    <div class="slide-content end-slide">
+      <div class="slide-label">HOMEWORK</div>
+      <h2>课后作业</h2>
+      <p>运用今天学到的方法，完成两款扁平风格图标</p>
+      <div class="homework-wrap">
+        <div class="hw-card">
+          <div class="hw-icon">💬</div>
+          <h4>消息图标</h4>
+          <p>椭圆 + 布尔运算</p>
+        </div>
+        <div class="hw-card">
+          <div class="hw-icon">🏅</div>
+          <h4>奖章图标</h4>
+          <p>圆形 + 五角星</p>
+        </div>
+      </div>
+      <div style="margin-top:60px">
+        <button class="restart-btn" onclick="goToSlide(0)">↻ 重新开始</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ========== Slide Navigation ==========
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+let isAnimating = false;
+
+document.getElementById('slideTotal').textContent = String(totalSlides).padStart(2, '0');
+
+// Create nav dots
+const navDots = document.getElementById('navDots');
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => goToSlide(i);
+  navDots.appendChild(dot);
+});
+
+function goToSlide(index) {
+  if (isAnimating || index < 0 || index >= totalSlides) return;
+  isAnimating = true;
+
+  slides[currentSlide].classList.remove('active');
+  slides[currentSlide].classList.add(index > currentSlide ? 'prev' : '');
+  slides[index].classList.remove('prev');
+  
+  // Reset all slides position classes
+  slides.forEach((s, i) => {
+    s.classList.remove('prev');
+    if (i < index) s.classList.add('prev');
+  });
+
+  setTimeout(() => {
+    slides[index].classList.add('active');
+    currentSlide = index;
+    updateProgress();
+    updateDots();
+    updateSlideNum();
+    
+    // Reset step counters for step slides
+    if (index === 3) { // camera steps
+      currentStep.camera = 0;
+      updateCameraSteps();
+    }
+    if (index === 5) { // bulb steps
+      currentStep.bulb = 0;
+      updateBulbSteps();
+    }
+    
+    setTimeout(() => { isAnimating = false; }, 600);
+  }, 50);
+}
+
+function updateProgress() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function updateDots() {
+  document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentSlide);
+  });
+}
+
+function updateSlideNum() {
+  document.getElementById('slideNum').textContent = String(currentSlide + 1).padStart(2, '0');
+}
+
+// ========== Mouse Wheel Navigation ==========
+let wheelTimeout;
+document.addEventListener('wheel', (e) => {
+  if (isAnimating) return;
+  clearTimeout(wheelTimeout);
+  wheelTimeout = setTimeout(() => {
+    if (e.deltaY > 30) {
+      goToSlide(currentSlide + 1);
+    } else if (e.deltaY < -30) {
+      goToSlide(currentSlide - 1);
+    }
+  }, 50);
+}, { passive: true });
+
+// ========== Keyboard Navigation ==========
+document.addEventListener('keydown', (e) => {
+  if (isAnimating) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    goToSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    goToSlide(currentSlide - 1);
+  } else if (e.key === 'Home') {
+    goToSlide(0);
+  } else if (e.key === 'End') {
+    goToSlide(totalSlides - 1);
+  }
+});
+
+// ========== Touch Navigation ==========
+let touchStartY = 0;
+document.addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+  if (isAnimating) return;
+  const diff = touchStartY - e.changedTouches[0].clientY;
+  if (Math.abs(diff) > 50) {
+    if (diff > 0) goToSlide(currentSlide + 1);
+    else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+
+// ========== Boolean Demo ==========
+const boolTypes = ['union', 'subtract', 'intersect', 'exclude'];
+const boolLabels = ['合并 · Union', '减去 · Subtract', '交集 · Intersect', '排除 · Exclude'];
+const boolDescs = [
+  '将两个形状合并为一个整体，重叠区域自动融合',
+  '用顶层形状在底层形状上"挖洞"，制作空心效果',
+  '只保留重叠部分，制作深色衔接面的核心',
+  '保留不重叠部分，重叠处挖空'
+];
+let boolIndex = 0;
+
+function setBoolean(type) {
+  const svg = document.getElementById('boolResult');
+  const cx1 = 75, cy1 = 100, r = 65;
+  const cx2 = 165, cy2 = 100;
+
+  if (type === 'union') {
+    svg.innerHTML = `
+      <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="url(#gradA)"/>
+      <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="url(#gradA)"/>
+      <defs>
+        <linearGradient id="gradA" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#3BD7FB"/>
+          <stop offset="100%" stop-color="#1A7DFF"/>
+        </linearGradient>
+      </defs>
+    `;
+  } else if (type === 'subtract') {
+    svg.innerHTML = `
+      <defs>
+        <mask id="subM">
+          <rect width="240" height="200" fill="white"/>
+          <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="black"/>
+        </mask>
+        <linearGradient id="gradA2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#3BD7FB"/>
+          <stop offset="100%" stop-color="#1A7DFF"/>
+        </linearGradient>
+      </defs>
+      <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="url(#gradA2)" mask="url(#subM)"/>
+    `;
+  } else if (type === 'intersect') {
+    svg.innerHTML = `
+      <defs>
+        <clipPath id="interC">
+          <circle cx="${cx2}" cy="${cy2}" r="${r}"/>
+        </clipPath>
+        <linearGradient id="gradD" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#005EFF"/>
+          <stop offset="100%" stop-color="#003DB3"/>
+        </linearGradient>
+      </defs>
+      <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="url(#gradD)" clip-path="url(#interC)"/>
+    `;
+  } else if (type === 'exclude') {
+    svg.innerHTML = `
+      <defs>
+        <mask id="exM">
+          <rect width="240" height="200" fill="white"/>
+          <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="black"/>
+          <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="black"/>
+          <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="white"/>
+          <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="white"/>
+        </mask>
+        <linearGradient id="gradA3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#3BD7FB"/>
+          <stop offset="100%" stop-color="#1A7DFF"/>
+        </linearGradient>
+        <linearGradient id="gradB" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#FEB829"/>
+          <stop offset="100%" stop-color="#FB8B06"/>
+        </linearGradient>
+      </defs>
+      <circle cx="${cx1}" cy="${cy1}" r="${r}" fill="url(#gradA3)"/>
+      <circle cx="${cx2}" cy="${cy2}" r="${r}" fill="url(#gradB)"/>
+    `;
+  }
+
+  document.getElementById('boolLabel').textContent = boolLabels[boolIndex];
+}
+
+function nextBool() {
+  boolIndex = (boolIndex + 1) % boolTypes.length;
+  setBoolean(boolTypes[boolIndex]);
+}
+
+function prevBool() {
+  boolIndex = (boolIndex - 1 + boolTypes.length) % boolTypes.length;
+  setBoolean(boolTypes[boolIndex]);
+}
+
+// Initialize boolean
+setBoolean('union');
+
+// ========== Step Navigation for Camera & Bulb ==========
+const currentStep = { camera: 0, bulb: 0 };
+const cameraStepCount = 5;
+const bulbStepCount = 4;
+
+// Build step rails
+function buildRail(id, count) {
+  const rail = document.getElementById(id);
+  rail.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot' + (i === 0 ? ' active' : '');
+    dot.textContent = i + 1;
+    rail.appendChild(dot);
+    if (i < count - 1) {
+      const line = document.createElement('div');
+      line.className = 'step-line';
+      rail.appendChild(line);
+    }
+  }
+}
+buildRail('stepRail', cameraStepCount);
+buildRail('bulbRail', bulbStepCount);
+
+function updateCameraSteps() {
+  const cards = document.querySelectorAll('#cameraSteps .step-card');
+  const dots = document.querySelectorAll('#stepRail .step-dot');
+  const lines = document.querySelectorAll('#stepRail .step-line');
+  cards.forEach((c, i) => c.classList.toggle('active', i === currentStep.camera));
+  dots.forEach((d, i) => d.classList.toggle('active', i <= currentStep.camera));
+  lines.forEach((l, i) => l.classList.toggle('active', i < currentStep.camera));
+}
+
+function updateBulbSteps() {
+  const cards = document.querySelectorAll('#bulbSteps .step-card');
+  const dots = document.querySelectorAll('#bulbRail .step-dot');
+  const lines = document.querySelectorAll('#bulbRail .step-line');
+  cards.forEach((c, i) => c.classList.toggle('active', i === currentStep.bulb));
+  dots.forEach((d, i) => d.classList.toggle('active', i <= currentStep.bulb));
+  lines.forEach((l, i) => l.classList.toggle('active', i < currentStep.bulb));
+}
+
+function nextStep(type = 'camera') {
+  if (type === 'camera') {
+    if (currentStep.camera < cameraStepCount - 1) {
+      currentStep.camera++;
+      updateCameraSteps();
+    }
+  } else {
+    if (currentStep.bulb < bulbStepCount - 1) {
+      currentStep.bulb++;
+      updateBulbSteps();
+    }
+  }
+}
+
+function prevStep(type = 'camera') {
+  if (type === 'camera') {
+    if (currentStep.camera > 0) {
+      currentStep.camera--;
+      updateCameraSteps();
+    }
+  } else {
+    if (currentStep.bulb > 0) {
+      currentStep.bulb--;
+      updateBulbSteps();
+    }
+  }
+}
+
+// ========== Copy Value ==========
+function copyVal(el) {
+  const text = el.textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    showCopySuccess(el);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showCopySuccess(el);
+  });
+}
+
+function showCopySuccess(el) {
+  const original = el.textContent;
+  el.textContent = '✓ 已复制';
+  el.style.background = 'rgba(16,185,129,.25)';
+  el.style.color = '#34d399';
+  setTimeout(() => {
+    el.textContent = original;
+    el.style.background = '';
+    el.style.color = '';
+  }, 1200);
+}
+
+// ========== Init ==========
+updateProgress();
+</script>
+</body>
+</html>
